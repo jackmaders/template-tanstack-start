@@ -18,11 +18,13 @@ bun run test:e2e    # Run browser tests
 bun run test:perf   # Run Lighthouse CI
 ```
 
-On Linux or WSL, Lighthouse may need to be pointed at Playwright's Chromium. Install the browser if needed, then resolve its executable path automatically for the run:
+On native Linux, Lighthouse may need to be pointed at Playwright's Chromium. Install the browser if needed, then resolve its executable path automatically for the run:
 
 ```bash
 export CHROME_PATH="$(node -p 'require("@playwright/test").chromium.executablePath()')"
 ```
+
+On WSL, the LHCI config sets a Linux temporary profile path through `collect.settings.chromeFlags`. This lets Lighthouse continue using the Linux browser selected by `CHROME_PATH`.
 
 ## Architecture
 

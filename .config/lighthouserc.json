@@ -5,7 +5,10 @@
 			"startServerCommand": "bun run cf:preview",
 			"startServerReadyPattern": "listen|ready",
 			"startServerReadyTimeout": 30000,
-			"numberOfRuns": 1
+			"numberOfRuns": 3,
+			"settings": {
+				"chromeFlags": "--user-data-dir=/tmp/lighthouse-manual"
+			}
 		},
 		"assert": {
 			"aggregationMethod": "pessimistic",
