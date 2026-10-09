@@ -5,12 +5,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
-	head: rootHead,
-	shellComponent: RootDocument,
-});
-
-export function rootHead() {
-	return {
+	head: () => ({
 		meta: [
 			{
 				charSet: "utf-8",
@@ -29,10 +24,11 @@ export function rootHead() {
 				href: appCss,
 			},
 		],
-	};
-}
+	}),
+	shellComponent: RootDocument,
+});
 
-export function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en">
 			<head>

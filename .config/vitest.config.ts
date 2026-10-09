@@ -13,7 +13,7 @@ export default defineConfig({
 		coverage: {
 			provider: "v8",
 			reporter: ["text", "json", "html"],
-			include: ["src/**/__tests__/*.{ts,tsx}"],
+			include: ["src/**/*.{ts,tsx}"],
 			exclude: ["**/__tests__/**", "**/__mocks__/**", "src/routeTree.gen.ts"],
 			thresholds: {
 				lines: 100,
