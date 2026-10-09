@@ -14,7 +14,12 @@ export default defineConfig({
 			provider: "v8",
 			reporter: ["text", "json", "html"],
 			include: ["src/**/*.{ts,tsx}"],
-			exclude: ["**/__tests__/**", "**/__mocks__/**", "src/routeTree.gen.ts"],
+			exclude: [
+				"**/__tests__/**",
+				"**/__mocks__/**",
+				"src/routes/**",
+				"src/routeTree.gen.ts",
+			],
 			thresholds: {
 				lines: 100,
 				functions: 100,

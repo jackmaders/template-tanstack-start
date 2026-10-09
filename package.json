@@ -33,6 +33,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.15",
+		"@cloudflare/vite-plugin": "^1.63.1",
 		"@commitlint/cli": "^21.2.3",
 		"@commitlint/config-conventional": "^21.2.3",
 		"@tailwindcss/vite": "^4.1.18",
@@ -51,6 +52,7 @@
 		"lefthook": "^2.2.1",
 		"typescript": "^6.0.2",
 		"vite": "^8.0.0",
-		"vitest": "^5.0.3"
+		"vitest": "^5.0.3",
+		"wrangler": "^4.149.0"
 	}
 }
