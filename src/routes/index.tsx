@@ -1,16 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
+import { listPosts } from "@/features/posts/api/posts.functions";
+import { PostsPage } from "@/features/posts/components/posts-page";
 
-export const Route = createFileRoute("/")({ component: Home });
+export const Route = createFileRoute("/")({
+	loader: () => listPosts(),
+	component: Home,
+});
 
 function Home() {
-	return (
-		<main className="p-8">
-			<h1 className="font-bold text-4xl">Welcome to TanStack Start</h1>
-			<p className="mt-4 text-lg">
-				Edit <code>src/routes/index.tsx</code> to get started.
-			</p>
-			<Button>button</Button>
-		</main>
-	);
+	const posts = Route.useLoaderData();
+
+	return <PostsPage posts={posts} />;
 }
