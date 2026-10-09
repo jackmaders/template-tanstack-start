@@ -12,6 +12,7 @@
 			"**",
 			"!!**/dist",
 			"!!**/coverage",
+			"!!**/public",
 			"!!**/.agents",
 			"!!**/.wrangler",
 			"!!**/test-results",
