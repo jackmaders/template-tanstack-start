@@ -5,7 +5,7 @@
 	"scripts": {
 		"build": "vite build -c .config/vite.config.ts",
 		"cf:deploy": "wrangler deploy -c dist/server/wrangler.json",
-		"cf:generate": "wrangler types src/cloudflare-env.d.ts --include-runtime false -c .config/wrangler.json",
+		"cf:generate": "wrangler types src/types/cloudflare-env.d.ts --include-runtime false -c .config/wrangler.json",
 		"cf:preview": "wrangler dev dist/server/index.js -c dist/server/wrangler.json --persist-to .wrangler/state --var BETTER_AUTH_URL:http://localhost:8787",
 		"db:generate": "drizzle-kit generate --config=.config/drizzle.config.ts",
 		"db:migrate": "wrangler d1 migrations apply DB --local --persist-to .wrangler/state -c .config/wrangler.json",
