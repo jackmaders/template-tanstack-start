@@ -1,183 +1,47 @@
-Welcome to your new TanStack Start app!
+# TanStack Start Template
 
-# Getting Started
+A TanStack Start application template using React, TypeScript, Tailwind CSS, shadcn/ui, and Cloudflare Workers.
 
-To run this application:
+## Getting started
 
 ```bash
 bun install
-bun --bun run dev
+bun run dev
 ```
 
-# Building For Production
-
-To build this application for production:
+Useful commands:
 
 ```bash
-bun --bun run build
+bun run build       # Build for Cloudflare Workers
+bun run validate    # Build, lint, type check, unused code check, and unit tests
+bun run test:e2e    # Run browser tests
 ```
 
-## Styling
+## Architecture
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+This repository includes the [Bulletproof React Patterns skill](.agents/skills/bulletproof-react-patterns/SKILL.md) as the general guide for feature boundaries, shared code, imports, and React architecture. Its framework-neutral structure is adapted to TanStack Start here:
 
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
-
-
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+```text
+src/
+├── client.tsx       # TanStack Start client entry point
+├── router.tsx       # Shared router configuration
+├── routeTree.gen.ts # Generated route tree
+├── styles.css       # Global styles
+├── assets/          # Assets imported and processed by the app
+├── components/      # Shared components; shadcn/ui components live in ui/
+├── config/          # Runtime app configuration and environment parsing
+├── features/        # Domain-specific modules
+├── hooks/           # Hooks shared across features
+├── lib/             # Preconfigured integrations and shared library wrappers
+├── routes/          # TanStack file routes and app-level composition
+├── stores/          # State shared across features
+├── testing/         # Shared test utilities, fixtures, and mocks
+├── types/           # Types shared across features
+└── utils/           # Small, framework-independent shared helpers
 ```
 
-Then anywhere in your JSX you can use it like so:
+TanStack Start splits its application layer across the client entry point, router configuration, and file routes. Route files are the source for the generated route tree. See [AGENTS.md](./AGENTS.md) for conventions on route data, generated files, shared UI, and the existing toolchain.
 
-```tsx
-<Link to="/about">About</Link>
-```
+Put URL-served static files in root `public/`, and imported assets in `src/assets/`.
 
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+Tool configuration lives in root `.config/`. Unit tests live in `__tests__` folders; reusable fixtures and test helpers belong in `src/testing`. Browser tests live in root `browser-tests/`.
