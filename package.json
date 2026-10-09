@@ -36,6 +36,7 @@
 		"@cloudflare/vite-plugin": "^1.63.1",
 		"@commitlint/cli": "^21.2.3",
 		"@commitlint/config-conventional": "^21.2.3",
+		"@playwright/test": "^1.64.0",
 		"@tailwindcss/vite": "^4.1.18",
 		"@tanstack/devtools-vite": "0.8.5",
 		"@tanstack/router-cli": "^1.132.0",
