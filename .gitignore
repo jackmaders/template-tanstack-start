@@ -12,6 +12,7 @@ dist-ssr
 __unconfig*
 todos.json
 coverage
+.lighthouseci
 
 # Playwright
 /test-results/

@@ -2,7 +2,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
-import appCss from "../styles.css?url";
+import appCss from "../styles.css?inline";
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -15,6 +15,11 @@ export const Route = createRootRoute({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
+				name: "description",
+				content:
+					"A starter template for building modern full-stack React apps with TanStack Start.",
+			},
+			{
 				title: "TanStack Start Starter",
 			},
 		],
@@ -23,10 +28,6 @@ export const Route = createRootRoute({
 				rel: "icon",
 				type: "image/svg",
 				href: "/favicon.svg",
-			},
-			{
-				rel: "stylesheet",
-				href: appCss,
 			},
 		],
 	}),
@@ -38,6 +39,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 		<html className="dark" lang="en">
 			<head>
 				<HeadContent />
+				<style>{appCss}</style>
 			</head>
 			<body>
 				{children}

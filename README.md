@@ -15,6 +15,13 @@ Useful commands:
 bun run build       # Build for Cloudflare Workers
 bun run validate    # Build, lint, type check, unused code check, and unit tests
 bun run test:e2e    # Run browser tests
+bun run test:perf   # Run Lighthouse CI
+```
+
+On Linux or WSL, Lighthouse may need to be pointed at Playwright's Chromium. Install the browser if needed, then resolve its executable path automatically for the run:
+
+```bash
+export CHROME_PATH="$(node -p 'require("@playwright/test").chromium.executablePath()')"
 ```
 
 ## Architecture
