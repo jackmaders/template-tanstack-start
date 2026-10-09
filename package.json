@@ -38,13 +38,19 @@
 		"@tailwindcss/vite": "^4.1.18",
 		"@tanstack/devtools-vite": "0.8.5",
 		"@tanstack/router-cli": "^1.132.0",
+		"@testing-library/jest-dom": "^7.0.1",
+		"@testing-library/react": "^16.3.3",
+		"@testing-library/user-event": "^14.6.7",
 		"@types/node": "^22.10.2",
 		"@types/react": "^19.2.0",
 		"@types/react-dom": "^19.2.0",
 		"@vitejs/plugin-react": "^6.0.1",
+		"@vitest/coverage-v8": "5.0.3",
+		"happy-dom": "^20.14.6",
 		"knip": "^6.41.0",
 		"lefthook": "^2.2.1",
 		"typescript": "^6.0.2",
-		"vite": "^8.0.0"
+		"vite": "^8.0.0",
+		"vitest": "^5.0.3"
 	}
 }
