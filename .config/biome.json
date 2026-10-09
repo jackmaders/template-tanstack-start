@@ -1,0 +1,94 @@
+{
+	"root": false,
+	"$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true,
+		"root": "."
+	},
+	"files": {
+		"includes": [
+			"**",
+			"!!**/dist",
+			"!!**/coverage",
+			"!!**/.agents",
+			"!!**/.wrangler",
+			"!!**/test-results",
+			"!!**/playwright-report",
+			"!!**/.lighthouseci",
+			"!**/src/app/routeTree.gen.ts",
+			"!**/src/cloudflare-env.d.ts"
+		]
+	},
+	"plugins": [
+		{
+			"path": "./plugins/no-inline-vitest-mock.grit",
+			"includes": ["**", "!**/__mocks__/**"]
+		}
+	],
+	"css": { "parser": { "tailwindDirectives": true } },
+	"linter": {
+		"domains": {
+			"playwright": "all",
+			"react": "all",
+			"tailwind": "all",
+			"types": "all"
+		},
+		"rules": {
+			"a11y": "error",
+			"security": "error",
+			"complexity": {
+				"noImplicitCoercions": "error"
+			},
+			"nursery": {
+				"noFloatingPromises": "error",
+				"noMisusedPromises": "error",
+				"noTailwindArbitraryValue": "error",
+				"noUnsafeTypeAssertion": "error",
+				"noUnusedClasses": "error",
+				"useConsistentTestIt": {
+					"level": "error",
+					"options": {
+						"function": "test",
+						"withinDescribe": "test"
+					}
+				},
+				"useSortedClasses": "error"
+			},
+			"performance": {
+				"noAwaitInLoops": "error",
+				"noNamespaceImport": "error",
+				"noReExportAll": "error",
+				"useTopLevelRegex": "error"
+			},
+			"style": {
+				"useBlockStatements": "error",
+				"useNamingConvention": {
+					"level": "error",
+					"options": { "strictCase": false }
+				}
+			},
+			"suspicious": {
+				"noConsole": "error",
+				"noConstantBinaryExpressions": "error",
+				"noFocusedTests": "error",
+				"noImportCycles": "error",
+				"noSkippedTests": "error",
+				"noUnusedExpressions": "error",
+				"noVar": "error"
+			}
+		}
+	},
+	"assist": {
+		"actions": {
+			"source": {
+				"noDuplicateClasses": "on",
+				"useSortedAttributes": "on",
+				"useSortedInterfaceMembers": "on",
+				"useSortedPackageJson": "on",
+				"useSortedProperties": "on"
+			}
+		}
+	}
+}

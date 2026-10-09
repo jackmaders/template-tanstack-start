@@ -1,0 +1,18 @@
+assert_lefthook_installed: true
+
+output:
+  - summary
+  - failure
+
+pre-commit:
+  parallel: true
+  commands:
+    biome-check:
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,css,scss}"
+      run: bun biome check --config-path=.config/biome.json --write --unsafe --linter-enabled=false --assist-enabled=true {staged_files}
+      stage_fixed: true
+
+commit-msg:
+  commands:
+    commitlint:
+      run: bun commitlint --edit {1} --config .config/commitlint.config.mjs

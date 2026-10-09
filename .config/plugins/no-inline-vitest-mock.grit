@@ -1,0 +1,9 @@
+language js
+
+`$fn($mod, $factory, $...)` as $call where {
+	$fn <: or {
+		`vi.mock`,
+		`vi.doMock`
+	},
+	register_diagnostic(span=$call, message="Inline Vitest mocks are not allowed. Vitest mocks must be defined in a dedicated __mocks__ file.", severity="error")
+}
