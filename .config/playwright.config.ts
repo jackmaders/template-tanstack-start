@@ -1,7 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const isCI = Boolean(process.env.CI);
-const skipBuild = process.env.E2E_SKIP_BUILD === "true";
 const usePreview = process.env.E2E_USE_PREVIEW === "true";
 const externalBaseURL = process.env.E2E_BASE_URL?.trim();
 
@@ -9,10 +8,6 @@ const devBaseURL = "http://localhost:5173";
 const previewBaseURL = "http://localhost:8787";
 
 const baseURL = externalBaseURL || (usePreview ? previewBaseURL : devBaseURL);
-
-if (skipBuild && !usePreview) {
-	throw new Error("E2E_SKIP_BUILD requires E2E_USE_PREVIEW");
-}
 
 export default defineConfig({
 	testDir: "../browser-tests",
@@ -48,10 +43,6 @@ function getWebServerConfig() {
 	}
 
 	const steps = []; // ["bun run db:migrate", "bun run db:seed"];
-
-	if (usePreview && !skipBuild) {
-		steps.unshift("bun run build");
-	}
 
 	if (usePreview) {
 		steps.push("bun run preview");
