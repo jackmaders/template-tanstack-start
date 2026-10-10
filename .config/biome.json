@@ -1,21 +1,16 @@
 {
-	"root": false,
 	"$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
-	"vcs": {
-		"enabled": true,
-		"clientKind": "git",
-		"useIgnoreFile": true,
-		"root": "."
+	"assist": {
+		"actions": { "source": { "preset": "all", "useSortedPackageJson": "off" } }
 	},
+	"css": { "parser": { "tailwindDirectives": true } },
 	"files": {
 		"includes": [
 			"**",
 			"!!**/dist",
 			"!!**/coverage",
 			"!!**/public",
-			"!!**/.agents",
 			"!!**/.wrangler",
-			"!!**/drizzle",
 			"!!**/test-results",
 			"!!**/playwright-report",
 			"!!**/.lighthouseci",
@@ -23,43 +18,31 @@
 			"!**/src/types/cloudflare-env.d.ts"
 		]
 	},
-	"plugins": [
-		{
-			"path": "./plugins/no-inline-vitest-mock.grit",
-			"includes": ["**", "!**/__mocks__/**"]
-		}
-	],
-	"css": { "parser": { "tailwindDirectives": true } },
 	"linter": {
-		"domains": {
-			"playwright": "all",
-			"react": "all",
-			"tailwind": "all",
-			"types": "all"
-		},
 		"rules": {
 			"a11y": { "preset": "all" },
-			"security": { "preset": "all", "noSecrets": "off" },
 			"complexity": { "preset": "all" },
 			"nursery": { "preset": "all" },
 			"performance": { "preset": "all", "useSolidForComponent": "off" },
-			"style": { "preset": "none" },
+			"security": { "noSecrets": "off", "preset": "all" },
+			"style": { "noDefaultExport": "error", "preset": "none" },
 			"suspicious": { "preset": "none" }
 		}
 	},
-	"assist": {
-		"actions": {
-			"source": {
-				"noDuplicateClasses": "on",
-				"useSortedAttributes": "on",
-				"useSortedInterfaceMembers": "on",
-				"useSortedPackageJson": "on",
-				"useSortedProperties": "on",
-				"organizeImports": "on",
-				"useSortedEnumMembers": "on",
-				"useSortedTypeFields": "on",
-				"useSortedSelectionSet": "on"
-			}
+	"overrides": [
+		{
+			"includes": ["**/*.config.*"],
+			"linter": { "rules": { "style": { "noDefaultExport": "off" } } }
 		}
+	],
+	"plugins": [
+		{ "includes": ["**"], "path": "./plugins/no-inline-vitest-mock.grit" }
+	],
+	"root": false,
+	"vcs": {
+		"clientKind": "git",
+		"enabled": true,
+		"root": ".",
+		"useIgnoreFile": true
 	}
 }

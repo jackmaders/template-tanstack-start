@@ -1,40 +1,40 @@
 {
-	"version": "7",
-	"dialect": "sqlite",
-	"id": "86057c13-3f99-417e-817e-72a60c65dd7a",
-	"prevIds": ["00000000-0000-0000-0000-000000000000"],
 	"ddl": [
 		{
-			"name": "posts",
-			"entityType": "tables"
+			"entityType": "tables",
+			"name": "posts"
 		},
 		{
-			"type": "integer",
-			"notNull": false,
 			"autoincrement": true,
 			"default": null,
+			"entityType": "columns",
 			"generated": null,
 			"name": "id",
-			"entityType": "columns",
-			"table": "posts"
+			"notNull": false,
+			"table": "posts",
+			"type": "integer"
 		},
 		{
-			"type": "text",
-			"notNull": true,
 			"autoincrement": false,
 			"default": null,
+			"entityType": "columns",
 			"generated": null,
 			"name": "name",
-			"entityType": "columns",
-			"table": "posts"
+			"notNull": true,
+			"table": "posts",
+			"type": "text"
 		},
 		{
 			"columns": ["id"],
-			"nameExplicit": false,
+			"entityType": "pks",
 			"name": "posts_pk",
-			"table": "posts",
-			"entityType": "pks"
+			"nameExplicit": false,
+			"table": "posts"
 		}
 	],
-	"renames": []
+	"dialect": "sqlite",
+	"id": "86057c13-3f99-417e-817e-72a60c65dd7a",
+	"prevIds": ["00000000-0000-0000-0000-000000000000"],
+	"renames": [],
+	"version": "7"
 }

@@ -1,40 +1,40 @@
 {
-	"version": "7",
-	"dialect": "sqlite",
-	"id": "da8eefc7-cca0-4dd1-bf61-42020710d278",
-	"prevIds": ["af648fae-9602-47ca-a3fa-563fd32f6166"],
 	"ddl": [
 		{
-			"name": "posts",
-			"entityType": "tables"
+			"entityType": "tables",
+			"name": "posts"
 		},
 		{
-			"type": "integer",
-			"notNull": false,
 			"autoincrement": true,
 			"default": null,
+			"entityType": "columns",
 			"generated": null,
 			"name": "id",
-			"entityType": "columns",
-			"table": "posts"
+			"notNull": false,
+			"table": "posts",
+			"type": "integer"
 		},
 		{
-			"type": "text(160)",
-			"notNull": true,
 			"autoincrement": false,
 			"default": null,
+			"entityType": "columns",
 			"generated": null,
 			"name": "title",
-			"entityType": "columns",
-			"table": "posts"
+			"notNull": true,
+			"table": "posts",
+			"type": "text(160)"
 		},
 		{
 			"columns": ["id"],
-			"nameExplicit": false,
+			"entityType": "pks",
 			"name": "posts_pk",
-			"table": "posts",
-			"entityType": "pks"
+			"nameExplicit": false,
+			"table": "posts"
 		}
 	],
-	"renames": ["posts.name->posts.title"]
+	"dialect": "sqlite",
+	"id": "da8eefc7-cca0-4dd1-bf61-42020710d278",
+	"prevIds": ["af648fae-9602-47ca-a3fa-563fd32f6166"],
+	"renames": ["posts.name->posts.title"],
+	"version": "7"
 }
