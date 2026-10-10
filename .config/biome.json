@@ -45,6 +45,10 @@
 			}
 		},
 		{
+			"includes": ["**/__mocks__/*"],
+			"linter": { "rules": { "style": { "useNamingConvention": "off" } } }
+		},
+		{
 			"includes": ["**/__tests__/*.spec.*"],
 			"linter": { "rules": { "style": { "noMagicNumbers": "off" } } }
 		}
