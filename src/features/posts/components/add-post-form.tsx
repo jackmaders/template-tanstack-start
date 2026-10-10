@@ -1,4 +1,5 @@
-import { type SubmitEvent, useCallback, useId } from "react";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
+import { useId } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -14,45 +15,59 @@ import { useCreatePost } from "@/features/posts/api/use-create-post";
 import { createPostSchema } from "../api/posts.schema";
 
 export function AddPostForm() {
-	const { isPending, mutate: createPost, error } = useCreatePost();
+	const { isPending, mutate: createPost } = useCreatePost();
 	const titleInputId = useId();
 
-	const handleSubmit = useCallback(
-		(event: SubmitEvent<HTMLFormElement>) => {
-			event.preventDefault();
-			const form = event.currentTarget;
-			const formData = Object.fromEntries(new FormData(form));
-			const result = createPostSchema.safeParse(formData);
-
-			if (!result.success) {
-				console.error(result.error);
-				return;
-			}
-
-			createPost(result.data, { onSuccess: () => form.reset() });
+	const form = useForm({
+		defaultValues: { title: "" },
+		validationLogic: revalidateLogic(),
+		validators: { onDynamic: createPostSchema },
+		onSubmit: ({ value }) => {
+			createPost(createPostSchema.parse(value), {
+				onSuccess: () => form.reset(),
+			});
 		},
-		[createPost],
-	);
+	});
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form
+			onSubmit={(e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				form.handleSubmit();
+			}}
+		>
 			<Card>
 				<CardHeader>
 					<CardTitle>Add a post</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<Field>
-						<FieldLabel htmlFor={titleInputId}>Post title</FieldLabel>
-						<Input
-							autoComplete="off"
-							id={titleInputId}
-							maxLength={POST_TITLE_MAX_LENGTH}
-							name="title"
-							placeholder="Give your post a title"
-							required
-						/>
-						{!!error && <FieldError>{error.message}</FieldError>}
-					</Field>
+					<form.Field name="title">
+						{(field) => {
+							const errors = field.state.meta.errors;
+							const isInvalid = errors.length > 0;
+							const titleErrorId = `${titleInputId}-error`;
+
+							return (
+								<Field data-invalid={isInvalid}>
+									<FieldLabel htmlFor={titleInputId}>Post title</FieldLabel>
+									<Input
+										aria-describedby={isInvalid ? titleErrorId : undefined}
+										aria-invalid={isInvalid}
+										autoComplete="off"
+										id={titleInputId}
+										maxLength={POST_TITLE_MAX_LENGTH}
+										name={field.name}
+										onBlur={field.handleBlur}
+										onChange={(e) => field.handleChange(e.target.value)}
+										placeholder="Give your post a title"
+										value={field.state.value}
+									/>
+									<FieldError errors={errors} id={titleErrorId} />
+								</Field>
+							);
+						}}
+					</form.Field>
 				</CardContent>
 				<CardFooter>
 					<Button disabled={isPending} type="submit">
