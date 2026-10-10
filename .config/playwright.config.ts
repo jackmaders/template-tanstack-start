@@ -10,16 +10,8 @@ const previewBaseURL = "http://localhost:8787";
 const baseURL = externalBaseURL || (usePreview ? previewBaseURL : devBaseURL);
 
 export default defineConfig({
-	testDir: "../browser-tests",
-	fullyParallel: true,
 	forbidOnly: isCI,
-	retries: isCI ? 2 : 0,
-	workers: isCI ? 1 : undefined,
-	reporter: isCI ? "github" : "list",
-	use: {
-		baseURL,
-		trace: "on-first-retry",
-	},
+	fullyParallel: true,
 	projects: [
 		{
 			name: "chromium",
@@ -34,6 +26,14 @@ export default defineConfig({
 			use: { ...devices["Desktop Safari"] },
 		},
 	],
+	reporter: isCI ? "github" : "list",
+	retries: isCI ? 2 : 0,
+	testDir: "../browser-tests",
+	use: {
+		baseURL,
+		trace: "on-first-retry",
+	},
+	workers: isCI ? 1 : undefined,
 	...getWebServerConfig(),
 });
 
@@ -53,8 +53,8 @@ function getWebServerConfig() {
 	return {
 		webServer: {
 			command: steps.join(" && "),
-			url: baseURL,
 			reuseExistingServer: false,
+			url: baseURL,
 		},
 	};
 }

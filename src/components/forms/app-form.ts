@@ -7,8 +7,8 @@ import { SubmitButton } from "./submit-button";
 import { TextField } from "./text-field";
 
 export const { useAppForm } = createFormHook({
-	fieldContext,
-	formContext,
 	fieldComponents: { TextField },
+	fieldContext,
 	formComponents: { Form, SubmitButton },
+	formContext,
 });

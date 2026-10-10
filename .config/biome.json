@@ -15,6 +15,7 @@
 			"!!**/public",
 			"!!**/.agents",
 			"!!**/.wrangler",
+			"!!**/drizzle",
 			"!!**/test-results",
 			"!!**/playwright-report",
 			"!!**/.lighthouseci",
@@ -103,7 +104,11 @@
 				"useSortedAttributes": "on",
 				"useSortedInterfaceMembers": "on",
 				"useSortedPackageJson": "on",
-				"useSortedProperties": "on"
+				"useSortedProperties": "on",
+				"organizeImports": "on",
+				"useSortedEnumMembers": "on",
+				"useSortedTypeFields": "on",
+				"useSortedSelectionSet": "on"
 			}
 		}
 	}

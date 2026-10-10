@@ -9,22 +9,22 @@ export function getRouter() {
 		mutationCache: new MutationCache({
 			onError: (error) =>
 				toast.add({
-					type: "error",
-					priority: "high",
 					description: error.message,
+					priority: "high",
+					type: "error",
 				}),
 		}),
 	});
 
 	const router = createTanStackRouter({
-		routeTree,
 		context: { queryClient },
-		scrollRestoration: true,
 		defaultPreload: "intent",
 		defaultPreloadStaleTime: 0,
+		routeTree,
+		scrollRestoration: true,
 	});
 
-	setupRouterSsrQueryIntegration({ router, queryClient });
+	setupRouterSsrQueryIntegration({ queryClient, router });
 
 	return router;
 }

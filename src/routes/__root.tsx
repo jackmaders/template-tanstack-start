@@ -14,28 +14,28 @@ export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
 }>()({
 	head: () => ({
+		links: [
+			{
+				href: "/favicon.svg",
+				rel: "icon",
+				type: "image/svg",
+			},
+		],
 		meta: [
 			{
 				charSet: "utf-8",
 			},
 			{
-				name: "viewport",
 				content: "width=device-width, initial-scale=1",
+				name: "viewport",
 			},
 			{
-				name: "description",
 				content:
 					"A starter template for building modern full-stack React apps with TanStack Start.",
+				name: "description",
 			},
 			{
 				title: "TanStack Start Starter",
-			},
-		],
-		links: [
-			{
-				rel: "icon",
-				type: "image/svg",
-				href: "/favicon.svg",
 			},
 		],
 	}),

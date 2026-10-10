@@ -42,18 +42,18 @@ function makeMockDatabase(results: MockDatabaseResults = {}) {
 	const deleteQuery = vi.fn(() => ({ where }));
 
 	const db = {
-		select,
-		insert,
 		delete: deleteQuery,
+		insert,
+		select,
 	};
 	if (!hasPostDatabaseOperations(db)) {
 		throw new Error("The mock database is missing post operations");
 	}
 
 	return {
-		db,
 		calls: {
 			createReturning,
+			deleteQuery,
 			deleteReturning,
 			from,
 			insert,
@@ -62,8 +62,8 @@ function makeMockDatabase(results: MockDatabaseResults = {}) {
 			select,
 			values,
 			where,
-			deleteQuery,
 		},
+		db,
 	};
 }
 

@@ -6,7 +6,6 @@ import viteReact from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 const config = defineConfig({
-	resolve: { tsconfigPaths: true },
 	environments: {
 		ssr: { build: { chunkSizeWarningLimit: 1500 } },
 	},
@@ -20,6 +19,7 @@ const config = defineConfig({
 		tailwindcss(),
 		viteReact(),
 	],
+	resolve: { tsconfigPaths: true },
 });
 
 export default config;

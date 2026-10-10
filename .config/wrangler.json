@@ -1,11 +1,7 @@
 {
 	"$schema": "../node_modules/wrangler/config-schema.json",
-	"name": "template-tanstack-start",
 	"compatibility_date": "2026-09-19",
 	"compatibility_flags": ["nodejs_compat"],
-	"main": "@tanstack/react-start/server-entry",
-	"observability": { "enabled": true },
-	"workers_dev": true,
 	"d1_databases": [
 		{
 			"binding": "DB",
@@ -14,5 +10,9 @@
 			"migrations_dir": "../drizzle",
 			"migrations_pattern": "../drizzle/*/migration.sql"
 		}
-	]
+	],
+	"main": "@tanstack/react-start/server-entry",
+	"name": "template-tanstack-start",
+	"observability": { "enabled": true },
+	"workers_dev": true
 }

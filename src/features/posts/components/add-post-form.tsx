@@ -16,15 +16,15 @@ export function AddPostForm() {
 
 	const form = useAppForm({
 		defaultValues: { title: "" },
-		validationLogic: revalidateLogic({ mode: "change" }),
-		validators: {
-			onMount: createPostSchema,
-			onDynamic: createPostSchema,
-		},
 		onSubmit: async ({ value }) => {
 			await createPost(value);
 			form.reset();
 			await form.validate("mount");
+		},
+		validationLogic: revalidateLogic({ mode: "change" }),
+		validators: {
+			onDynamic: createPostSchema,
+			onMount: createPostSchema,
 		},
 	});
 

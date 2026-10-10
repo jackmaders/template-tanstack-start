@@ -21,11 +21,11 @@ type FieldState = {
 
 let canSubmit = true;
 let fieldState: FieldState = {
-	name: "name",
-	value: "",
 	errors: [],
 	isTouched: false,
 	isValid: true,
+	name: "name",
+	value: "",
 };
 
 const handleChange = vi.fn();
@@ -45,11 +45,11 @@ export function setFormCanSubmit(value: boolean) {
 
 export function setFieldState(state: Partial<FieldState> = {}) {
 	fieldState = {
-		name: state.name ?? "name",
-		value: state.value ?? "",
 		errors: state.errors ?? [],
 		isTouched: state.isTouched ?? false,
 		isValid: state.isValid ?? true,
+		name: state.name ?? "name",
+		value: state.value ?? "",
 	};
 	handleChange.mockClear();
 	handleBlur.mockClear();
@@ -61,17 +61,17 @@ export function getFieldHandlers() {
 
 export function useFieldContext() {
 	return {
+		handleBlur,
+		handleChange,
 		name: fieldState.name,
 		state: {
-			value: fieldState.value,
 			meta: {
 				errors: fieldState.errors,
 				isTouched: fieldState.isTouched,
 				isValid: fieldState.isValid,
 			},
+			value: fieldState.value,
 		},
-		handleBlur,
-		handleChange,
 	};
 }
 

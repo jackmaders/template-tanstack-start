@@ -3,8 +3,8 @@ import { postsQueryOptions } from "@/features/posts/api/posts.queries";
 import { PostsPage } from "@/features/posts/components/posts-page";
 
 export const Route = createFileRoute("/")({
-	loader: ({ context }) => context.queryClient.query(postsQueryOptions),
 	component: Home,
+	loader: ({ context }) => context.queryClient.query(postsQueryOptions),
 });
 
 function Home() {
