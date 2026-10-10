@@ -1,14 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { listPosts } from "@/features/posts/api/posts.functions";
+import { postsQueryOptions } from "@/features/posts/api/posts.queries";
 import { PostsPage } from "@/features/posts/components/posts-page";
 
 export const Route = createFileRoute("/")({
-	loader: () => listPosts(),
+	loader: ({ context }) => context.queryClient.query(postsQueryOptions),
 	component: Home,
 });
 
 function Home() {
-	const posts = Route.useLoaderData();
-
-	return <PostsPage posts={posts} />;
+	return <PostsPage />;
 }

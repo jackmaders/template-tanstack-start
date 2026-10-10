@@ -1,12 +1,13 @@
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/db/db.server";
-import { type Post, type PostInsert, posts } from "@/db/schema/posts";
+import { posts } from "@/db/schema/posts";
+import type { PostInsert } from "./posts.schema";
 
-export async function getPosts(db = getDb()): Promise<Post[]> {
+export async function getPosts(db = getDb()) {
 	return await db.select().from(posts).orderBy(desc(posts.id)).limit(50);
 }
 
-export async function addPost(values: PostInsert, db = getDb()): Promise<Post> {
+export async function addPost(values: PostInsert, db = getDb()) {
 	const [post] = await db.insert(posts).values(values).returning();
 
 	if (!post) {
@@ -16,6 +17,6 @@ export async function addPost(values: PostInsert, db = getDb()): Promise<Post> {
 	return post;
 }
 
-export async function removePost(id: number, db = getDb()): Promise<void> {
-	await db.delete(posts).where(eq(posts.id, id));
+export async function removePost(id: number, db = getDb()) {
+	return await db.delete(posts).where(eq(posts.id, id)).returning();
 }

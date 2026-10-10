@@ -1,12 +1,7 @@
-import type { Post } from "@/db/schema/posts";
 import { AddPostForm } from "./add-post-form";
 import { PostList } from "./post-list";
 
-type PostsPageProps = {
-	posts: Post[];
-};
-
-export function PostsPage({ posts }: PostsPageProps) {
+export function PostsPage() {
 	return (
 		<main>
 			<header>
@@ -16,7 +11,7 @@ export function PostsPage({ posts }: PostsPageProps) {
 			</header>
 
 			<AddPostForm />
-			<PostList posts={posts} />
+			<PostList />
 		</main>
 	);
 }

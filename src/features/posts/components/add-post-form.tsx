@@ -1,5 +1,3 @@
-import { useRouter } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import {
 	type ChangeEvent,
 	type FormEvent,
@@ -9,16 +7,13 @@ import {
 } from "react";
 import { Button } from "@/components/ui/button";
 import { POST_NAME_MAX_LENGTH } from "@/db/schema/posts";
-import { createPost } from "@/features/posts/api/posts.functions";
+import { useCreatePost } from "@/features/posts/api/use-create-post";
 
 export function AddPostForm() {
-	const router = useRouter();
-	const createPostFn = useServerFn(createPost);
+	const { isError, isPending, mutate: createPost, error } = useCreatePost();
 	const headingId = useId();
 	const titleInputId = useId();
 	const [title, setTitle] = useState("");
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const handleTitleChange = useCallback(
 		(event: ChangeEvent<HTMLInputElement>) => {
@@ -28,26 +23,11 @@ export function AddPostForm() {
 	);
 
 	const handleSubmit = useCallback(
-		async (event: FormEvent<HTMLFormElement>) => {
+		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			setErrorMessage(null);
-			setIsSubmitting(true);
-
-			try {
-				await createPostFn({ data: { name: title } });
-				setTitle("");
-				await router.invalidate({ sync: true });
-			} catch (error) {
-				setErrorMessage(
-					error instanceof Error
-						? error.message
-						: "The post could not be created.",
-				);
-			} finally {
-				setIsSubmitting(false);
-			}
+			createPost({ name: title }, { onSuccess: () => setTitle("") });
 		},
-		[createPostFn, router, title],
+		[createPost, title],
 	);
 
 	return (
@@ -65,14 +45,11 @@ export function AddPostForm() {
 					required
 					value={title}
 				/>
-				<Button
-					disabled={isSubmitting || title.trim().length === 0}
-					type="submit"
-				>
-					{isSubmitting ? "Adding…" : "Add post"}
+				<Button disabled={isPending || title.trim().length === 0} type="submit">
+					{isPending ? "Adding…" : "Add post"}
 				</Button>
 			</form>
-			{errorMessage ? <p role="alert">{errorMessage}</p> : null}
+			{isError ? <p role="alert">{error.message}</p> : null}
 		</section>
 	);
 }

@@ -1,13 +1,11 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useId } from "react";
-import type { Post } from "@/db/schema/posts";
+import { postsQueryOptions } from "@/features/posts/api/posts.queries";
 import { DeletePostForm } from "./delete-post-form";
 
-type PostListProps = {
-	posts: Post[];
-};
-
-export function PostList({ posts }: PostListProps) {
+export function PostList() {
 	const headingId = useId();
+	const { data: posts } = useSuspenseQuery(postsQueryOptions);
 
 	return (
 		<section aria-labelledby={headingId}>
