@@ -29,7 +29,7 @@ function createWrapper(queryClient: QueryClient) {
 test("useDeletePost starts idle and reports a pending mutation", async () => {
 	const queryClient = createQueryClient();
 	const post: Post = { id: 1, title: "Deleted post" };
-	let resolveDeletePost: (value: Post[]) => void = () => {};
+	let resolveDeletePost!: (value: Post[]) => void;
 	vi.mocked(deletePost).mockReturnValueOnce(
 		new Promise((resolve) => {
 			resolveDeletePost = resolve;

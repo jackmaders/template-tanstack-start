@@ -42,7 +42,7 @@ function getWebServerConfig() {
 		return {};
 	}
 
-	const steps = []; // ["bun run db:migrate", "bun run db:seed"];
+	const steps = ["bun run db:migrate"];
 
 	if (usePreview) {
 		steps.push("bun run preview");

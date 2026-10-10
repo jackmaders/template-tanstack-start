@@ -17,7 +17,7 @@ export const createServerFn = vi.fn(() => {
 		handler(handler) {
 			return async (options = {}) => {
 				const data = validator ? validator.parse(options.data) : options.data;
-				return handler({ data });
+				return await handler({ data });
 			};
 		},
 		validator(schema) {

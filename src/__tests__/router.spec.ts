@@ -18,9 +18,7 @@ test("shows a high priority toast when a mutation fails", async () => {
 	const error = new Error("mutation failed");
 	const { queryClient } = router.options.context;
 	const mutation = queryClient.getMutationCache().build(queryClient, {
-		mutationFn: async () => {
-			throw error;
-		},
+		mutationFn: () => Promise.reject(error),
 	});
 
 	await expect(mutation.execute(undefined)).rejects.toBe(error);

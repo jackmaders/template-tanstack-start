@@ -58,7 +58,6 @@
 		"cf:preview": "wrangler dev dist/server/index.js -c dist/server/wrangler.json --persist-to .wrangler/state --var BETTER_AUTH_URL:http://localhost:8787",
 		"db:generate": "drizzle-kit generate --config=.config/drizzle.config.ts",
 		"db:migrate": "wrangler d1 migrations apply DB --local --persist-to .wrangler/state -c .config/wrangler.json",
-		"db:seed": "wrangler d1 execute DB --local --file=src/db/seed/seed.sql --persist-to .wrangler/state -c .config/wrangler.json",
 		"dev": "vite dev -c .config/vite.config.ts",
 		"lint": "biome check --config-path=.config/biome.json .",
 		"lint:ci": "biome ci --config-path=.config/biome.json .",

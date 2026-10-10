@@ -10,11 +10,8 @@ interface FormHarnessProps {
 	onSubmit: () => void | Promise<void>;
 }
 
-export function FormHarness({
-	onError,
-	onParentSubmit,
-	onSubmit,
-}: FormHarnessProps) {
+// biome-ignore lint/style/useComponentExportOnlyModules: Test-only helper should stay local.
+function FormHarness({ onError, onParentSubmit, onSubmit }: FormHarnessProps) {
 	const form = useAppForm({ defaultValues: {}, onSubmit });
 
 	return (
@@ -53,9 +50,7 @@ test("passes a rejected form submission to onError", async () => {
 	const error = new Error("Submission failed");
 	const onError = vi.fn();
 	const onParentSubmit = vi.fn();
-	const onSubmit = vi.fn(async () => {
-		throw error;
-	});
+	const onSubmit = vi.fn(() => Promise.reject(error));
 	const { getByRole } = render(
 		<FormHarness
 			onError={onError}

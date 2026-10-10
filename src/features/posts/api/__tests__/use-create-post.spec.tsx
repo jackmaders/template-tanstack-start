@@ -28,7 +28,7 @@ function createWrapper(queryClient: QueryClient) {
 test("useCreatePost starts idle and reports a pending mutation", async () => {
 	const queryClient = createQueryClient();
 	const post: Post = { id: 1, title: "Created post" };
-	let resolveCreatePost: (value: Post) => void = () => {};
+	let resolveCreatePost!: (value: Post) => void;
 	vi.mocked(createPost).mockReturnValueOnce(
 		new Promise((resolve) => {
 			resolveCreatePost = resolve;

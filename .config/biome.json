@@ -25,7 +25,10 @@
 				"preset": "all",
 				"useExportsLast": "off"
 			},
-			"suspicious": { "preset": "none" }
+			"suspicious": {
+				"noReactSpecificProps": "off",
+				"preset": "all"
+			}
 		}
 	},
 	"overrides": [
