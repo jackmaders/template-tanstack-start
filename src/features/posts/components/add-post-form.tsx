@@ -12,7 +12,7 @@ import { useCreatePost } from "@/features/posts/api/use-create-post";
 import { createPostSchema } from "../api/posts.schema";
 
 export function AddPostForm() {
-	const { isPending, mutateAsync: createPost } = useCreatePost();
+	const { mutateAsync: createPost } = useCreatePost();
 
 	const form = useAppForm({
 		defaultValues: { title: "" },
@@ -48,9 +48,7 @@ export function AddPostForm() {
 						</form.AppField>
 					</CardContent>
 					<CardFooter>
-						<form.SubmitButton disabled={isPending} type="submit">
-							Add post
-						</form.SubmitButton>
+						<form.SubmitButton type="submit">Add post</form.SubmitButton>
 					</CardFooter>
 				</Card>
 			</form.Form>

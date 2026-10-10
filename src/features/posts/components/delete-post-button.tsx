@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import { type ComponentProps, type MouseEvent, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import type { Post } from "@/features/posts/api/posts.schema";
 import { useDeletePost } from "@/features/posts/api/use-delete-post";
@@ -16,14 +16,19 @@ export function DeletePostButton({
 }: DeletePostButtonProps) {
 	const { isPending, mutate: deletePost } = useDeletePost();
 
+	const handleOnClick = useCallback(
+		(event: MouseEvent<HTMLButtonElement>) => {
+			deletePost({ id: post.id });
+			onClick?.(event);
+		},
+		[deletePost, onClick, post],
+	);
+
 	return (
 		<Button
 			{...props}
 			disabled={disabled || isPending}
-			onClick={(e) => {
-				deletePost({ id: post.id });
-				onClick?.(e);
-			}}
+			onClick={handleOnClick}
 			type={type}
 		>
 			{`Delete ${post.title}`}
