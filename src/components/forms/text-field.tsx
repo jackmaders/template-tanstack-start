@@ -21,12 +21,12 @@ type TextFieldProps = Omit<
 	label: string;
 };
 
-export function TextField({ label, ...inputProps }: TextFieldProps) {
+export function TextField({ label, ...props }: TextFieldProps) {
 	const field = useFieldContext<string>();
 	const id = useId();
 	const errorId = `${id}-error`;
-	const errors = field.state.meta.errors;
-	const isInvalid = errors.length > 0;
+	const { errors, isTouched, isValid } = field.state.meta;
+	const isInvalid = !isValid && isTouched;
 
 	const handleChange = useCallback(
 		(event: ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +39,7 @@ export function TextField({ label, ...inputProps }: TextFieldProps) {
 		<Field data-invalid={isInvalid}>
 			<FieldLabel htmlFor={id}>{label}</FieldLabel>
 			<Input
-				{...inputProps}
+				{...props}
 				aria-describedby={isInvalid ? errorId : undefined}
 				aria-invalid={isInvalid}
 				id={id}
@@ -48,7 +48,7 @@ export function TextField({ label, ...inputProps }: TextFieldProps) {
 				onChange={handleChange}
 				value={field.state.value}
 			/>
-			<FieldError errors={errors} id={errorId} />
+			<FieldError errors={errors} hidden={!isInvalid} id={errorId} />
 		</Field>
 	);
 }

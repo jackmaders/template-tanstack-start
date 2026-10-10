@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useId } from "react";
 import { postsQueryOptions } from "@/features/posts/api/posts.queries";
-import { DeletePostForm } from "./delete-post-form";
+import { DeletePostButton } from "./delete-post-button";
 
 export function PostList() {
 	const headingId = useId();
@@ -21,7 +21,7 @@ export function PostList() {
 					{posts.map((post) => (
 						<li key={post.id}>
 							<p>{post.title}</p>
-							<DeletePostForm post={post} />
+							<DeletePostButton post={post} />
 						</li>
 					))}
 				</ul>

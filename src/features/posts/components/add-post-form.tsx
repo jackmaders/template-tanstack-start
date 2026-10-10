@@ -12,16 +12,20 @@ import { useCreatePost } from "@/features/posts/api/use-create-post";
 import { createPostSchema } from "../api/posts.schema";
 
 export function AddPostForm() {
-	const { isPending, mutate: createPost } = useCreatePost();
+	const { isPending, mutateAsync: createPost } = useCreatePost();
 
 	const form = useAppForm({
 		defaultValues: { title: "" },
 		validationLogic: revalidateLogic(),
-		validators: { onDynamic: createPostSchema },
-		onSubmit: ({ value }) => {
-			createPost(createPostSchema.parse(value), {
-				onSuccess: () => form.reset(),
-			});
+		validators: {
+			onMount: createPostSchema,
+			onDynamic: createPostSchema,
+			onSubmit: createPostSchema,
+		},
+		onSubmit: async ({ value }) => {
+			await createPost(createPostSchema.parse(value));
+			form.reset();
+			await form.validate("mount");
 		},
 	});
 
