@@ -1,14 +1,9 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { POST_TITLE_MAX_LENGTH } from "@/db/schema/posts";
-import {
-	mutateAsync,
-	resetCreatePostMock,
-} from "@/features/posts/api/__mocks__/use-create-post";
+import { mutateAsync } from "@/features/posts/api/__mocks__/use-create-post";
 import { AddPostForm } from "../add-post-form";
 
 vi.mock("@/features/posts/api/use-create-post");
-
-beforeEach(() => resetCreatePostMock());
 
 function getForm() {
 	const form = screen
@@ -61,7 +56,7 @@ test("shows validation for a whitespace-only title and allows correction", async
 });
 
 test("creates a post and resets the form after successful submission", async () => {
-	mutateAsync.mockResolvedValue({ id: 1, title: "A useful post" });
+	mutateAsync.mockResolvedValueOnce({ id: 1, title: "A useful post" });
 	render(<AddPostForm />);
 
 	const titleInput = screen.getByRole("textbox", { name: "Post title" });
