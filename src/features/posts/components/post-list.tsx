@@ -20,7 +20,7 @@ export function PostList() {
 				<ul>
 					{posts.map((post) => (
 						<li key={post.id}>
-							<p>{post.name}</p>
+							<p>{post.title}</p>
 							<DeletePostForm post={post} />
 						</li>
 					))}

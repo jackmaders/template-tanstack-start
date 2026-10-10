@@ -141,4 +141,20 @@ body {
 	html {
 		@apply font-sans;
 	}
+
+	h1 {
+		@apply text-3xl font-semibold tracking-tight;
+	}
+
+	h2 {
+		@apply text-2xl font-semibold tracking-tight;
+	}
+
+	h3 {
+		@apply text-xl font-semibold tracking-tight;
+	}
+
+	p {
+		@apply leading-7;
+	}
 }

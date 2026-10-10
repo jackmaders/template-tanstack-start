@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { listPosts } from "./posts.functions";
+import { listPostsFn } from "./posts.functions";
 
 export const postKeys = {
 	all: ["posts"] as const,
@@ -7,5 +7,5 @@ export const postKeys = {
 
 export const postsQueryOptions = queryOptions({
 	queryKey: postKeys.all,
-	queryFn: () => listPosts(),
+	queryFn: () => listPostsFn(),
 });

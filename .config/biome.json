@@ -19,7 +19,7 @@
 			"!!**/playwright-report",
 			"!!**/.lighthouseci",
 			"!**/src/routeTree.gen.ts",
-			"!**/src/cloudflare-env.d.ts"
+			"!**/src/types/cloudflare-env.d.ts"
 		]
 	},
 	"plugins": [

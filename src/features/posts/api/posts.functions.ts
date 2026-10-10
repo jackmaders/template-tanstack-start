@@ -1,15 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
-import { deletePostSchema, insertPostSchema } from "./posts.schema";
-import { addPost, getPosts, removePost } from "./posts.server";
+import { createPostSchema, deletePostSchema } from "./posts.schema";
+import { createPost, deletePost, listPosts } from "./posts.server";
 
-export const listPosts = createServerFn({ method: "GET" }).handler(() =>
-	getPosts(),
+export const listPostsFn = createServerFn({ method: "GET" }).handler(() =>
+	listPosts(),
 );
 
-export const createPost = createServerFn({ method: "POST" })
-	.validator(insertPostSchema)
-	.handler(({ data }) => addPost(data));
+export const createPostFn = createServerFn({ method: "POST" })
+	.validator(createPostSchema)
+	.handler(({ data }) => createPost(data));
 
-export const deletePost = createServerFn({ method: "POST" })
+export const deletePostFn = createServerFn({ method: "POST" })
 	.validator(deletePostSchema)
-	.handler(({ data }) => removePost(data.id));
+	.handler(({ data }) => deletePost(data.id));

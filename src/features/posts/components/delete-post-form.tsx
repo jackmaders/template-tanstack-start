@@ -1,4 +1,4 @@
-import { type FormEvent, useCallback } from "react";
+import { type SubmitEvent, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import type { Post } from "@/features/posts/api/posts.schema";
 import { useDeletePost } from "@/features/posts/api/use-delete-post";
@@ -11,7 +11,7 @@ export function DeletePostForm({ post }: DeletePostFormProps) {
 	const { isError, isPending, mutate: deletePost, error } = useDeletePost();
 
 	const handleSubmit = useCallback(
-		(event: FormEvent<HTMLFormElement>) => {
+		(event: SubmitEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			deletePost({ id: post.id });
 		},
@@ -22,7 +22,7 @@ export function DeletePostForm({ post }: DeletePostFormProps) {
 		<>
 			<form onSubmit={handleSubmit}>
 				<Button
-					aria-label={`Delete ${post.name}`}
+					aria-label={`Delete ${post.title}`}
 					disabled={isPending}
 					type="submit"
 				>

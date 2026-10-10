@@ -1,0 +1,40 @@
+{
+	"version": "7",
+	"dialect": "sqlite",
+	"id": "af648fae-9602-47ca-a3fa-563fd32f6166",
+	"prevIds": ["86057c13-3f99-417e-817e-72a60c65dd7a"],
+	"ddl": [
+		{
+			"name": "posts",
+			"entityType": "tables"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": true,
+			"default": null,
+			"generated": null,
+			"name": "id",
+			"entityType": "columns",
+			"table": "posts"
+		},
+		{
+			"type": "text(160)",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "name",
+			"entityType": "columns",
+			"table": "posts"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "posts_pk",
+			"table": "posts",
+			"entityType": "pks"
+		}
+	],
+	"renames": []
+}
