@@ -7,13 +7,7 @@
 	"files": {
 		"includes": [
 			"**",
-			"!!**/dist",
-			"!!**/coverage",
-			"!!**/public",
-			"!!**/.wrangler",
-			"!!**/test-results",
-			"!!**/playwright-report",
-			"!!**/.lighthouseci",
+			"!!**/{dist,coverage,public,.wrangler,test-results,playwright-report,.lighthouseci}",
 			"!**/src/routeTree.gen.ts",
 			"!**/src/types/cloudflare-env.d.ts"
 		]
@@ -25,7 +19,12 @@
 			"nursery": { "preset": "all" },
 			"performance": { "preset": "all", "useSolidForComponent": "off" },
 			"security": { "noSecrets": "off", "preset": "all" },
-			"style": { "noTernary": "off", "preset": "all", "useExportsLast": "off" },
+			"style": {
+				"noJsxLiterals": "off",
+				"noTernary": "off",
+				"preset": "all",
+				"useExportsLast": "off"
+			},
 			"suspicious": { "preset": "none" }
 		}
 	},
