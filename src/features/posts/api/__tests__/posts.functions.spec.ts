@@ -1,6 +1,5 @@
-import { deletePost } from "../__mocks__/posts.server";
 import { createPostFn, deletePostFn, listPostsFn } from "../posts.functions";
-import { createPost, listPosts } from "../posts.server";
+import { createPost, deletePost, listPosts } from "../posts.server";
 
 vi.mock("@tanstack/react-start");
 vi.mock("../posts.server");
@@ -25,4 +24,19 @@ test("validates and forwards delete request", async () => {
 
 	deletePostFn({ data: { id } });
 	expect(deletePost).toHaveBeenCalledWith(id);
+});
+
+test("registers the correct schemas", async () => {
+	vi.resetModules();
+
+	const { createServerFn } = await import("@tanstack/react-start");
+	const { createPostSchema, deletePostSchema } = await import(
+		"../posts.schema"
+	);
+	await import("../posts.functions");
+
+	const builder = vi.mocked(createServerFn).mock.results[0]?.value;
+
+	expect(builder?.validator).toHaveBeenNthCalledWith(1, createPostSchema);
+	expect(builder?.validator).toHaveBeenNthCalledWith(2, deletePostSchema);
 });
