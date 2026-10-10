@@ -1,6 +1,5 @@
 import { revalidateLogic } from "@tanstack/react-form";
 import { useAppForm } from "@/components/forms/app-form";
-import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -46,9 +45,9 @@ export function AddPostForm() {
 						</form.AppField>
 					</CardContent>
 					<CardFooter>
-						<Button disabled={isPending} type="submit">
+						<form.SubmitButton disabled={isPending} type="submit">
 							Add post
-						</Button>
+						</form.SubmitButton>
 					</CardFooter>
 				</Card>
 			</form.Form>
