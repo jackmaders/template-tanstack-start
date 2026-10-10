@@ -25,14 +25,26 @@
 			"nursery": { "preset": "all" },
 			"performance": { "preset": "all", "useSolidForComponent": "off" },
 			"security": { "noSecrets": "off", "preset": "all" },
-			"style": { "noDefaultExport": "error", "preset": "none" },
+			"style": { "noTernary": "off", "preset": "all", "useExportsLast": "off" },
 			"suspicious": { "preset": "none" }
 		}
 	},
 	"overrides": [
 		{
 			"includes": ["**/*.config.*"],
-			"linter": { "rules": { "style": { "noDefaultExport": "off" } } }
+			"linter": {
+				"rules": {
+					"style": {
+						"noDefaultExport": "off",
+						"noProcessEnv": "off",
+						"useNamingConvention": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": ["**/__tests__/*.spec.*"],
+			"linter": { "rules": { "style": { "noMagicNumbers": "off" } } }
 		}
 	],
 	"plugins": [

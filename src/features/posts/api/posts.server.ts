@@ -3,8 +3,14 @@ import { getDb } from "@/db/db.server";
 import { posts } from "@/db/schema/posts";
 import type { PostCreate } from "./posts.schema";
 
+const LIST_POSTS_LIMIT = 50;
+
 export async function listPosts(db = getDb()) {
-	return await db.select().from(posts).orderBy(desc(posts.id)).limit(50);
+	return await db
+		.select()
+		.from(posts)
+		.orderBy(desc(posts.id))
+		.limit(LIST_POSTS_LIMIT);
 }
 
 export async function createPost(values: PostCreate, db = getDb()) {
