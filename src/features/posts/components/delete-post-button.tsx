@@ -7,15 +7,24 @@ interface DeletePostButtonProps extends ComponentProps<"button"> {
 	post: Post;
 }
 
-export function DeletePostButton({ post, ...props }: DeletePostButtonProps) {
+export function DeletePostButton({
+	post,
+	disabled,
+	onClick,
+	type = "button",
+	...props
+}: DeletePostButtonProps) {
 	const { isPending, mutate: deletePost } = useDeletePost();
 
 	return (
 		<Button
-			disabled={isPending}
-			onClick={() => deletePost({ id: post.id })}
-			type="button"
 			{...props}
+			disabled={disabled || isPending}
+			onClick={(e) => {
+				deletePost({ id: post.id });
+				onClick?.(e);
+			}}
+			type={type}
 		>
 			{`Delete ${post.title}`}
 		</Button>

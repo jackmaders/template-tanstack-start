@@ -1,18 +1,20 @@
 import { type ComponentProps, type SubmitEvent, useCallback } from "react";
 import { useFormContext } from "./form-context";
 
-type FormProps = Omit<ComponentProps<"form">, "onSubmit">;
+interface FormProps extends Omit<ComponentProps<"form">, "onSubmit"> {
+	onError?: (error: unknown) => void;
+}
 
-export function Form(props: FormProps) {
+export function Form({ onError, ...props }: FormProps) {
 	const form = useFormContext();
 
 	const handleSubmit = useCallback(
-		(event: SubmitEvent<HTMLFormElement>) => {
+		async (event: SubmitEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			event.stopPropagation();
-			void form.handleSubmit();
+			await form.handleSubmit().catch(onError);
 		},
-		[form],
+		[form, onError],
 	);
 
 	return <form onSubmit={handleSubmit} {...props} />;
