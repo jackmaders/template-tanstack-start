@@ -4,6 +4,8 @@ import { posts } from "@/db/schema/posts";
 import { createPost, deletePost, listPosts } from "../posts.server";
 
 vi.mock("@/db/db.server.ts");
+
+// biome-ignore lint/suspicious/noExplicitAny: allow any db methods on the mock
 const db = getDb() as any;
 
 test("lists posts by descending id with the configured limit", async () => {
