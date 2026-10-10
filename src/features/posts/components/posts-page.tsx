@@ -5,9 +5,7 @@ export function PostsPage() {
 	return (
 		<main>
 			<header>
-				<p>Your workspace</p>
-				<h1>Posts</h1>
-				<p>A simple place to collect ideas. Add a post to get started.</p>
+				<h1>Welcome to TanStack Start</h1>
 			</header>
 
 			<AddPostForm />
