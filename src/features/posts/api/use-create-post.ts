@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/ui/toast-manager";
 import { createPostFn } from "./posts.functions";
 import { postKeys } from "./posts.queries";
 import type { PostCreate } from "./posts.schema";
