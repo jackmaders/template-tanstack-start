@@ -12,14 +12,14 @@ test("lists posts and returns the server result", async () => {
 	expect(listPosts).toHaveBeenCalledOnce();
 });
 
-test("validates and forwards new post data", async () => {
+test("validates and forwards new post data", () => {
 	const data = { title: "test" };
 
 	createPostFn({ data });
 	expect(createPost).toHaveBeenCalledWith(data);
 });
 
-test("validates and forwards delete request", async () => {
+test("validates and forwards delete request", () => {
 	const id = 1;
 
 	deletePostFn({ data: { id } });

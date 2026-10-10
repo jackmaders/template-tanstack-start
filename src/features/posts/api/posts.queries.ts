@@ -6,6 +6,6 @@ export const postKeys = {
 };
 
 export const postsQueryOptions = queryOptions({
-	queryFn: () => listPostsFn(),
+	queryFn: listPostsFn,
 	queryKey: postKeys.all,
 });
