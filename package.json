@@ -68,6 +68,7 @@
 		"test:coverage": "vitest --run --coverage -c .config/vitest.config.ts",
 		"test:e2e": "playwright test -c .config/playwright.config.ts",
 		"test:perf": "lhci autorun --config=.config/lighthouserc.json",
+		"test:watch": "vitest -c .config/vitest.config.ts",
 		"validate": "bun run build && bun run lint && bun run lint:types && bun run lint:unused && bun run test"
 	},
 	"type": "module"
