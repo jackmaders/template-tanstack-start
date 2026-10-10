@@ -7,7 +7,8 @@ const config: KnipConfig = {
 		"src/server.ts!",
 		"src/start.ts!",
 	],
-
+	ignore: ["src/components/ui/*"],
+	ignoreDependencies: ["cloudflare"],
 	ignoreExportsUsedInFile: true,
 	treatConfigHintsAsErrors: true,
 	rules: {

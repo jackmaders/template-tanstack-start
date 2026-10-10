@@ -1,5 +1,7 @@
 import { getRouter } from "../router";
 
+vi.mock("@/db/db.server.ts");
+
 test("creates the application router with its navigation defaults", () => {
 	const router = getRouter();
 
