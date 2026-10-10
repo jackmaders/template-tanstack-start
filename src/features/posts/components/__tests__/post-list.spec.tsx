@@ -13,7 +13,9 @@ vi.mock("@tanstack/react-start");
 
 function renderPostList(posts: Post[]) {
 	const queryClient = new QueryClient({
-		defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+		defaultOptions: {
+			queries: { retry: false, staleTime: Number.POSITIVE_INFINITY },
+		},
 	});
 	queryClient.setQueryData(postKeys.all, posts);
 

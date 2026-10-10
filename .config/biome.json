@@ -38,65 +38,15 @@
 			"types": "all"
 		},
 		"rules": {
-			"a11y": "error",
-			"security": {
-				"preset": "all",
-				"noSecrets": "off"
-			},
-			"complexity": {
-				"noImplicitCoercions": "error"
-			},
-			"nursery": {
-				"noFloatingPromises": "error",
-				"noMisusedPromises": "error",
-				"noTailwindArbitraryValue": "error",
-				"noUnsafeTypeAssertion": "error",
-				"noUnusedClasses": "error",
-				"useConsistentTestIt": {
-					"level": "error",
-					"options": {
-						"function": "test",
-						"withinDescribe": "test"
-					}
-				},
-				"useSortedClasses": "error"
-			},
-			"performance": {
-				"noAwaitInLoops": "error",
-				"noNamespaceImport": "error",
-				"noReExportAll": "error",
-				"useTopLevelRegex": "error"
-			},
-			"style": {
-				"useBlockStatements": "error",
-				"useNamingConvention": {
-					"level": "error",
-					"options": { "strictCase": false }
-				}
-			},
-			"suspicious": {
-				"noConsole": "error",
-				"noConstantBinaryExpressions": "error",
-				"noFocusedTests": "error",
-				"noImportCycles": "error",
-				"noSkippedTests": "error",
-				"noUnusedExpressions": "error",
-				"noVar": "error"
-			}
+			"a11y": { "preset": "all" },
+			"security": { "preset": "all", "noSecrets": "off" },
+			"complexity": { "preset": "all" },
+			"nursery": { "preset": "all" },
+			"performance": { "preset": "all", "useSolidForComponent": "off" },
+			"style": { "preset": "none" },
+			"suspicious": { "preset": "none" }
 		}
 	},
-	"overrides": [
-		{
-			"includes": ["src/components/ui/**"],
-			"linter": {
-				"rules": {
-					"nursery": {
-						"noTailwindArbitraryValue": "off"
-					}
-				}
-			}
-		}
-	],
 	"assist": {
 		"actions": {
 			"source": {

@@ -2,22 +2,24 @@ import type { ReactNode } from "react";
 import { vi } from "vitest";
 import type { useFormContext as useOriginalFormContext } from "../form-context";
 
-type FormState = { canSubmit: boolean };
+interface FormState {
+	canSubmit: boolean;
+}
 
-type SubscribeProps = {
-	selector: (state: FormState) => boolean;
+interface SubscribeProps {
 	children: (selected: boolean) => ReactNode;
-};
+	selector: (state: FormState) => boolean;
+}
 
 type FormContext = ReturnType<typeof useOriginalFormContext>;
 
-type FieldState = {
-	name: string;
-	value: string;
+interface FieldState {
 	errors: Array<{ message?: string } | undefined>;
 	isTouched: boolean;
 	isValid: boolean;
-};
+	name: string;
+	value: string;
+}
 
 let canSubmit = true;
 let fieldState: FieldState = {

@@ -4,11 +4,11 @@ import { vi } from "vitest";
 import { useAppForm } from "../app-form";
 import { Form } from "../form";
 
-type FormHarnessProps = {
+interface FormHarnessProps {
 	onError: (error: unknown) => void;
 	onParentSubmit: NonNullable<ComponentProps<"div">["onSubmit"]>;
 	onSubmit: () => void | Promise<void>;
-};
+}
 
 export function FormHarness({
 	onError,

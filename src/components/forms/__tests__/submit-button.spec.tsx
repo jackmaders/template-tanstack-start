@@ -32,7 +32,7 @@ test("disables the button when the form cannot submit", () => {
 
 test("keeps an explicitly disabled button disabled when the form can submit", () => {
 	render(
-		<SubmitButton disabled type="button">
+		<SubmitButton disabled={true} type="button">
 			Save
 		</SubmitButton>,
 	);

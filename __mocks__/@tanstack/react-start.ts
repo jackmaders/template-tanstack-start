@@ -1,13 +1,15 @@
 import { vi } from "vitest";
 
-type Validator = { parse: (data: unknown) => unknown };
+interface Validator {
+	parse: (data: unknown) => unknown;
+}
 type Handler = (options: { data: unknown }) => unknown;
-type ServerFnBuilder = {
-	validator: (schema: Validator) => ServerFnBuilder;
+interface ServerFnBuilder {
 	handler: (
 		handler: Handler,
 	) => (options?: { data?: unknown }) => Promise<unknown>;
-};
+	validator: (schema: Validator) => ServerFnBuilder;
+}
 
 export const createServerFn = vi.fn(() => {
 	let validator: Validator | undefined;

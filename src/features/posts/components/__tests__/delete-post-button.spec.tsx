@@ -37,7 +37,7 @@ test("renders a delete button and calls the mutation and click handler", () => {
 });
 
 test("disables the button when the disabled prop is true", () => {
-	render(<DeletePostButton disabled post={post} />);
+	render(<DeletePostButton disabled={true} post={post} />);
 
 	const button = screen.getByRole("button", {
 		name: "Delete A post to remove",

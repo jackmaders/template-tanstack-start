@@ -1,16 +1,16 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const isCI = Boolean(process.env.CI);
+const isCi = Boolean(process.env.CI);
 const usePreview = process.env.E2E_USE_PREVIEW === "true";
-const externalBaseURL = process.env.E2E_BASE_URL?.trim();
+const externalBaseUrl = process.env.E2E_BASE_URL?.trim();
 
-const devBaseURL = "http://localhost:5173";
-const previewBaseURL = "http://localhost:8787";
+const devBaseUrl = "http://localhost:5173";
+const previewBaseUrl = "http://localhost:8787";
 
-const baseURL = externalBaseURL || (usePreview ? previewBaseURL : devBaseURL);
+const baseUrl = externalBaseUrl || (usePreview ? previewBaseUrl : devBaseUrl);
 
 export default defineConfig({
-	forbidOnly: isCI,
+	forbidOnly: isCi,
 	fullyParallel: true,
 	projects: [
 		{
@@ -26,19 +26,19 @@ export default defineConfig({
 			use: { ...devices["Desktop Safari"] },
 		},
 	],
-	reporter: isCI ? "github" : "list",
-	retries: isCI ? 2 : 0,
+	reporter: isCi ? "github" : "list",
+	retries: isCi ? 2 : 0,
 	testDir: "../browser-tests",
 	use: {
-		baseURL,
+		baseURL: baseUrl,
 		trace: "on-first-retry",
 	},
-	workers: isCI ? 1 : undefined,
+	workers: isCi ? 1 : undefined,
 	...getWebServerConfig(),
 });
 
 function getWebServerConfig() {
-	if (externalBaseURL) {
+	if (externalBaseUrl) {
 		return {};
 	}
 
@@ -54,7 +54,7 @@ function getWebServerConfig() {
 		webServer: {
 			command: steps.join(" && "),
 			reuseExistingServer: false,
-			url: baseURL,
+			url: baseUrl,
 		},
 	};
 }
