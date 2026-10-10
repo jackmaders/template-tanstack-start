@@ -1,4 +1,3 @@
-import { QueryClient } from "@tanstack/react-query";
 import { vi } from "vitest";
 import {
 	postKeys,
@@ -18,8 +17,6 @@ test("postsQueryOptions returns posts from the query function", async () => {
 	const posts = [{ id: 1, title: "A post" }];
 	vi.mocked(listPosts).mockResolvedValueOnce(posts);
 
-	await expect(
-		new QueryClient().fetchQuery(postsQueryOptions),
-	).resolves.toEqual(posts);
+	await expect(postsQueryOptions.queryFn({} as never)).resolves.toEqual(posts);
 	expect(listPosts).toHaveBeenCalledOnce();
 });

@@ -1,31 +1,18 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
-import type { PropsWithChildren } from "react";
 import { vi } from "vitest";
 import { resetDeletePostMock } from "@/features/posts/api/__mocks__/use-delete-post";
-import { postKeys } from "@/features/posts/api/posts.queries";
 import type { Post } from "@/features/posts/api/posts.schema";
 import { PostList } from "../post-list";
 
+vi.mock("@tanstack/react-query");
 vi.mock("@/features/posts/api/use-delete-post");
 vi.mock("@/features/posts/api/posts.server");
 vi.mock("@tanstack/react-start");
 
 function renderPostList(posts: Post[]) {
-	const queryClient = new QueryClient({
-		defaultOptions: {
-			queries: { retry: false, staleTime: Number.POSITIVE_INFINITY },
-		},
-	});
-	queryClient.setQueryData(postKeys.all, posts);
-
-	function Wrapper({ children }: PropsWithChildren) {
-		return (
-			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-		);
-	}
-
-	return render(<PostList />, { wrapper: Wrapper });
+	vi.mocked(useSuspenseQuery).mockReturnValue({ data: posts } as never);
+	return render(<PostList />);
 }
 
 beforeEach(() => resetDeletePostMock());

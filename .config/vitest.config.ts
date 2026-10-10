@@ -5,6 +5,7 @@ export default defineConfig({
 		tsconfigPaths: true,
 	},
 	test: {
+		clearMocks: true,
 		coverage: {
 			exclude: [
 				"**/__tests__/**",
@@ -25,7 +26,6 @@ export default defineConfig({
 		environment: "happy-dom",
 		globals: true,
 		include: ["src/**/__tests__/*.spec.{ts,tsx}"],
-		mockReset: true,
 		setupFiles: ["@testing-library/jest-dom/vitest"],
 	},
 });
