@@ -5,12 +5,19 @@ import type { QueryClient } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
 	HeadContent,
+	type LinkComponentProps,
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/toast";
+import { AccountActions } from "@/features/account/components/account-actions";
 import appCss from "@/styles.css?inline";
+
+const links: LinkComponentProps[] = [
+	{ children: "Home", to: "/" },
+	{ children: "About", to: "/about" },
+];
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
@@ -52,7 +59,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<style>{appCss}</style>
 			</head>
 			<body>
-				<Navbar />
+				<Navbar actions={<AccountActions />} links={links} />
 				{children}
 				<Toaster />
 				<TanStackDevtools

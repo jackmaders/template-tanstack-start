@@ -10,33 +10,28 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { AccountActions } from "@/features/account/components/account-actions";
 
-const navigation: LinkComponentProps[] = [
-	{ children: "Home", to: "/" },
-	{ children: "About", to: "/about" },
-];
+interface NavbarProps extends ComponentProps<"header"> {
+	actions?: ReactNode;
+	links?: LinkComponentProps[];
+}
 
-interface NavbarProps extends ComponentProps<"header"> {}
-
-export function Navbar({ ...props }: NavbarProps) {
+export function Navbar({ links = [], actions, ...props }: NavbarProps) {
 	return (
 		<header {...props}>
 			<nav aria-label="Main navigation">
 				<div className="flex items-center justify-between gap-4">
 					<Link to="/">LOGO</Link>
 					<div className="max-sm:hidden flex gap-2">
-						{navigation.map((link) => (
+						{links.map((link) => (
 							<Link key={link.to} {...link} />
 						))}
 					</div>
-					<div className="max-sm:hidden flex items-center gap-2">
-						<AccountActions />
-					</div>
+					<div className="max-sm:hidden flex items-center gap-2">{actions}</div>
 					<MobileNavDrawer
-						actions={<AccountActions />}
+						actions={actions}
 						className="sm:hidden"
-						navigation={navigation}
+						navigation={links}
 					/>
 				</div>
 			</nav>
