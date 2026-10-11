@@ -6,15 +6,21 @@ import {
 	deletePost,
 	listPosts,
 } from "@/features/posts/api/posts.server";
+import { createDatabaseFixture } from "@/testing/fixtures/database";
+import { createPostFixture } from "@/testing/fixtures/post";
 
 vi.mock("@/db/db.server.ts");
 
-// biome-ignore lint/suspicious/noExplicitAny: allow any db methods on the mock
-const db = getDb() as any;
+let db: ReturnType<typeof createDatabaseFixture>;
+
+beforeEach(() => {
+	db = createDatabaseFixture();
+	vi.mocked(getDb, { deep: true, partial: true }).mockReturnValue(db);
+});
 
 test("lists posts by descending id with the configured limit", async () => {
 	// Arrange
-	const expectedPosts = [{ id: 2, title: "Newer post" }];
+	const expectedPosts = [createPostFixture({ id: 2, title: "Newer post" })];
 
 	vi.mocked(db.limit).mockReturnValueOnce(expectedPosts);
 
@@ -33,7 +39,7 @@ test("lists posts by descending id with the configured limit", async () => {
 test("creates and returns the inserted post", async () => {
 	// Arrange
 	const values = { title: "A new post" };
-	const post = { id: 1, ...values };
+	const post = createPostFixture(values);
 
 	vi.mocked(db.returning).mockReturnValueOnce([post]);
 
@@ -62,7 +68,7 @@ test("throws when creating a post returns no row", async () => {
 test("deletes and returns rows matching the post id", async () => {
 	// Arrange
 	const id = 7;
-	const deletedPosts = [{ id, title: "Old post" }];
+	const deletedPosts = [createPostFixture({ id, title: "Old post" })];
 	vi.mocked(db.returning).mockResolvedValueOnce(deletedPosts);
 
 	// Act

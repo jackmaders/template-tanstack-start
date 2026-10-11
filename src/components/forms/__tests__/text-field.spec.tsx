@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import { TextField } from "@/components/forms/text-field";
+import { createTextFieldFixture } from "@/testing/fixtures/text-field";
 
 vi.mock("@tanstack/react-form");
 
@@ -10,10 +11,10 @@ const { useFieldContext } = createFormHookContexts();
 
 test("renders a controlled text field with its label and forwarded props", () => {
 	// Arrange
-	vi.mocked(useFieldContext).mockReturnValueOnce({
-		name: "email",
-		state: { meta: { errors: [], isValid: true }, value: "ada@example.com" },
-	} as never);
+	vi.mocked(useFieldContext<string>, {
+		deep: true,
+		partial: true,
+	}).mockReturnValueOnce(createTextFieldFixture({ value: "ada@example.com" }));
 
 	// Act
 	render(
@@ -38,14 +39,12 @@ test("renders a controlled text field with its label and forwarded props", () =>
 test("forwards input changes and blur to the field handlers", async () => {
 	// Arrange
 	const user = userEvent.setup();
-	const handleChange = vi.fn();
-	const handleBlur = vi.fn();
-
-	vi.mocked(useFieldContext).mockReturnValueOnce({
-		handleBlur,
-		handleChange,
-		state: { meta: { errors: [], isValid: true } },
-	} as never);
+	const field = createTextFieldFixture();
+	const { handleChange, handleBlur } = field;
+	vi.mocked(useFieldContext<string>, {
+		deep: true,
+		partial: true,
+	}).mockReturnValueOnce(field);
 
 	// Act
 	render(<TextField label="Email address" />);
@@ -63,15 +62,18 @@ test("forwards input changes and blur to the field handlers", async () => {
 
 test("shows validation errors accessibly after an invalid field is touched", () => {
 	// Arrange
-	vi.mocked(useFieldContext).mockReturnValueOnce({
-		state: {
+	vi.mocked(useFieldContext<string>, {
+		deep: true,
+		partial: true,
+	}).mockReturnValueOnce(
+		createTextFieldFixture({
 			meta: {
 				errors: [{ message: "Enter a valid email address" }],
 				isTouched: true,
 				isValid: false,
 			},
-		},
-	} as never);
+		}),
+	);
 
 	// Act
 	render(<TextField label="Email address" />);
@@ -88,15 +90,18 @@ test("shows validation errors accessibly after an invalid field is touched", () 
 
 test("keeps validation errors hidden until the field is touched", () => {
 	// Arrange
-	vi.mocked(useFieldContext).mockReturnValueOnce({
-		state: {
+	vi.mocked(useFieldContext<string>, {
+		deep: true,
+		partial: true,
+	}).mockReturnValueOnce(
+		createTextFieldFixture({
 			meta: {
 				errors: [{ message: "Enter a valid email address" }],
 				isTouched: false,
 				isValid: false,
 			},
-		},
-	} as never);
+		}),
+	);
 
 	// Act
 	render(<TextField label="Email address" />);

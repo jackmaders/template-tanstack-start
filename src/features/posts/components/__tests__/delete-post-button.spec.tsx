@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useDeletePost } from "@/features/posts/api/use-delete-post";
 import { DeletePostButton } from "@/features/posts/components/delete-post-button";
+import { createPostFixture } from "@/testing/fixtures/post";
 
 vi.mock("@/features/posts/api/use-delete-post");
 
@@ -11,7 +12,7 @@ test("deletes the post when clicked", async () => {
 	const { mutate } = useDeletePost();
 
 	// Act
-	render(<DeletePostButton post={{ id: 1, title: "A post" }} />);
+	render(<DeletePostButton post={createPostFixture()} />);
 
 	const button = screen.getByRole("button", { name: "Delete A post" });
 	await user.click(button);
@@ -32,7 +33,7 @@ test("forwards props and calls the supplied click handler", async () => {
 		<DeletePostButton
 			className="custom-button"
 			onClick={onClick}
-			post={{ id: 1, title: "A post" }}
+			post={createPostFixture()}
 			type="submit"
 		/>,
 	);
@@ -48,13 +49,13 @@ test("forwards props and calls the supplied click handler", async () => {
 
 test("disables deletion while a mutation is pending", () => {
 	// Arrange
-	vi.mocked(useDeletePost).mockReturnValueOnce({
-		...useDeletePost(),
+	vi.mocked(useDeletePost, { partial: true }).mockReturnValueOnce({
 		isPending: true,
-	} as never);
+		mutate: useDeletePost().mutate,
+	});
 
 	// Act
-	render(<DeletePostButton post={{ id: 1, title: "A post" }} />);
+	render(<DeletePostButton post={createPostFixture()} />);
 
 	// Assert
 	expect(screen.getByRole("button")).toBeDisabled();
@@ -66,9 +67,7 @@ test("respects an explicitly disabled button", async () => {
 	const { mutate } = useDeletePost();
 
 	// Act
-	render(
-		<DeletePostButton disabled={true} post={{ id: 1, title: "A post" }} />,
-	);
+	render(<DeletePostButton disabled={true} post={createPostFixture()} />);
 
 	const button = screen.getByRole("button");
 	await user.click(button);
