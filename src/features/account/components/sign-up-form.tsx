@@ -6,11 +6,9 @@ import { signupSchema } from "@/features/account/api/account.schema";
 import { signUp } from "@/lib/auth/auth-client";
 
 interface SignUpFormProps
-	extends Omit<ComponentProps<typeof Form>, "children"> {
-	onSubmit: () => void;
-}
+	extends Omit<ComponentProps<typeof Form>, "children"> {}
 
-export function SignUpForm({ onSubmit, ...props }: SignUpFormProps) {
+export function SignUpForm({ ...props }: SignUpFormProps) {
 	const form = useAppForm({
 		defaultValues: { email: "", name: "", password: "" },
 		onSubmit: ({ value }) => signUp.email(value),

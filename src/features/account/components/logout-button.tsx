@@ -8,12 +8,9 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast-manager";
 import { signOut } from "@/lib/auth/auth-client";
 
-interface LogoutButtonProps extends ComponentProps<"button"> {
-	onSuccess?: () => void;
-}
+interface LogoutButtonProps extends ComponentProps<"button"> {}
 
 export function LogoutButton({
-	onSuccess,
 	children = "Log out",
 	disabled,
 	onClick,
