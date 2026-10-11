@@ -1,29 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { toast } from "@/components/ui/toast-manager";
 import { LogoutButton } from "@/features/account/components/logout-button";
 import { signOut } from "@/lib/auth/auth-client";
-import { advanceTimers } from "@/testing/utils/advance-timers";
-import { resolveWithDelay } from "@/testing/utils/resolve-with-delay";
 
 vi.mock("@/lib/auth/auth-client");
 vi.mock("@/components/ui/toast-manager");
-
-let user: ReturnType<typeof userEvent.setup>;
-
-beforeEach(() => {
-	vi.useFakeTimers({
-		shouldAdvanceTime: true,
-		toFake: ["setTimeout", "clearTimeout"],
-	});
-
-	user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-});
-
-afterEach(() => {
-	vi.clearAllTimers();
-	vi.useRealTimers();
-});
 
 test("renders the default label and button type", () => {
 	// Act
@@ -55,6 +37,8 @@ test("respects the disabled prop", () => {
 });
 
 test("does not sign out when disabled", async () => {
+	// Arrange
+	const user = userEvent.setup();
 	// Act
 	render(<LogoutButton disabled={true} />);
 	await user.click(screen.getByRole("button"));
@@ -64,15 +48,18 @@ test("does not sign out when disabled", async () => {
 
 test("enables the button and clears its busy state after completion", async () => {
 	// Arrange
-
+	const user = userEvent.setup();
 	const response = { data: { success: true }, error: null };
-
-	vi.mocked(signOut).mockImplementationOnce(() => resolveWithDelay(response));
+	const { promise, resolve } = Promise.withResolvers();
+	vi.mocked(signOut).mockReturnValueOnce(promise);
 
 	// Act
 	render(<LogoutButton />);
 	await user.click(screen.getByRole("button"));
-	await advanceTimers();
+	await act(async () => {
+		resolve(response);
+		await promise;
+	});
 
 	// Assert
 	expect(screen.getByRole("button")).toBeEnabled();
@@ -81,14 +68,19 @@ test("enables the button and clears its busy state after completion", async () =
 
 test("calls the click callback after completion", async () => {
 	// Arrange
+	const user = userEvent.setup();
 	const onClick = vi.fn();
 	const response = { data: { success: true }, error: null };
-	vi.mocked(signOut).mockImplementationOnce(() => resolveWithDelay(response));
+	const { promise, resolve } = Promise.withResolvers();
+	vi.mocked(signOut).mockReturnValueOnce(promise);
 
 	// Act
 	render(<LogoutButton onClick={onClick} />);
 	await user.click(screen.getByRole("button"));
-	await advanceTimers();
+	await act(async () => {
+		resolve(response);
+		await promise;
+	});
 
 	// Assert
 	expect(onClick).toHaveBeenCalledOnce();
@@ -96,14 +88,19 @@ test("calls the click callback after completion", async () => {
 
 test("does not show a toast on success", async () => {
 	// Arrange
+	const user = userEvent.setup();
 	const response = { data: { success: true }, error: null };
-	vi.mocked(signOut).mockImplementationOnce(() => resolveWithDelay(response));
+	const { promise, resolve } = Promise.withResolvers();
+	vi.mocked(signOut).mockReturnValueOnce(promise);
 
 	// Act
 	render(<LogoutButton />);
 	await user.click(screen.getByRole("button"));
 
-	await advanceTimers();
+	await act(async () => {
+		resolve(response);
+		await promise;
+	});
 
 	// Assert
 	expect(toast.add).not.toHaveBeenCalled();
@@ -111,6 +108,7 @@ test("does not show a toast on success", async () => {
 
 test("shows server errors in a toast", async () => {
 	// Arrange
+	const user = userEvent.setup();
 	vi.mocked(signOut).mockResolvedValueOnce({
 		data: null,
 		error: {
@@ -132,6 +130,7 @@ test("shows server errors in a toast", async () => {
 
 test("enables the button after a failed logout", async () => {
 	// Arrange
+	const user = userEvent.setup();
 
 	vi.mocked(signOut).mockResolvedValueOnce({
 		data: null,
@@ -150,6 +149,7 @@ test("enables the button after a failed logout", async () => {
 
 test("calls the click callback after a failed logout", async () => {
 	// Arrange
+	const user = userEvent.setup();
 	const onClick = vi.fn();
 
 	vi.mocked(signOut).mockResolvedValueOnce({
@@ -169,9 +169,11 @@ test("calls the click callback after a failed logout", async () => {
 
 test("disables the button, marks it busy, and defers the callback while pending", async () => {
 	// Arrange
+	const user = userEvent.setup();
 	const onClick = vi.fn();
 	const response = { data: { success: true }, error: null };
-	vi.mocked(signOut).mockImplementationOnce(() => resolveWithDelay(response));
+	const { promise, resolve } = Promise.withResolvers();
+	vi.mocked(signOut).mockReturnValueOnce(promise);
 	// Act
 	render(<LogoutButton onClick={onClick} />);
 	await user.click(screen.getByRole("button"));
@@ -179,17 +181,29 @@ test("disables the button, marks it busy, and defers the callback while pending"
 	expect(screen.getByRole("button")).toBeDisabled();
 	expect(screen.getByRole("button")).toHaveAttribute("aria-busy", "true");
 	expect(onClick).not.toHaveBeenCalled();
+
+	await act(async () => {
+		resolve(response);
+		await promise;
+	});
 });
 
 test("ignores repeated clicks while pending", async () => {
 	// Arrange
+	const user = userEvent.setup();
 	const onClick = vi.fn();
 	const response = { data: { success: true }, error: null };
-	vi.mocked(signOut).mockImplementationOnce(() => resolveWithDelay(response));
+	const { promise, resolve } = Promise.withResolvers();
+	vi.mocked(signOut).mockReturnValueOnce(promise);
 	// Act
 	render(<LogoutButton onClick={onClick} />);
 	await user.click(screen.getByRole("button"));
 	await user.click(screen.getByRole("button"));
 	// Assert
 	expect(signOut).toHaveBeenCalledOnce();
+
+	await act(async () => {
+		resolve(response);
+		await promise;
+	});
 });

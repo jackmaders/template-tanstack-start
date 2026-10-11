@@ -208,10 +208,7 @@
 	],
 	"plugins": [
 		{
-			"includes": [
-				"**/__tests__/*.spec.{ts,tsx}",
-				"**/browser-tests/*.spec.ts"
-			],
+			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
 			"path": "./plugins/prefer-once-mocks.grit"
 		},
 		{

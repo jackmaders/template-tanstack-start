@@ -1,27 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SignUpForm } from "@/features/account/components/sign-up-form";
 import { signUp } from "@/lib/auth/auth-client";
-import { advanceTimers } from "@/testing/utils/advance-timers";
-import { resolveWithDelay } from "@/testing/utils/resolve-with-delay";
 
 vi.mock("@/lib/auth/auth-client");
-
-let user: ReturnType<typeof userEvent.setup>;
-
-beforeEach(() => {
-	vi.useFakeTimers({
-		shouldAdvanceTime: true,
-		toFake: ["setTimeout", "clearTimeout"],
-	});
-
-	user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-});
-
-afterEach(() => {
-	vi.clearAllTimers();
-	vi.useRealTimers();
-});
 
 test("forwards form props", () => {
 	// Act
@@ -57,6 +39,8 @@ test("renders fields with the expected properties and submit button", () => {
 });
 
 test("blocks empty submissions", async () => {
+	// Arrange
+	const user = userEvent.setup();
 	// Act
 	render(<SignUpForm aria-label="Account" />);
 	await user.click(screen.getByRole("button", { name: "Sign up" }));
@@ -66,6 +50,7 @@ test("blocks empty submissions", async () => {
 
 test("submits entered values", async () => {
 	// Arrange
+	const user = userEvent.setup();
 	vi.mocked(signUp.email).mockResolvedValueOnce({ data: null, error: null });
 	// Act
 	render(<SignUpForm />);
@@ -84,10 +69,10 @@ test("submits entered values", async () => {
 
 test("disables submission while the request is pending", async () => {
 	// Arrange
+	const user = userEvent.setup();
 	const response = { data: null, error: null };
-	vi.mocked(signUp.email).mockImplementationOnce(() =>
-		resolveWithDelay(response),
-	);
+	const { promise, resolve } = Promise.withResolvers();
+	vi.mocked(signUp.email).mockReturnValueOnce(promise);
 	// Act
 	render(<SignUpForm />);
 	await user.type(screen.getByLabelText("Name"), "Person");
@@ -97,21 +82,29 @@ test("disables submission while the request is pending", async () => {
 
 	// Assert
 	expect(screen.getByRole("button", { name: "Please wait…" })).toBeDisabled();
+
+	await act(async () => {
+		resolve(response);
+		await promise;
+	});
 });
 
 test("enables submission after the request completes", async () => {
 	// Arrange
+	const user = userEvent.setup();
 	const response = { data: null, error: null };
-	vi.mocked(signUp.email).mockImplementationOnce(() =>
-		resolveWithDelay(response),
-	);
+	const { promise, resolve } = Promise.withResolvers();
+	vi.mocked(signUp.email).mockReturnValueOnce(promise);
 	// Act
 	render(<SignUpForm />);
 	await user.type(screen.getByLabelText("Name"), "Person");
 	await user.type(screen.getByLabelText("Email"), "person@example.com");
 	await user.type(screen.getByLabelText("Password"), "password");
 	await user.click(screen.getByRole("button", { name: "Sign up" }));
-	await advanceTimers();
+	await act(async () => {
+		resolve(response);
+		await promise;
+	});
 	// Assert
 	expect(screen.getByRole("button", { name: "Sign up" })).toBeEnabled();
 });
