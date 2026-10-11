@@ -2,7 +2,10 @@ import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "./form-context";
 
-const selectCanSubmit = (state: { canSubmit: boolean }) => !state.canSubmit;
+const selectSubmitState = (state: {
+	canSubmit: boolean;
+	isSubmitting: boolean;
+}) => [state.canSubmit, state.isSubmitting] as const;
 
 export function SubmitButton({
 	children,
@@ -12,10 +15,15 @@ export function SubmitButton({
 	const form = useFormContext();
 
 	return (
-		<form.Subscribe selector={selectCanSubmit}>
-			{(canSubmit) => (
-				<Button {...props} disabled={props.disabled || canSubmit} type={type}>
-					{children}
+		<form.Subscribe selector={selectSubmitState}>
+			{([canSubmit, isSubmitting]) => (
+				<Button
+					{...props}
+					aria-busy={isSubmitting}
+					disabled={props.disabled || !canSubmit || isSubmitting}
+					type={type}
+				>
+					{isSubmitting ? "Please wait…" : <span>{children}</span>}
 				</Button>
 			)}
 		</form.Subscribe>

@@ -1,6 +1,6 @@
 import { Link, type LinkComponentProps } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
@@ -11,23 +11,28 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 
-const links: LinkComponentProps[] = [
-	{ children: "Home", to: "/" },
-	{ children: "About", to: "/about" },
-];
+interface NavbarProps extends ComponentProps<"header"> {
+	actions?: ReactNode;
+	navigation: LinkComponentProps[];
+}
 
-export function Navbar() {
+export function Navbar({ actions, navigation, ...props }: NavbarProps) {
 	return (
-		<header>
+		<header {...props}>
 			<nav aria-label="Main navigation">
 				<div className="flex items-center justify-between gap-4">
 					<Link to="/">LOGO</Link>
 					<div className="max-sm:hidden flex gap-2">
-						{links.map((props) => (
-							<Link key={props.to} {...props} />
+						{navigation.map((link) => (
+							<Link key={link.to} {...link} />
 						))}
 					</div>
-					<MobileNavDrawer className="sm:hidden" links={links} />
+					<div className="max-sm:hidden flex items-center gap-2">{actions}</div>
+					<MobileNavDrawer
+						actions={actions}
+						className="sm:hidden"
+						navigation={navigation}
+					/>
 				</div>
 			</nav>
 		</header>
@@ -35,10 +40,15 @@ export function Navbar() {
 }
 
 interface MobileNavDrawerProps extends ComponentProps<typeof DrawerTrigger> {
-	links?: LinkComponentProps[];
+	actions?: ReactNode;
+	navigation?: LinkComponentProps[];
 }
 
-function MobileNavDrawer({ links = [], ...props }: MobileNavDrawerProps) {
+function MobileNavDrawer({
+	navigation = [],
+	actions,
+	...props
+}: MobileNavDrawerProps) {
 	return (
 		<Drawer showSwipeHandle={true}>
 			<DrawerTrigger
@@ -63,13 +73,14 @@ function MobileNavDrawer({ links = [], ...props }: MobileNavDrawerProps) {
 					</DrawerClose>
 				</DrawerHeader>
 				<nav aria-label="Mobile navigation" className="flex flex-col gap-2 p-4">
-					{links.map((props) => (
+					{navigation.map((link) => (
 						<DrawerClose
-							key={props.to}
+							key={link.to}
 							nativeButton={false}
-							render={<Link {...props} />}
+							render={<Link {...link} />}
 						/>
 					))}
+					<div className="flex flex-wrap items-center gap-2">{actions}</div>
 				</nav>
 			</DrawerContent>
 		</Drawer>

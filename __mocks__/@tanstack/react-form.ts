@@ -3,7 +3,9 @@ import { vi } from "vitest";
 
 const form = {
 	handleSubmit: vi.fn(() => Promise.resolve()),
-	Subscribe: vi.fn(({ children }) => children()),
+	Subscribe: vi.fn(({ children, selector }) =>
+		children(selector({ canSubmit: true, errorMap: {}, isSubmitting: false })),
+	),
 };
 
 const field = {};

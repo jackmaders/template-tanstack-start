@@ -66,3 +66,18 @@ test("forwards an explicit button type", () => {
 	expect(button).toHaveAttribute("type", "button");
 	expect(button).not.toBeDisabled();
 });
+
+test("disables the button and shows a busy label while submitting", () => {
+	// Arrange
+	const form = useFormContext();
+	const mockFormSubmitting = vi.fn(({ children, selector }) =>
+		children(selector({ canSubmit: true, isSubmitting: true })),
+	);
+	vi.mocked(form.Subscribe).mockImplementationOnce(mockFormSubmitting);
+	// Act
+	render(<SubmitButton>Save</SubmitButton>);
+	// Assert
+	const button = screen.getByRole("button", { name: "Please wait…" });
+	expect(button).toBeDisabled();
+	expect(button).toHaveAttribute("aria-busy", "true");
+});
