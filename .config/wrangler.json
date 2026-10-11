@@ -14,5 +14,8 @@
 	"main": "@tanstack/react-start/server-entry",
 	"name": "template-tanstack-start",
 	"observability": { "enabled": true },
+	"vars": {
+		"BETTER_AUTH_URL": "https://your-app.example.com"
+	},
 	"workers_dev": true
 }
