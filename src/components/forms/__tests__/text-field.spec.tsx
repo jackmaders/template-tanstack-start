@@ -11,10 +11,11 @@ const { useFieldContext } = createFormHookContexts();
 
 test("renders a controlled text field with its label and forwarded props", () => {
 	// Arrange
+	const field = createTextFieldFixture({ state: { value: "ada@example.com" } });
 	vi.mocked(useFieldContext<string>, {
 		deep: true,
 		partial: true,
-	}).mockReturnValueOnce(createTextFieldFixture({ value: "ada@example.com" }));
+	}).mockReturnValueOnce(field);
 
 	// Act
 	render(
@@ -67,10 +68,12 @@ test("shows validation errors accessibly after an invalid field is touched", () 
 		partial: true,
 	}).mockReturnValueOnce(
 		createTextFieldFixture({
-			meta: {
-				errors: [{ message: "Enter a valid email address" }],
-				isTouched: true,
-				isValid: false,
+			state: {
+				meta: {
+					errors: [{ message: "Enter a valid email address" }],
+					isTouched: true,
+					isValid: false,
+				},
 			},
 		}),
 	);
@@ -95,10 +98,12 @@ test("keeps validation errors hidden until the field is touched", () => {
 		partial: true,
 	}).mockReturnValueOnce(
 		createTextFieldFixture({
-			meta: {
-				errors: [{ message: "Enter a valid email address" }],
-				isTouched: false,
-				isValid: false,
+			state: {
+				meta: {
+					errors: [{ message: "Enter a valid email address" }],
+					isTouched: false,
+					isValid: false,
+				},
 			},
 		}),
 	);

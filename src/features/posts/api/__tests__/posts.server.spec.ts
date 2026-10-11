@@ -6,23 +6,21 @@ import {
 	deletePost,
 	listPosts,
 } from "@/features/posts/api/posts.server";
-import { createDatabaseFixture } from "@/testing/fixtures/database";
 import { createPostFixture } from "@/testing/fixtures/post";
 
 vi.mock("@/db/db.server.ts");
 
-let db: ReturnType<typeof createDatabaseFixture>;
-
-beforeEach(() => {
-	db = createDatabaseFixture();
-	vi.mocked(getDb, { deep: true, partial: true }).mockReturnValue(db);
-});
+const db = getDb();
 
 test("lists posts by descending id with the configured limit", async () => {
 	// Arrange
 	const expectedPosts = [createPostFixture({ id: 2, title: "Newer post" })];
 
-	vi.mocked(db.limit).mockReturnValueOnce(expectedPosts);
+	const select = db.select();
+	const from = select.from(posts);
+	const query = from.orderBy(desc(posts.id));
+	vi.mocked(query.limit).mockResolvedValueOnce(expectedPosts);
+	vi.clearAllMocks();
 
 	// Act
 	const result = await listPosts();
@@ -31,9 +29,9 @@ test("lists posts by descending id with the configured limit", async () => {
 	expect(result).toBe(expectedPosts);
 
 	expect(db.select).toHaveBeenCalledOnce();
-	expect(db.from).toHaveBeenCalledWith(posts);
-	expect(db.orderBy).toHaveBeenCalledWith(desc(posts.id));
-	expect(db.limit).toHaveBeenCalledWith(50);
+	expect(select.from).toHaveBeenCalledWith(posts);
+	expect(from.orderBy).toHaveBeenCalledWith(desc(posts.id));
+	expect(query.limit).toHaveBeenCalledWith(50);
 });
 
 test("creates and returns the inserted post", async () => {
@@ -41,7 +39,9 @@ test("creates and returns the inserted post", async () => {
 	const values = { title: "A new post" };
 	const post = createPostFixture(values);
 
-	vi.mocked(db.returning).mockReturnValueOnce([post]);
+	const query = db.insert(posts).values(values);
+	vi.mocked(query.returning).mockResolvedValueOnce([post]);
+	vi.clearAllMocks();
 
 	// Act
 	const result = await createPost(values);
@@ -50,13 +50,15 @@ test("creates and returns the inserted post", async () => {
 	expect(result).toBe(post);
 
 	expect(db.insert).toHaveBeenCalledWith(posts);
-	expect(db.values).toHaveBeenCalledWith(values);
-	expect(db.returning).toHaveBeenCalledOnce();
+	expect(query.values).toHaveBeenCalledWith(values);
+	expect(query.returning).toHaveBeenCalledOnce();
 });
 
 test("throws when creating a post returns no row", async () => {
 	// Arrange
-	vi.mocked(db.returning).mockReturnValueOnce([]);
+	const query = db.insert(posts).values({ title: "A new post" });
+	vi.mocked(query.returning).mockResolvedValueOnce([]);
+	vi.clearAllMocks();
 
 	// Act
 	const result = createPost({ title: "A new post" });
@@ -69,7 +71,10 @@ test("deletes and returns rows matching the post id", async () => {
 	// Arrange
 	const id = 7;
 	const deletedPosts = [createPostFixture({ id, title: "Old post" })];
-	vi.mocked(db.returning).mockResolvedValueOnce(deletedPosts);
+	const deletion = db.delete(posts);
+	const query = deletion.where(eq(posts.id, id));
+	vi.mocked(query.returning).mockResolvedValueOnce(deletedPosts);
+	vi.clearAllMocks();
 
 	// Act
 	const result = await deletePost(id);
@@ -78,6 +83,6 @@ test("deletes and returns rows matching the post id", async () => {
 	expect(result).toBe(deletedPosts);
 
 	expect(db.delete).toHaveBeenCalledWith(posts);
-	expect(db.where).toHaveBeenCalledWith(eq(posts.id, id));
-	expect(db.returning).toHaveBeenCalledOnce();
+	expect(deletion.where).toHaveBeenCalledWith(eq(posts.id, id));
+	expect(query.returning).toHaveBeenCalledOnce();
 });
