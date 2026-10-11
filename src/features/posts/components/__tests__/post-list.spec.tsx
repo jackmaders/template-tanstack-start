@@ -1,22 +1,24 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { postsQueryOptions } from "@/features/posts/api/posts.queries";
 import { PostList } from "@/features/posts/components/post-list";
+import { createQueryTestContext } from "@/testing/query-client";
 
-vi.mock("@tanstack/react-query");
 vi.mock("@tanstack/react-start");
 vi.mock("@/features/posts/api/posts.server");
 vi.mock("@/features/posts/api/use-delete-post");
 
 test("shows an empty state when there are no posts", () => {
 	// Arrange
-	vi.mocked(useSuspenseQuery).mockReturnValueOnce({ data: [] } as never);
+	const { queryClient, wrapper } = createQueryTestContext();
+	queryClient.setQueryDefaults(postsQueryOptions.queryKey, {
+		staleTime: Number.POSITIVE_INFINITY,
+	});
+	queryClient.setQueryData(postsQueryOptions.queryKey, []);
 
 	// Act
-	render(<PostList />);
+	render(<PostList />, { wrapper });
 
 	// Assert
-	expect(useSuspenseQuery).toHaveBeenCalledWith(postsQueryOptions);
 	expect(screen.getByRole("region", { name: "All posts" })).toBeInTheDocument();
 	expect(screen.getByText("0 posts")).toBeInTheDocument();
 	expect(
@@ -27,12 +29,16 @@ test("shows an empty state when there are no posts", () => {
 
 test("shows a single post with its delete button", () => {
 	// Arrange
-	vi.mocked(useSuspenseQuery).mockReturnValueOnce({
-		data: [{ id: 1, title: "A post" }],
-	} as never);
+	const { queryClient, wrapper } = createQueryTestContext();
+	queryClient.setQueryDefaults(postsQueryOptions.queryKey, {
+		staleTime: Number.POSITIVE_INFINITY,
+	});
+	queryClient.setQueryData(postsQueryOptions.queryKey, [
+		{ id: 1, title: "A post" },
+	]);
 
 	// Act
-	render(<PostList />);
+	render(<PostList />, { wrapper });
 
 	// Assert
 	expect(screen.getByText("1 post")).toBeInTheDocument();
@@ -44,15 +50,17 @@ test("shows a single post with its delete button", () => {
 
 test("shows multiple posts", () => {
 	// Arrange
-	vi.mocked(useSuspenseQuery).mockReturnValueOnce({
-		data: [
-			{ id: 1, title: "First post" },
-			{ id: 2, title: "Second post" },
-		],
-	} as never);
+	const { queryClient, wrapper } = createQueryTestContext();
+	queryClient.setQueryDefaults(postsQueryOptions.queryKey, {
+		staleTime: Number.POSITIVE_INFINITY,
+	});
+	queryClient.setQueryData(postsQueryOptions.queryKey, [
+		{ id: 1, title: "First post" },
+		{ id: 2, title: "Second post" },
+	]);
 
 	// Act
-	render(<PostList />);
+	render(<PostList />, { wrapper });
 
 	// Assert
 	expect(screen.getByText("2 posts")).toBeInTheDocument();
