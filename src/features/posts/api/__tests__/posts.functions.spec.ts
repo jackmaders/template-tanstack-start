@@ -15,7 +15,7 @@ vi.mock("@/features/posts/api/posts.server");
 test("lists posts and returns the server result", async () => {
 	// Arrange
 	const posts = [{ id: 1, title: "A post" }];
-	vi.mocked(listPosts).mockResolvedValue(posts);
+	vi.mocked(listPosts).mockResolvedValueOnce(posts);
 
 	// Act
 	const result = await listPostsFn();

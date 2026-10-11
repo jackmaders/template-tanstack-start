@@ -1,16 +1,15 @@
 import { env } from "cloudflare:workers";
 import { betterAuth } from "better-auth/minimal";
 import { expect, it, vi } from "vitest";
+import "@/lib/auth/auth.server";
 
 vi.mock("better-auth/minimal");
 
-it("configures email authentication using Worker bindings and cookie support", async () => {
-	// Arrange
-	vi.resetModules();
+const configuration = vi.mocked(betterAuth).mock.calls.at(-1)?.[0];
 
+it("configures email authentication using Worker bindings and cookie support", () => {
 	// Act
-	await import("@/lib/auth/auth.server");
-	const options = vi.mocked(betterAuth).mock.calls.at(-1)?.[0];
+	const options = configuration;
 
 	// Assert
 	expect(options?.baseURL).toBe(env.BETTER_AUTH_URL);

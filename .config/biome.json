@@ -208,6 +208,13 @@
 	],
 	"plugins": [
 		{
+			"includes": [
+				"**/__tests__/*.spec.{ts,tsx}",
+				"**/browser-tests/*.spec.ts"
+			],
+			"path": "./plugins/prefer-once-mocks.grit"
+		},
+		{
 			"includes": ["**"],
 			"path": "./plugins/no-inline-vitest-mock.grit"
 		},

@@ -61,7 +61,7 @@ test("passes submission errors to the onError callback", async () => {
 	const form = useFormContext();
 	const error = new Error("submission failed");
 	const onError = vi.fn();
-	vi.mocked(form.handleSubmit).mockRejectedValue(error);
+	vi.mocked(form.handleSubmit).mockRejectedValueOnce(error);
 
 	// Act
 	render(

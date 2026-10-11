@@ -1,0 +1,6 @@
+language js
+
+`$mock.$method($args)` as $call where {
+	$method <: r"^(?:mockReturnValue|mockResolvedValue|mockRejectedValue|mockImplementation)$",
+	register_diagnostic(span=$call, message="Use the Once variant for test mock overrides to avoid leaking implementations between tests. Define persistent defaults in __mocks__ files.", severity="error")
+}

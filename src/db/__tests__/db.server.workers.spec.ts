@@ -9,7 +9,7 @@ vi.mock("drizzle-orm/d1");
 it("creates a database using the default Worker binding and auth relations", () => {
 	// Arrange
 	const database = {};
-	vi.mocked(drizzle, { partial: true }).mockReturnValue(database);
+	vi.mocked(drizzle, { partial: true }).mockReturnValueOnce(database);
 
 	// Act
 	const result = getDb();
@@ -23,15 +23,16 @@ it("creates a database using the default Worker binding and auth relations", () 
 
 it("creates a database using an explicitly supplied binding and auth relations", () => {
 	// Arrange
+	const binding = new Proxy(env.DB, {});
 	const database = {};
-	vi.mocked(drizzle, { partial: true }).mockReturnValue(database);
+	vi.mocked(drizzle, { partial: true }).mockReturnValueOnce(database);
 
 	// Act
-	const result = getDb();
+	const result = getDb(binding);
 
 	// Assert
-	expect(drizzle).toHaveBeenCalledExactlyOnceWith(env.DB, {
+	expect(drizzle).toHaveBeenCalledExactlyOnceWith(binding, {
 		relations: authRelations,
 	});
-	expect(result).toBe(drizzle(env.DB));
+	expect(result).toBe(database);
 });

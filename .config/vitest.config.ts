@@ -37,7 +37,10 @@ export default defineConfig({
 						".config/plugins/__tests__/*.spec.ts",
 					],
 					name: "client",
-					setupFiles: ["@testing-library/jest-dom/vitest"],
+					setupFiles: [
+						"@testing-library/jest-dom/vitest",
+						".config/vitest/setup.ts",
+					],
 				},
 			},
 			{
@@ -54,5 +57,6 @@ export default defineConfig({
 				},
 			},
 		],
+		restoreMocks: true,
 	},
 });
