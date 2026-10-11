@@ -1,7 +1,11 @@
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/db/db.server";
 import { posts } from "@/db/schema/posts";
-import { createPost, deletePost, listPosts } from "../posts.server";
+import {
+	createPost,
+	deletePost,
+	listPosts,
+} from "@/features/posts/api/posts.server";
 
 vi.mock("@/db/db.server.ts");
 

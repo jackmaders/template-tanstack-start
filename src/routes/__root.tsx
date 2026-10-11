@@ -10,7 +10,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { Toaster } from "@/components/ui/toast";
-import appCss from "../styles.css?inline";
+import appCss from "@/styles.css?inline";
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;

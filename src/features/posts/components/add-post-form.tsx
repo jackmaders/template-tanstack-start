@@ -8,8 +8,8 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { POST_TITLE_MAX_LENGTH } from "@/db/schema/posts";
+import { createPostSchema } from "@/features/posts/api/posts.schema";
 import { useCreatePost } from "@/features/posts/api/use-create-post";
-import { createPostSchema } from "../api/posts.schema";
 
 export function AddPostForm() {
 	const { mutateAsync: createPost } = useCreatePost();

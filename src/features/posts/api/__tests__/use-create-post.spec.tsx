@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPost } from "../posts.server";
-import { useCreatePost } from "../use-create-post";
+import { createPost } from "@/features/posts/api/posts.server";
+import { useCreatePost } from "@/features/posts/api/use-create-post";
 
 vi.mock("@tanstack/react-query");
 vi.mock("@tanstack/react-start");
-vi.mock("../posts.server");
+vi.mock("@/features/posts/api/posts.server");
 
 test("forwards new post data and returns the created post", async () => {
 	const data = { title: "New post" };

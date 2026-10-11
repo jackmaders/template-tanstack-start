@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deletePost } from "../posts.server";
-import { useDeletePost } from "../use-delete-post";
+import { deletePost } from "@/features/posts/api/posts.server";
+import { useDeletePost } from "@/features/posts/api/use-delete-post";
 
 vi.mock("@tanstack/react-query");
 vi.mock("@tanstack/react-start");
-vi.mock("../posts.server");
+vi.mock("@/features/posts/api/posts.server");
 
 test("forwards the post id and returns the deleted posts", async () => {
 	const data = { id: 1 };

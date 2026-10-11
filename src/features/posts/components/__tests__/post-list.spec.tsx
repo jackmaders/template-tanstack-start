@@ -1,12 +1,12 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { postsQueryOptions } from "../../api/posts.queries";
-import { PostList } from "../post-list";
+import { postsQueryOptions } from "@/features/posts/api/posts.queries";
+import { PostList } from "@/features/posts/components/post-list";
 
 vi.mock("@tanstack/react-query");
 vi.mock("@tanstack/react-start");
-vi.mock("../../api/posts.server");
-vi.mock("../../api/use-delete-post");
+vi.mock("@/features/posts/api/posts.server");
+vi.mock("@/features/posts/api/use-delete-post");
 
 test("shows an empty state when there are no posts", () => {
 	vi.mocked(useSuspenseQuery).mockReturnValueOnce({ data: [] } as never);

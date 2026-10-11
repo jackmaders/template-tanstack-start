@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { useDeletePost } from "../../api/use-delete-post";
-import { DeletePostButton } from "../delete-post-button";
+import { useDeletePost } from "@/features/posts/api/use-delete-post";
+import { DeletePostButton } from "@/features/posts/components/delete-post-button";
 
-vi.mock("../../api/use-delete-post");
+vi.mock("@/features/posts/api/use-delete-post");
 
 test("deletes the post when clicked", () => {
 	const { mutate } = useDeletePost();

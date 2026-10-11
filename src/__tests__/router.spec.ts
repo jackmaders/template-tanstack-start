@@ -1,5 +1,5 @@
 import { toast } from "@/components/ui/toast-manager";
-import { getRouter } from "../router";
+import { getRouter } from "@/router";
 
 vi.mock("@/components/ui/toast-manager");
 vi.mock("@/db/db.server.ts");

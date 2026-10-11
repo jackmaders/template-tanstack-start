@@ -1,8 +1,16 @@
-import { createPostFn, deletePostFn, listPostsFn } from "../posts.functions";
-import { createPost, deletePost, listPosts } from "../posts.server";
+import {
+	createPostFn,
+	deletePostFn,
+	listPostsFn,
+} from "@/features/posts/api/posts.functions";
+import {
+	createPost,
+	deletePost,
+	listPosts,
+} from "@/features/posts/api/posts.server";
 
 vi.mock("@tanstack/react-start");
-vi.mock("../posts.server");
+vi.mock("@/features/posts/api/posts.server");
 
 test("lists posts and returns the server result", async () => {
 	const posts = [{ id: 1, title: "A post" }];
@@ -31,9 +39,9 @@ test("registers the correct schemas", async () => {
 
 	const { createServerFn } = await import("@tanstack/react-start");
 	const { createPostSchema, deletePostSchema } = await import(
-		"../posts.schema"
+		"@/features/posts/api/posts.schema"
 	);
-	await import("../posts.functions");
+	await import("@/features/posts/api/posts.functions");
 
 	const builder = vi.mocked(createServerFn).mock.results[0]?.value;
 

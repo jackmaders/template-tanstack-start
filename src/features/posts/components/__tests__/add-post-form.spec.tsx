@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { POST_TITLE_MAX_LENGTH } from "@/db/schema/posts";
-import { useCreatePost } from "../../api/use-create-post";
-import { AddPostForm } from "../add-post-form";
+import { useCreatePost } from "@/features/posts/api/use-create-post";
+import { AddPostForm } from "@/features/posts/components/add-post-form";
 
-vi.mock("../../api/use-create-post");
+vi.mock("@/features/posts/api/use-create-post");
 
 test("renders an empty post form with title constraints", () => {
 	render(<AddPostForm />);

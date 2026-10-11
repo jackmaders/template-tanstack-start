@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import { PostsPage } from "../posts-page";
+import { PostsPage } from "@/features/posts/components/posts-page";
 
-vi.mock("../add-post-form");
-vi.mock("../post-list");
+vi.mock("@/features/posts/components/add-post-form");
+vi.mock("@/features/posts/components/post-list");
 
 test("renders the page heading, add post form, and post list", () => {
 	render(<PostsPage />);

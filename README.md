@@ -54,3 +54,11 @@ TanStack Start splits its application layer across the client entry point, route
 Put URL-served static files in root `public/`, and imported assets in `src/assets/`.
 
 Tool configuration lives in root `.config/`. Unit tests live in `__tests__` folders; reusable fixtures and test helpers belong in `src/testing`. Browser tests live in root `browser-tests/`.
+
+Biome's `noRestrictedImports` rules enforce the import direction:
+
+- Shared modules (including `src/db`) cannot import features or application composition.
+- Features cannot import routes, the router, the client entry point, or the generated route tree.
+- Use `@/` for parent-directory imports. Same-directory `./` imports remain allowed.
+
+These rules apply automatically to new features and shared modules without feature-specific configuration. Features should not import other features; compose them in routes or extract shared code instead. This cross-feature convention is not enforced by `noRestrictedImports`, which matches import strings and cannot compare the source and destination feature names.

@@ -6,7 +6,7 @@ vi.mock("@tanstack/react-start/client");
 vi.mock("react-dom/client");
 
 test("hydrates the application inside React strict mode", async () => {
-	await import("../client");
+	await import("@/client");
 
 	expect(hydrateRoot).toHaveBeenCalledOnce();
 

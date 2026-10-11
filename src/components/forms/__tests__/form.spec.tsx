@@ -7,7 +7,7 @@ import {
 	waitFor,
 } from "@testing-library/react";
 import { vi } from "vitest";
-import { Form } from "../form";
+import { Form } from "@/components/forms/form";
 
 vi.mock("@tanstack/react-form");
 

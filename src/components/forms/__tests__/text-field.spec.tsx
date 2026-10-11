@@ -1,7 +1,7 @@
 import { createFormHookContexts } from "@tanstack/react-form";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
-import { TextField } from "../text-field";
+import { TextField } from "@/components/forms/text-field";
 
 vi.mock("@tanstack/react-form");
 

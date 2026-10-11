@@ -1,9 +1,18 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
 	"assist": {
-		"actions": { "source": { "preset": "all", "useSortedPackageJson": "off" } }
+		"actions": {
+			"source": {
+				"preset": "all",
+				"useSortedPackageJson": "off"
+			}
+		}
 	},
-	"css": { "parser": { "tailwindDirectives": true } },
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
 	"files": {
 		"includes": [
 			"**",
@@ -14,11 +23,23 @@
 	},
 	"linter": {
 		"rules": {
-			"a11y": { "preset": "all" },
-			"complexity": { "preset": "all" },
-			"nursery": { "preset": "all" },
-			"performance": { "preset": "all", "useSolidForComponent": "off" },
-			"security": { "noSecrets": "off", "preset": "all" },
+			"a11y": {
+				"preset": "all"
+			},
+			"complexity": {
+				"preset": "all"
+			},
+			"nursery": {
+				"preset": "all"
+			},
+			"performance": {
+				"preset": "all",
+				"useSolidForComponent": "off"
+			},
+			"security": {
+				"noSecrets": "off",
+				"preset": "all"
+			},
 			"style": {
 				"noJsxLiterals": "off",
 				"noRestrictedImports": {
@@ -61,15 +82,122 @@
 		},
 		{
 			"includes": ["**/__tests__/*.spec.*"],
+			"linter": { "rules": { "style": { "noMagicNumbers": "off" } } }
+		},
+		{
+			"includes": ["**/src/**"],
 			"linter": {
 				"rules": {
-					"style": { "noMagicNumbers": "off" }
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["**/__mocks__/**", "**/__mocks__"],
+										"message": "Do not import from __mocks__ files. Import the original module and let Vitest load its mock."
+									},
+									{
+										"group": ["../**"],
+										"message": "Use @/ imports instead of parent-directory imports so architecture boundaries are enforced."
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": [
+				"**/src/{assets,components,config,db,hooks,lib,stores,testing,types,utils}/**"
+			],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["**/__mocks__/**", "**/__mocks__"],
+										"message": "Do not import from __mocks__ files. Import the original module and let Vitest load its mock."
+									},
+									{
+										"group": ["../**"],
+										"message": "Use @/ imports instead of parent-directory imports so architecture boundaries are enforced."
+									},
+									{
+										"group": [
+											"@/routes",
+											"@/routes/**",
+											"@/router",
+											"@/router.*",
+											"@/client",
+											"@/client.*",
+											"@/routeTree.gen",
+											"@/routeTree.gen.*",
+											"@/app",
+											"@/app/**"
+										],
+										"message": "Shared modules and features must not import application composition. Compose features in src/routes."
+									},
+									{
+										"group": ["@/features", "@/features/**"],
+										"message": "Shared modules must not import features. Move reusable code into shared modules."
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": ["**/src/features/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["**/__mocks__/**", "**/__mocks__"],
+										"message": "Do not import from __mocks__ files. Import the original module and let Vitest load its mock."
+									},
+									{
+										"group": ["../**"],
+										"message": "Use @/ imports instead of parent-directory imports so architecture boundaries are enforced."
+									},
+									{
+										"group": [
+											"@/routes",
+											"@/routes/**",
+											"@/router",
+											"@/router.*",
+											"@/client",
+											"@/client.*",
+											"@/routeTree.gen",
+											"@/routeTree.gen.*",
+											"@/app",
+											"@/app/**"
+										],
+										"message": "Shared modules and features must not import application composition. Compose features in src/routes."
+									}
+								]
+							}
+						}
+					}
 				}
 			}
 		}
 	],
 	"plugins": [
-		{ "includes": ["**"], "path": "./plugins/no-inline-vitest-mock.grit" }
+		{
+			"includes": ["**"],
+			"path": "./plugins/no-inline-vitest-mock.grit"
+		}
 	],
 	"root": false,
 	"vcs": {

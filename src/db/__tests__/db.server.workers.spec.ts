@@ -1,7 +1,7 @@
 import { env } from "cloudflare:workers";
 import { sql } from "drizzle-orm";
 import { expect, it } from "vitest";
-import { getDb } from "../db.server";
+import { getDb } from "@/db/db.server";
 
 it("queries D1 using the default environment binding", async () => {
 	const result = await getDb().get<{ value: number }>(sql`select 42 as value`);
