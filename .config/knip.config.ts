@@ -10,7 +10,7 @@ const config: KnipConfig = {
 		"src/server.ts!",
 		"src/start.ts!",
 	],
-	ignore: ["src/components/ui/*", "src/testing/**"],
+	ignore: ["src/components/ui/*", "src/testing/**", ".config/vitest/*"],
 	ignoreDependencies: ["cloudflare"],
 	ignoreExportsUsedInFile: true,
 	lefthook: { config: [".config/lefthook.yml"] },
