@@ -6,8 +6,10 @@ vi.mock("@/db/db.server.ts");
 vi.mock("@tanstack/react-router-ssr-query");
 
 test("creates the application router with its navigation defaults", () => {
+	// Act
 	const router = getRouter();
 
+	// Assert
 	expect(router.options.scrollRestoration).toBe(true);
 	expect(router.options.defaultPreload).toBe("intent");
 	expect(router.options.defaultPreloadStaleTime).toBe(0);
@@ -15,14 +17,20 @@ test("creates the application router with its navigation defaults", () => {
 });
 
 test("shows a high priority toast when a mutation fails", async () => {
+	// Arrange
 	const error = new Error("mutation failed");
+
+	// Act
 	const router = getRouter();
 	const { queryClient } = router.options.context;
 	const mutation = queryClient.getMutationCache().build(queryClient, {
 		mutationFn: () => Promise.reject(error),
 	});
 
-	await expect(mutation.execute(undefined)).rejects.toBe(error);
+	const result = mutation.execute(undefined);
+
+	// Assert
+	await expect(result).rejects.toBe(error);
 
 	expect(toast.add).toHaveBeenCalledWith({
 		description: "mutation failed",

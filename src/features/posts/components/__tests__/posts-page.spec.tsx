@@ -5,8 +5,10 @@ vi.mock("@/features/posts/components/add-post-form");
 vi.mock("@/features/posts/components/post-list");
 
 test("renders the page heading, add post form, and post list", () => {
+	// Act
 	render(<PostsPage />);
 
+	// Assert
 	expect(screen.getByRole("main")).toBeInTheDocument();
 	expect(
 		screen.getByRole("heading", {

@@ -62,3 +62,9 @@ Biome's `noRestrictedImports` rules enforce the import direction:
 - Use `@/` for parent-directory imports. Same-directory `./` imports remain allowed.
 
 These rules apply automatically to new features and shared modules without feature-specific configuration. Features should not import other features; compose them in routes or extract shared code instead. This cross-feature convention is not enforced by `noRestrictedImports`, which matches import strings and cannot compare the source and destination feature names.
+
+## Test structure
+
+Biome's `require-test-aaa` plugin requires separate `// Act` and `// Assert` comments in each inline `test` or `it` callback. `// Arrange` is optional; when included, it must come first. Combined `// Act/Assert` sections are rejected. This applies to unit tests and browser tests, including parameterized tests and test modifiers.
+
+Keep the operation under test in Act and check its result in Assert. For promise rejections, capture the promise in Act and use `await expect(result).rejects` in Assert. The rule checks comment structure; reviewing whether each section contains the right behavior remains necessary.

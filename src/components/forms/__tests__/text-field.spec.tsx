@@ -8,11 +8,13 @@ vi.mock("@tanstack/react-form");
 const { useFieldContext } = createFormHookContexts();
 
 test("renders a controlled text field with its label and forwarded props", () => {
+	// Arrange
 	vi.mocked(useFieldContext).mockReturnValueOnce({
 		name: "email",
 		state: { meta: { errors: [], isValid: true }, value: "ada@example.com" },
 	} as never);
 
+	// Act
 	render(
 		<TextField
 			className="custom-input"
@@ -22,6 +24,8 @@ test("renders a controlled text field with its label and forwarded props", () =>
 	);
 
 	const input = screen.getByRole("textbox", { name: "Email address" });
+
+	// Assert
 	expect(input).toHaveValue("ada@example.com");
 	expect(input).toHaveAttribute("name", "email");
 	expect(input).toHaveAttribute("placeholder", "you@example.com");
@@ -31,6 +35,7 @@ test("renders a controlled text field with its label and forwarded props", () =>
 });
 
 test("forwards input changes and blur to the field handlers", () => {
+	// Arrange
 	const handleChange = vi.fn();
 	const handleBlur = vi.fn();
 
@@ -40,18 +45,21 @@ test("forwards input changes and blur to the field handlers", () => {
 		state: { meta: { errors: [], isValid: true } },
 	} as never);
 
+	// Act
 	render(<TextField label="Email address" />);
 	const input = screen.getByRole("textbox", { name: "Email address" });
 
 	fireEvent.change(input, { target: { value: "grace@example.com" } });
 	fireEvent.blur(input);
 
+	// Assert
 	expect(handleChange).toHaveBeenCalledOnce();
 	expect(handleChange).toHaveBeenCalledWith("grace@example.com");
 	expect(handleBlur).toHaveBeenCalledOnce();
 });
 
 test("shows validation errors accessibly after an invalid field is touched", () => {
+	// Arrange
 	vi.mocked(useFieldContext).mockReturnValueOnce({
 		state: {
 			meta: {
@@ -62,10 +70,13 @@ test("shows validation errors accessibly after an invalid field is touched", () 
 		},
 	} as never);
 
+	// Act
 	render(<TextField label="Email address" />);
 
 	const input = screen.getByRole("textbox", { name: "Email address" });
 	const error = screen.getByRole("alert");
+
+	// Assert
 	expect(input).toHaveAttribute("aria-invalid", "true");
 	expect(input).toHaveAttribute("aria-describedby", error.id);
 	expect(error).toHaveTextContent("Enter a valid email address");
@@ -73,6 +84,7 @@ test("shows validation errors accessibly after an invalid field is touched", () 
 });
 
 test("keeps validation errors hidden until the field is touched", () => {
+	// Arrange
 	vi.mocked(useFieldContext).mockReturnValueOnce({
 		state: {
 			meta: {
@@ -83,9 +95,12 @@ test("keeps validation errors hidden until the field is touched", () => {
 		},
 	} as never);
 
+	// Act
 	render(<TextField label="Email address" />);
 
 	const input = screen.getByRole("textbox", { name: "Email address" });
+
+	// Assert
 	expect(input).toHaveAttribute("aria-invalid", "false");
 	expect(input).not.toHaveAttribute("aria-describedby");
 	expect(screen.queryByRole("alert")).not.toBeInTheDocument();

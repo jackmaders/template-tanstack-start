@@ -1,0 +1,24 @@
+language js
+
+or {
+	`$fn($name, $callback, $...)` where {
+		$callback <: or {
+			JsArrowFunctionExpression(),
+			JsFunctionExpression()
+		}
+	},
+	`$fn($name, $options, $callback, $...)` where {
+		$callback <: or {
+			JsArrowFunctionExpression(),
+			JsFunctionExpression()
+		}
+	}
+} as $call where {
+	$fn <: r"^(?:test|it)(?:[.(].*)?$",
+	or {
+		not $callback <: r"(?ms)^[\s\S]*?^[\t ]*// Act[\t ]*\r?$[\s\S]*?^[\t ]*// Assert[\t ]*\r?$[\s\S]*$",
+		$callback <: r"(?ms)^[\s\S]*?^[\t ]*// (?:Act|Assert)[\t ]*\r?$[\s\S]*?^[\t ]*// Arrange[\t ]*\r?$[\s\S]*$",
+		$callback <: r"(?ms)^[\s\S]*?^[\t ]*// Assert[\t ]*\r?$[\s\S]*?^[\t ]*// Act[\t ]*\r?$[\s\S]*$"
+	},
+	register_diagnostic(span=$call, message="Tests must include separate // Act and // Assert comments in that order. Optional // Arrange must come first. Do not combine Act and Assert.", severity="error")
+}

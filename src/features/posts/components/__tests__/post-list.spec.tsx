@@ -9,10 +9,13 @@ vi.mock("@/features/posts/api/posts.server");
 vi.mock("@/features/posts/api/use-delete-post");
 
 test("shows an empty state when there are no posts", () => {
+	// Arrange
 	vi.mocked(useSuspenseQuery).mockReturnValueOnce({ data: [] } as never);
 
+	// Act
 	render(<PostList />);
 
+	// Assert
 	expect(useSuspenseQuery).toHaveBeenCalledWith(postsQueryOptions);
 	expect(screen.getByRole("region", { name: "All posts" })).toBeInTheDocument();
 	expect(screen.getByText("0 posts")).toBeInTheDocument();
@@ -23,12 +26,15 @@ test("shows an empty state when there are no posts", () => {
 });
 
 test("shows a single post with its delete button", () => {
+	// Arrange
 	vi.mocked(useSuspenseQuery).mockReturnValueOnce({
 		data: [{ id: 1, title: "A post" }],
 	} as never);
 
+	// Act
 	render(<PostList />);
 
+	// Assert
 	expect(screen.getByText("1 post")).toBeInTheDocument();
 	expect(screen.getByText("A post")).toBeInTheDocument();
 	expect(
@@ -37,6 +43,7 @@ test("shows a single post with its delete button", () => {
 });
 
 test("shows multiple posts", () => {
+	// Arrange
 	vi.mocked(useSuspenseQuery).mockReturnValueOnce({
 		data: [
 			{ id: 1, title: "First post" },
@@ -44,8 +51,10 @@ test("shows multiple posts", () => {
 		],
 	} as never);
 
+	// Act
 	render(<PostList />);
 
+	// Assert
 	expect(screen.getByText("2 posts")).toBeInTheDocument();
 	expect(screen.getAllByRole("listitem")).toHaveLength(2);
 	expect(screen.getByText("First post")).toBeInTheDocument();

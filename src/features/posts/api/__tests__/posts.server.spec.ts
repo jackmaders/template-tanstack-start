@@ -13,11 +13,16 @@ vi.mock("@/db/db.server.ts");
 const db = getDb() as any;
 
 test("lists posts by descending id with the configured limit", async () => {
-	const result = [{ id: 2, title: "Newer post" }];
+	// Arrange
+	const expectedPosts = [{ id: 2, title: "Newer post" }];
 
-	vi.mocked(db.limit).mockReturnValueOnce(result);
+	vi.mocked(db.limit).mockReturnValueOnce(expectedPosts);
 
-	await expect(listPosts()).resolves.toBe(result);
+	// Act
+	const result = await listPosts();
+
+	// Assert
+	expect(result).toBe(expectedPosts);
 
 	expect(db.select).toHaveBeenCalledOnce();
 	expect(db.from).toHaveBeenCalledWith(posts);
@@ -26,12 +31,17 @@ test("lists posts by descending id with the configured limit", async () => {
 });
 
 test("creates and returns the inserted post", async () => {
+	// Arrange
 	const values = { title: "A new post" };
 	const post = { id: 1, ...values };
 
 	vi.mocked(db.returning).mockReturnValueOnce([post]);
 
-	await expect(createPost(values)).resolves.toBe(post);
+	// Act
+	const result = await createPost(values);
+
+	// Assert
+	expect(result).toBe(post);
 
 	expect(db.insert).toHaveBeenCalledWith(posts);
 	expect(db.values).toHaveBeenCalledWith(values);
@@ -39,19 +49,27 @@ test("creates and returns the inserted post", async () => {
 });
 
 test("throws when creating a post returns no row", async () => {
+	// Arrange
 	vi.mocked(db.returning).mockReturnValueOnce([]);
 
-	await expect(createPost({ title: "A new post" })).rejects.toThrow(
-		"The post could not be created.",
-	);
+	// Act
+	const result = createPost({ title: "A new post" });
+
+	// Assert
+	await expect(result).rejects.toThrow("The post could not be created.");
 });
 
 test("deletes and returns rows matching the post id", async () => {
+	// Arrange
 	const id = 7;
 	const deletedPosts = [{ id, title: "Old post" }];
 	vi.mocked(db.returning).mockResolvedValueOnce(deletedPosts);
 
-	await expect(deletePost(id)).resolves.toBe(deletedPosts);
+	// Act
+	const result = await deletePost(id);
+
+	// Assert
+	expect(result).toBe(deletedPosts);
 
 	expect(db.delete).toHaveBeenCalledWith(posts);
 	expect(db.where).toHaveBeenCalledWith(eq(posts.id, id));

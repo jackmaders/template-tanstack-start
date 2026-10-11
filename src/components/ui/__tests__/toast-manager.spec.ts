@@ -6,10 +6,19 @@ import {
 } from "@/components/ui/toast-manager";
 
 test("exports a toast manager created by Base UI", () => {
-	expect(toast).toBeDefined();
+	// Act
+	const manager = toast;
+
+	// Assert
+	expect(manager).toBeDefined();
 });
 
 test("re-exports the Base UI manager factory and hook", () => {
-	expect(createToastManager).toBe(Toast.createToastManager);
-	expect(useToastManager).toBe(Toast.useToastManager);
+	// Act
+	const factory = createToastManager;
+	const hook = useToastManager;
+
+	// Assert
+	expect(factory).toBe(Toast.createToastManager);
+	expect(hook).toBe(Toast.useToastManager);
 });

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/field";
 
 test("renders a field set and forwards its props", () => {
+	// Act
 	render(
 		<FieldSet className="custom-set" data-testid="field-set" title="Options">
 			Set content
@@ -20,6 +21,8 @@ test("renders a field set and forwards its props", () => {
 	);
 
 	const fieldSet = screen.getByTestId("field-set");
+
+	// Assert
 	expect(fieldSet).toHaveAttribute("data-slot", "field-set");
 	expect(fieldSet).toHaveAttribute("title", "Options");
 	expect(fieldSet).toHaveClass("custom-set");
@@ -27,6 +30,7 @@ test("renders a field set and forwards its props", () => {
 });
 
 test("renders legends with the default and label variants", () => {
+	// Act
 	render(
 		<>
 			<FieldLegend data-testid="default-legend">Preferences</FieldLegend>
@@ -36,6 +40,7 @@ test("renders legends with the default and label variants", () => {
 		</>,
 	);
 
+	// Assert
 	expect(screen.getByTestId("default-legend")).toHaveAttribute(
 		"data-variant",
 		"legend",
@@ -51,6 +56,7 @@ test("renders legends with the default and label variants", () => {
 });
 
 test("renders a field group and forwards its props", () => {
+	// Act
 	render(
 		<FieldGroup className="custom-group" data-testid="field-group">
 			Group content
@@ -58,12 +64,15 @@ test("renders a field group and forwards its props", () => {
 	);
 
 	const group = screen.getByTestId("field-group");
+
+	// Assert
 	expect(group).toHaveAttribute("data-slot", "field-group");
 	expect(group).toHaveClass("custom-group");
 	expect(group).toHaveTextContent("Group content");
 });
 
 test("renders fields with default and explicit orientations", () => {
+	// Act
 	render(
 		<>
 			<Field className="custom-field" data-testid="default-field">
@@ -75,6 +84,8 @@ test("renders fields with default and explicit orientations", () => {
 	);
 
 	const defaultField = screen.getByTestId("default-field");
+
+	// Assert
 	expect(defaultField).toHaveAttribute("data-slot", "field");
 	expect(defaultField).toHaveAttribute("data-orientation", "vertical");
 	expect(defaultField).toHaveClass("flex-col", "custom-field");
@@ -89,6 +100,7 @@ test("renders fields with default and explicit orientations", () => {
 });
 
 test("renders field content with its slot, class, and children", () => {
+	// Act
 	render(
 		<FieldContent className="custom-content" data-testid="field-content">
 			Content text
@@ -96,12 +108,15 @@ test("renders field content with its slot, class, and children", () => {
 	);
 
 	const content = screen.getByTestId("field-content");
+
+	// Assert
 	expect(content).toHaveAttribute("data-slot", "field-content");
 	expect(content).toHaveClass("custom-content");
 	expect(content).toHaveTextContent("Content text");
 });
 
 test("renders a field label through the shared label component", () => {
+	// Act
 	render(
 		<FieldLabel
 			className="custom-label"
@@ -113,6 +128,8 @@ test("renders a field label through the shared label component", () => {
 	);
 
 	const label = screen.getByTestId("field-label");
+
+	// Assert
 	expect(label).toHaveAttribute("data-slot", "field-label");
 	expect(label).toHaveAttribute("for", "email");
 	expect(label).toHaveClass("custom-label");
@@ -120,6 +137,7 @@ test("renders a field label through the shared label component", () => {
 });
 
 test("renders a field title with its slot and props", () => {
+	// Act
 	render(
 		<FieldTitle className="custom-title" data-testid="field-title">
 			Account details
@@ -127,12 +145,15 @@ test("renders a field title with its slot and props", () => {
 	);
 
 	const title = screen.getByTestId("field-title");
+
+	// Assert
 	expect(title).toHaveAttribute("data-slot", "field-label");
 	expect(title).toHaveClass("custom-title");
 	expect(title).toHaveTextContent("Account details");
 });
 
 test("renders a field description with its slot and props", () => {
+	// Act
 	render(
 		<FieldDescription
 			className="custom-description"
@@ -143,12 +164,15 @@ test("renders a field description with its slot and props", () => {
 	);
 
 	const description = screen.getByTestId("field-description");
+
+	// Assert
 	expect(description).toHaveAttribute("data-slot", "field-description");
 	expect(description).toHaveClass("custom-description");
 	expect(description).toHaveTextContent("We use this to contact you.");
 });
 
 test("renders field separators with and without content", () => {
+	// Act
 	render(
 		<>
 			<FieldSeparator
@@ -162,6 +186,8 @@ test("renders field separators with and without content", () => {
 	);
 
 	const emptySeparator = screen.getByTestId("empty-separator");
+
+	// Assert
 	expect(emptySeparator).toHaveAttribute("data-slot", "field-separator");
 	expect(emptySeparator).toHaveAttribute("data-content", "false");
 	expect(emptySeparator).toHaveClass("custom-separator");
@@ -181,6 +207,7 @@ test("renders field separators with and without content", () => {
 });
 
 test("renders field errors from children and deduplicates a single message", () => {
+	// Act
 	render(
 		<>
 			<FieldError data-testid="child-error">Custom error</FieldError>
@@ -192,6 +219,8 @@ test("renders field errors from children and deduplicates a single message", () 
 	);
 
 	const childError = screen.getByTestId("child-error");
+
+	// Assert
 	expect(childError).toHaveAttribute("data-slot", "field-error");
 	expect(childError).toHaveAttribute("role", "alert");
 	expect(childError).toHaveTextContent("Custom error");
@@ -199,6 +228,7 @@ test("renders field errors from children and deduplicates a single message", () 
 });
 
 test("renders unique field error messages and ignores messages without text", () => {
+	// Act
 	render(
 		<FieldError
 			className="custom-error"
@@ -214,6 +244,8 @@ test("renders unique field error messages and ignores messages without text", ()
 	);
 
 	const error = screen.getByTestId("multiple-errors");
+
+	// Assert
 	expect(error).toHaveAttribute("role", "alert");
 	expect(error).toHaveClass("custom-error");
 	expect(error.querySelectorAll("li")).toHaveLength(2);
@@ -222,6 +254,7 @@ test("renders unique field error messages and ignores messages without text", ()
 });
 
 test("does not render field errors when there are no messages", () => {
+	// Act
 	render(
 		<>
 			<FieldError data-testid="missing-errors" />
@@ -230,6 +263,7 @@ test("does not render field errors when there are no messages", () => {
 		</>,
 	);
 
+	// Assert
 	expect(screen.queryByTestId("missing-errors")).not.toBeInTheDocument();
 	expect(screen.queryByTestId("empty-errors")).not.toBeInTheDocument();
 	expect(screen.queryByTestId("empty-message")).not.toBeInTheDocument();

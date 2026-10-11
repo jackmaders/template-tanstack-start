@@ -31,7 +31,10 @@ export default defineConfig({
 					environment: "happy-dom",
 					exclude: ["src/**/*.workers.spec.ts"],
 					globals: true,
-					include: ["src/**/__tests__/*.spec.{ts,tsx}"],
+					include: [
+						"src/**/__tests__/*.spec.{ts,tsx}",
+						".config/plugins/__tests__/*.spec.ts",
+					],
 					name: "client",
 					setupFiles: ["@testing-library/jest-dom/vitest"],
 				},

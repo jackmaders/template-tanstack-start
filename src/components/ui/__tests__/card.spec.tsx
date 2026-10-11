@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 
 test("renders a default card and forwards its props", () => {
+	// Act
 	render(
 		<Card
 			aria-label="Account summary"
@@ -21,6 +22,8 @@ test("renders a default card and forwards its props", () => {
 	);
 
 	const card = screen.getByTestId("card");
+
+	// Assert
 	expect(card).toHaveAttribute("data-slot", "card");
 	expect(card).toHaveAttribute("data-size", "default");
 	expect(card).toHaveAttribute("aria-label", "Account summary");
@@ -29,12 +32,15 @@ test("renders a default card and forwards its props", () => {
 });
 
 test("renders a small card", () => {
+	// Act
 	render(<Card data-testid="small-card" size="sm" />);
 
+	// Assert
 	expect(screen.getByTestId("small-card")).toHaveAttribute("data-size", "sm");
 });
 
 test("renders a card header with its slot and forwarded props", () => {
+	// Act
 	render(
 		<CardHeader className="custom-header" data-testid="header" title="Heading">
 			Heading content
@@ -42,6 +48,8 @@ test("renders a card header with its slot and forwarded props", () => {
 	);
 
 	const header = screen.getByTestId("header");
+
+	// Assert
 	expect(header).toHaveAttribute("data-slot", "card-header");
 	expect(header).toHaveAttribute("title", "Heading");
 	expect(header).toHaveClass("custom-header");
@@ -49,6 +57,7 @@ test("renders a card header with its slot and forwarded props", () => {
 });
 
 test("renders a card title with its slot and forwarded props", () => {
+	// Act
 	render(
 		<CardTitle className="custom-title" data-testid="title" title="Card title">
 			Title content
@@ -56,6 +65,8 @@ test("renders a card title with its slot and forwarded props", () => {
 	);
 
 	const title = screen.getByTestId("title");
+
+	// Assert
 	expect(title).toHaveAttribute("data-slot", "card-title");
 	expect(title).toHaveAttribute("title", "Card title");
 	expect(title).toHaveClass("custom-title");
@@ -63,6 +74,7 @@ test("renders a card title with its slot and forwarded props", () => {
 });
 
 test("renders a card description with its slot and forwarded props", () => {
+	// Act
 	render(
 		<CardDescription
 			className="custom-description"
@@ -74,6 +86,8 @@ test("renders a card description with its slot and forwarded props", () => {
 	);
 
 	const description = screen.getByTestId("description");
+
+	// Assert
 	expect(description).toHaveAttribute("data-slot", "card-description");
 	expect(description).toHaveAttribute("title", "Card description");
 	expect(description).toHaveClass("custom-description");
@@ -81,6 +95,7 @@ test("renders a card description with its slot and forwarded props", () => {
 });
 
 test("renders a card action with its slot and forwarded props", () => {
+	// Act
 	render(
 		<CardAction
 			className="custom-action"
@@ -92,6 +107,8 @@ test("renders a card action with its slot and forwarded props", () => {
 	);
 
 	const action = screen.getByTestId("action");
+
+	// Assert
 	expect(action).toHaveAttribute("data-slot", "card-action");
 	expect(action).toHaveAttribute("title", "Card action");
 	expect(action).toHaveClass("custom-action");
@@ -99,6 +116,7 @@ test("renders a card action with its slot and forwarded props", () => {
 });
 
 test("renders card content with its slot and forwarded props", () => {
+	// Act
 	render(
 		<CardContent
 			className="custom-content"
@@ -110,6 +128,8 @@ test("renders card content with its slot and forwarded props", () => {
 	);
 
 	const content = screen.getByTestId("content");
+
+	// Assert
 	expect(content).toHaveAttribute("data-slot", "card-content");
 	expect(content).toHaveAttribute("title", "Card content");
 	expect(content).toHaveClass("custom-content");
@@ -117,6 +137,7 @@ test("renders card content with its slot and forwarded props", () => {
 });
 
 test("renders a card footer with its slot and forwarded props", () => {
+	// Act
 	render(
 		<CardFooter
 			className="custom-footer"
@@ -128,6 +149,8 @@ test("renders a card footer with its slot and forwarded props", () => {
 	);
 
 	const footer = screen.getByTestId("footer");
+
+	// Assert
 	expect(footer).toHaveAttribute("data-slot", "card-footer");
 	expect(footer).toHaveAttribute("title", "Card footer");
 	expect(footer).toHaveClass("custom-footer");

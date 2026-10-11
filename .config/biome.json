@@ -78,11 +78,23 @@
 		},
 		{
 			"includes": ["**/__mocks__/**"],
-			"linter": { "rules": { "style": { "useNamingConvention": "off" } } }
+			"linter": {
+				"rules": {
+					"style": {
+						"useNamingConvention": "off"
+					}
+				}
+			}
 		},
 		{
-			"includes": ["**/__tests__/*.spec.*"],
-			"linter": { "rules": { "style": { "noMagicNumbers": "off" } } }
+			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noMagicNumbers": "off"
+					}
+				}
+			}
 		},
 		{
 			"includes": ["**/src/**"],
@@ -197,6 +209,13 @@
 		{
 			"includes": ["**"],
 			"path": "./plugins/no-inline-vitest-mock.grit"
+		},
+		{
+			"includes": [
+				"**/__tests__/*.spec.{ts,tsx}",
+				"**/browser-tests/*.spec.ts"
+			],
+			"path": "./plugins/require-test-aaa.grit"
 		}
 	],
 	"root": false,
