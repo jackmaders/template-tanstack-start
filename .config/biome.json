@@ -77,10 +77,11 @@
 			}
 		},
 		{
-			"includes": ["**/__mocks__/**"],
+			"includes": ["**/__mocks__/**", "src/routes/api/**"],
 			"linter": {
 				"rules": {
 					"style": {
+						"useFilenamingConvention": "off",
 						"useNamingConvention": "off"
 					}
 				}

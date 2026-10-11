@@ -1,0 +1,502 @@
+{
+	"ddl": [
+		{
+			"entityType": "tables",
+			"name": "account"
+		},
+		{
+			"entityType": "tables",
+			"name": "session"
+		},
+		{
+			"entityType": "tables",
+			"name": "user"
+		},
+		{
+			"entityType": "tables",
+			"name": "verification"
+		},
+		{
+			"entityType": "tables",
+			"name": "posts"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "access_token",
+			"notNull": false,
+			"table": "account",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "access_token_expires_at",
+			"notNull": false,
+			"table": "account",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "account_id",
+			"notNull": true,
+			"table": "account",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": "(cast(unixepoch('subsecond') * 1000 as integer))",
+			"entityType": "columns",
+			"generated": null,
+			"name": "created_at",
+			"notNull": true,
+			"table": "account",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "id",
+			"notNull": false,
+			"table": "account",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "id_token",
+			"notNull": false,
+			"table": "account",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "password",
+			"notNull": false,
+			"table": "account",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "provider_id",
+			"notNull": true,
+			"table": "account",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "refresh_token",
+			"notNull": false,
+			"table": "account",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "refresh_token_expires_at",
+			"notNull": false,
+			"table": "account",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "scope",
+			"notNull": false,
+			"table": "account",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "updated_at",
+			"notNull": true,
+			"table": "account",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "user_id",
+			"notNull": true,
+			"table": "account",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": "(cast(unixepoch('subsecond') * 1000 as integer))",
+			"entityType": "columns",
+			"generated": null,
+			"name": "created_at",
+			"notNull": true,
+			"table": "session",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "expires_at",
+			"notNull": true,
+			"table": "session",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "id",
+			"notNull": false,
+			"table": "session",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "ip_address",
+			"notNull": false,
+			"table": "session",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "token",
+			"notNull": true,
+			"table": "session",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "updated_at",
+			"notNull": true,
+			"table": "session",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "user_agent",
+			"notNull": false,
+			"table": "session",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "user_id",
+			"notNull": true,
+			"table": "session",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": "(cast(unixepoch('subsecond') * 1000 as integer))",
+			"entityType": "columns",
+			"generated": null,
+			"name": "created_at",
+			"notNull": true,
+			"table": "user",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "email",
+			"notNull": true,
+			"table": "user",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": "false",
+			"entityType": "columns",
+			"generated": null,
+			"name": "email_verified",
+			"notNull": true,
+			"table": "user",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "id",
+			"notNull": false,
+			"table": "user",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "image",
+			"notNull": false,
+			"table": "user",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "name",
+			"notNull": true,
+			"table": "user",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": "(cast(unixepoch('subsecond') * 1000 as integer))",
+			"entityType": "columns",
+			"generated": null,
+			"name": "updated_at",
+			"notNull": true,
+			"table": "user",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": "(cast(unixepoch('subsecond') * 1000 as integer))",
+			"entityType": "columns",
+			"generated": null,
+			"name": "created_at",
+			"notNull": true,
+			"table": "verification",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "expires_at",
+			"notNull": true,
+			"table": "verification",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "id",
+			"notNull": false,
+			"table": "verification",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "identifier",
+			"notNull": true,
+			"table": "verification",
+			"type": "text"
+		},
+		{
+			"autoincrement": false,
+			"default": "(cast(unixepoch('subsecond') * 1000 as integer))",
+			"entityType": "columns",
+			"generated": null,
+			"name": "updated_at",
+			"notNull": true,
+			"table": "verification",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "value",
+			"notNull": true,
+			"table": "verification",
+			"type": "text"
+		},
+		{
+			"autoincrement": true,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "id",
+			"notNull": false,
+			"table": "posts",
+			"type": "integer"
+		},
+		{
+			"autoincrement": false,
+			"default": null,
+			"entityType": "columns",
+			"generated": null,
+			"name": "title",
+			"notNull": true,
+			"table": "posts",
+			"type": "text(160)"
+		},
+		{
+			"columns": ["user_id"],
+			"columnsTo": ["id"],
+			"entityType": "fks",
+			"name": "fk_account_user_id_user_id_fk",
+			"nameExplicit": false,
+			"onDelete": "CASCADE",
+			"onUpdate": "NO ACTION",
+			"table": "account",
+			"tableTo": "user"
+		},
+		{
+			"columns": ["user_id"],
+			"columnsTo": ["id"],
+			"entityType": "fks",
+			"name": "fk_session_user_id_user_id_fk",
+			"nameExplicit": false,
+			"onDelete": "CASCADE",
+			"onUpdate": "NO ACTION",
+			"table": "session",
+			"tableTo": "user"
+		},
+		{
+			"columns": ["id"],
+			"entityType": "pks",
+			"name": "account_pk",
+			"nameExplicit": false,
+			"table": "account"
+		},
+		{
+			"columns": ["id"],
+			"entityType": "pks",
+			"name": "session_pk",
+			"nameExplicit": false,
+			"table": "session"
+		},
+		{
+			"columns": ["id"],
+			"entityType": "pks",
+			"name": "user_pk",
+			"nameExplicit": false,
+			"table": "user"
+		},
+		{
+			"columns": ["id"],
+			"entityType": "pks",
+			"name": "verification_pk",
+			"nameExplicit": false,
+			"table": "verification"
+		},
+		{
+			"columns": ["id"],
+			"entityType": "pks",
+			"name": "posts_pk",
+			"nameExplicit": false,
+			"table": "posts"
+		},
+		{
+			"columns": [
+				{
+					"isExpression": false,
+					"value": "user_id"
+				}
+			],
+			"entityType": "indexes",
+			"isUnique": false,
+			"name": "account_userId_idx",
+			"origin": "manual",
+			"table": "account",
+			"where": null
+		},
+		{
+			"columns": [
+				{
+					"isExpression": false,
+					"value": "user_id"
+				}
+			],
+			"entityType": "indexes",
+			"isUnique": false,
+			"name": "session_userId_idx",
+			"origin": "manual",
+			"table": "session",
+			"where": null
+		},
+		{
+			"columns": [
+				{
+					"isExpression": false,
+					"value": "identifier"
+				}
+			],
+			"entityType": "indexes",
+			"isUnique": false,
+			"name": "verification_identifier_idx",
+			"origin": "manual",
+			"table": "verification",
+			"where": null
+		},
+		{
+			"columns": ["token"],
+			"entityType": "uniques",
+			"name": "session_token_unique",
+			"nameExplicit": false,
+			"table": "session"
+		},
+		{
+			"columns": ["email"],
+			"entityType": "uniques",
+			"name": "user_email_unique",
+			"nameExplicit": false,
+			"table": "user"
+		}
+	],
+	"dialect": "sqlite",
+	"id": "2537e5f2-64dc-4fa7-8655-8bcf833f08af",
+	"prevIds": ["da8eefc7-cca0-4dd1-bf61-42020710d278"],
+	"renames": [],
+	"version": "7"
+}
