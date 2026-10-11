@@ -216,6 +216,14 @@
 				"**/browser-tests/*.spec.ts"
 			],
 			"path": "./plugins/require-test-aaa.grit"
+		},
+		{
+			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
+			"path": "./plugins/no-side-effects-in-wait-for.grit"
+		},
+		{
+			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
+			"path": "./plugins/prefer-user-event.grit"
 		}
 	],
 	"root": false,

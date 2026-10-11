@@ -1,0 +1,6 @@
+language js
+
+`fireEvent.$method($args)` as $call where {
+	$method <: r"^(?:click|dblClick|change|input|keyDown|keyPress|keyUp|mouseDown|mouseUp|pointerDown|pointerUp|focus|blur)$",
+	register_diagnostic(span=$call, message="Prefer an awaited interaction from userEvent.setup() over fireEvent for user actions.", severity="warn")
+}

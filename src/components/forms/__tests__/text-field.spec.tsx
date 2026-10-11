@@ -1,5 +1,6 @@
 import { createFormHookContexts } from "@tanstack/react-form";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import { TextField } from "@/components/forms/text-field";
 
@@ -34,8 +35,9 @@ test("renders a controlled text field with its label and forwarded props", () =>
 	expect(input).not.toHaveAttribute("aria-describedby");
 });
 
-test("forwards input changes and blur to the field handlers", () => {
+test("forwards input changes and blur to the field handlers", async () => {
 	// Arrange
+	const user = userEvent.setup();
 	const handleChange = vi.fn();
 	const handleBlur = vi.fn();
 
@@ -49,8 +51,9 @@ test("forwards input changes and blur to the field handlers", () => {
 	render(<TextField label="Email address" />);
 	const input = screen.getByRole("textbox", { name: "Email address" });
 
-	fireEvent.change(input, { target: { value: "grace@example.com" } });
-	fireEvent.blur(input);
+	await user.click(input);
+	await user.paste("grace@example.com");
+	await user.tab();
 
 	// Assert
 	expect(handleChange).toHaveBeenCalledOnce();

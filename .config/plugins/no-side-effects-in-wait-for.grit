@@ -1,0 +1,25 @@
+language js
+
+`$wait($callback, $...)` where {
+	$wait <: or {
+		`waitFor`,
+		`$library.waitFor`
+	},
+	$callback <: contains `$fn($args)` as $call where {
+		$fn <: or {
+			`render`,
+			`renderHook`,
+			`fireEvent`,
+			`fireEvent.$method`,
+			`userEvent.$method`,
+			`user.$method`,
+			r"^[\s\S]*\.(?:mockImplementation(?:Once)?|mockReturnValue(?:Once)?|mockResolvedValue(?:Once)?|mockRejectedValue(?:Once)?|mockClear|mockReset|mockRestore)$",
+			r"^vi\.(?:mock|doMock|unmock|doUnmock|spyOn|clearAllMocks|resetAllMocks|restoreAllMocks|resetModules)$"
+		},
+		not $fn <: or {
+			`userEvent.setup`,
+			`user.setup`
+		},
+		register_diagnostic(span=$call, message="Keep actions and mock configuration outside waitFor. Its callback retries; use it only to observe results and assert.", severity="error")
+	}
+}
