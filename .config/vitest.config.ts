@@ -1,3 +1,4 @@
+import { cloudflareTest } from "@cloudflare/vitest-plugin";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
@@ -23,9 +24,31 @@ export default defineConfig({
 				statements: 100,
 			},
 		},
-		environment: "happy-dom",
-		globals: true,
-		include: ["src/**/__tests__/*.spec.{ts,tsx}"],
-		setupFiles: ["@testing-library/jest-dom/vitest"],
+		projects: [
+			{
+				extends: true,
+				test: {
+					environment: "happy-dom",
+					exclude: ["src/**/*.workers.spec.ts"],
+					globals: true,
+					include: ["src/**/__tests__/*.spec.{ts,tsx}"],
+					name: "client",
+					setupFiles: ["@testing-library/jest-dom/vitest"],
+				},
+			},
+			{
+				extends: true,
+				plugins: [
+					cloudflareTest({
+						main: "src/db/db.server.ts",
+						wrangler: { configPath: ".config/wrangler.json" },
+					}),
+				],
+				test: {
+					include: ["src/**/__tests__/*.workers.spec.ts"],
+					name: "workers",
+				},
+			},
+		],
 	},
 });
