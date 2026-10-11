@@ -1,15 +1,24 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { toast } from "@/components/ui/toast-manager";
 import { LogoutButton } from "@/features/account/components/logout-button";
 import { signOut } from "@/lib/auth/auth-client";
-import {
-	DEFAULT_DELAY_MS,
-	resolveWithDelay,
-} from "@/testing/utils/resolve-with-delay";
+import { advanceTimers } from "@/testing/utils/advance-timers";
+import { resolveWithDelay } from "@/testing/utils/resolve-with-delay";
 
 vi.mock("@/lib/auth/auth-client");
 vi.mock("@/components/ui/toast-manager");
+
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+	vi.useFakeTimers({
+		shouldAdvanceTime: true,
+		toFake: ["setTimeout", "clearTimeout"],
+	});
+
+	user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+});
 
 afterEach(() => {
 	vi.clearAllTimers();
@@ -46,8 +55,6 @@ test("respects the disabled prop", () => {
 });
 
 test("does not sign out when disabled", async () => {
-	// Arrange
-	const user = userEvent.setup();
 	// Act
 	render(<LogoutButton disabled={true} />);
 	await user.click(screen.getByRole("button"));
@@ -57,7 +64,6 @@ test("does not sign out when disabled", async () => {
 
 test("enables the button and clears its busy state after completion", async () => {
 	// Arrange
-	vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
 
 	const response = { data: { success: true }, error: null };
 
@@ -65,10 +71,8 @@ test("enables the button and clears its busy state after completion", async () =
 
 	// Act
 	render(<LogoutButton />);
-	await act(async () => {
-		fireEvent.click(screen.getByRole("button"));
-		await vi.advanceTimersByTimeAsync(DEFAULT_DELAY_MS);
-	});
+	await user.click(screen.getByRole("button"));
+	await advanceTimers();
 
 	// Assert
 	expect(screen.getByRole("button")).toBeEnabled();
@@ -77,41 +81,36 @@ test("enables the button and clears its busy state after completion", async () =
 
 test("calls the click callback after completion", async () => {
 	// Arrange
-	vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
 	const onClick = vi.fn();
 	const response = { data: { success: true }, error: null };
 	vi.mocked(signOut).mockImplementationOnce(() => resolveWithDelay(response));
 
 	// Act
 	render(<LogoutButton onClick={onClick} />);
-	await act(async () => {
-		fireEvent.click(screen.getByRole("button"));
-		await vi.advanceTimersByTimeAsync(DEFAULT_DELAY_MS);
-	});
+	await user.click(screen.getByRole("button"));
+	await advanceTimers();
+
 	// Assert
 	expect(onClick).toHaveBeenCalledOnce();
 });
 
 test("does not show a toast on success", async () => {
 	// Arrange
-	vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-
 	const response = { data: { success: true }, error: null };
 	vi.mocked(signOut).mockImplementationOnce(() => resolveWithDelay(response));
+
 	// Act
 	render(<LogoutButton />);
-	await act(async () => {
-		fireEvent.click(screen.getByRole("button"));
-		await vi.advanceTimersByTimeAsync(DEFAULT_DELAY_MS);
-	});
+	await user.click(screen.getByRole("button"));
+
+	await advanceTimers();
+
 	// Assert
 	expect(toast.add).not.toHaveBeenCalled();
 });
 
 test("shows server errors in a toast", async () => {
 	// Arrange
-	const user = userEvent.setup();
-
 	vi.mocked(signOut).mockResolvedValueOnce({
 		data: null,
 		error: {
@@ -133,7 +132,6 @@ test("shows server errors in a toast", async () => {
 
 test("enables the button after a failed logout", async () => {
 	// Arrange
-	const user = userEvent.setup();
 
 	vi.mocked(signOut).mockResolvedValueOnce({
 		data: null,
@@ -152,7 +150,6 @@ test("enables the button after a failed logout", async () => {
 
 test("calls the click callback after a failed logout", async () => {
 	// Arrange
-	const user = userEvent.setup();
 	const onClick = vi.fn();
 
 	vi.mocked(signOut).mockResolvedValueOnce({
@@ -172,16 +169,12 @@ test("calls the click callback after a failed logout", async () => {
 
 test("disables the button, marks it busy, and defers the callback while pending", async () => {
 	// Arrange
-	vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
 	const onClick = vi.fn();
 	const response = { data: { success: true }, error: null };
 	vi.mocked(signOut).mockImplementationOnce(() => resolveWithDelay(response));
 	// Act
 	render(<LogoutButton onClick={onClick} />);
-	await act(async () => {
-		fireEvent.click(screen.getByRole("button"));
-		await vi.advanceTimersByTimeAsync(DEFAULT_DELAY_MS - 1);
-	});
+	await user.click(screen.getByRole("button"));
 	// Assert
 	expect(screen.getByRole("button")).toBeDisabled();
 	expect(screen.getByRole("button")).toHaveAttribute("aria-busy", "true");
@@ -190,20 +183,13 @@ test("disables the button, marks it busy, and defers the callback while pending"
 
 test("ignores repeated clicks while pending", async () => {
 	// Arrange
-	vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
 	const onClick = vi.fn();
 	const response = { data: { success: true }, error: null };
 	vi.mocked(signOut).mockImplementationOnce(() => resolveWithDelay(response));
 	// Act
 	render(<LogoutButton onClick={onClick} />);
-	await act(async () => {
-		fireEvent.click(screen.getByRole("button"));
-		await vi.advanceTimersByTimeAsync(0);
-	});
-	await act(async () => {
-		fireEvent.click(screen.getByRole("button"));
-		await vi.advanceTimersByTimeAsync(DEFAULT_DELAY_MS - 1);
-	});
+	await user.click(screen.getByRole("button"));
+	await user.click(screen.getByRole("button"));
 	// Assert
 	expect(signOut).toHaveBeenCalledOnce();
 });

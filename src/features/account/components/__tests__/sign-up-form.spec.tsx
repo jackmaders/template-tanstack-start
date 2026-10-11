@@ -1,12 +1,22 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { SignUpForm } from "@/features/account/components/sign-up-form";
 import { signUp } from "@/lib/auth/auth-client";
-import {
-	DEFAULT_DELAY_MS,
-	resolveWithDelay,
-} from "@/testing/utils/resolve-with-delay";
+import { advanceTimers } from "@/testing/utils/advance-timers";
+import { resolveWithDelay } from "@/testing/utils/resolve-with-delay";
 
 vi.mock("@/lib/auth/auth-client");
+
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+	vi.useFakeTimers({
+		shouldAdvanceTime: true,
+		toFake: ["setTimeout", "clearTimeout"],
+	});
+
+	user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+});
 
 afterEach(() => {
 	vi.clearAllTimers();
@@ -49,10 +59,7 @@ test("renders fields with the expected properties and submit button", () => {
 test("blocks empty submissions", async () => {
 	// Act
 	render(<SignUpForm aria-label="Account" />);
-	await act(async () => {
-		await Promise.resolve();
-		fireEvent.submit(screen.getByRole("form", { name: "Account" }));
-	});
+	await user.click(screen.getByRole("button", { name: "Sign up" }));
 	// Assert
 	expect(signUp.email).not.toHaveBeenCalled();
 });
@@ -62,18 +69,11 @@ test("submits entered values", async () => {
 	vi.mocked(signUp.email).mockResolvedValueOnce({ data: null, error: null });
 	// Act
 	render(<SignUpForm />);
-	await act(async () => {
-		fireEvent.change(screen.getByLabelText("Name"), {
-			target: { value: "Person" },
-		});
-		fireEvent.change(screen.getByLabelText("Email"), {
-			target: { value: "person@example.com" },
-		});
-		fireEvent.change(screen.getByLabelText("Password"), {
-			target: { value: "password" },
-		});
-		fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
-	});
+	await user.type(screen.getByLabelText("Name"), "Person");
+	await user.type(screen.getByLabelText("Email"), "person@example.com");
+	await user.type(screen.getByLabelText("Password"), "password");
+	await user.click(screen.getByRole("button", { name: "Sign up" }));
+
 	// Assert
 	expect(signUp.email).toHaveBeenCalledExactlyOnceWith({
 		email: "person@example.com",
@@ -84,51 +84,34 @@ test("submits entered values", async () => {
 
 test("disables submission while the request is pending", async () => {
 	// Arrange
-	vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
 	const response = { data: null, error: null };
 	vi.mocked(signUp.email).mockImplementationOnce(() =>
 		resolveWithDelay(response),
 	);
 	// Act
 	render(<SignUpForm />);
-	await act(async () => {
-		fireEvent.change(screen.getByLabelText("Name"), {
-			target: { value: "Person" },
-		});
-		fireEvent.change(screen.getByLabelText("Email"), {
-			target: { value: "person@example.com" },
-		});
-		fireEvent.change(screen.getByLabelText("Password"), {
-			target: { value: "password" },
-		});
-		fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
-	});
+	await user.type(screen.getByLabelText("Name"), "Person");
+	await user.type(screen.getByLabelText("Email"), "person@example.com");
+	await user.type(screen.getByLabelText("Password"), "password");
+	await user.click(screen.getByRole("button", { name: "Sign up" }));
+
 	// Assert
 	expect(screen.getByRole("button", { name: "Please wait…" })).toBeDisabled();
 });
 
 test("enables submission after the request completes", async () => {
 	// Arrange
-	vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
 	const response = { data: null, error: null };
 	vi.mocked(signUp.email).mockImplementationOnce(() =>
 		resolveWithDelay(response),
 	);
 	// Act
 	render(<SignUpForm />);
-	await act(async () => {
-		fireEvent.change(screen.getByLabelText("Name"), {
-			target: { value: "Person" },
-		});
-		fireEvent.change(screen.getByLabelText("Email"), {
-			target: { value: "person@example.com" },
-		});
-		fireEvent.change(screen.getByLabelText("Password"), {
-			target: { value: "password" },
-		});
-		fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
-		await vi.advanceTimersByTimeAsync(DEFAULT_DELAY_MS);
-	});
+	await user.type(screen.getByLabelText("Name"), "Person");
+	await user.type(screen.getByLabelText("Email"), "person@example.com");
+	await user.type(screen.getByLabelText("Password"), "password");
+	await user.click(screen.getByRole("button", { name: "Sign up" }));
+	await advanceTimers();
 	// Assert
 	expect(screen.getByRole("button", { name: "Sign up" })).toBeEnabled();
 });
