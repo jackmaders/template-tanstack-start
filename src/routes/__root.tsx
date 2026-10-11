@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
+import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/toast";
 import appCss from "@/styles.css?inline";
 
@@ -52,6 +53,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<style>{appCss}</style>
 			</head>
 			<body>
+				<Navbar />
 				{children}
 				<Toaster />
 				<TanStackDevtools
