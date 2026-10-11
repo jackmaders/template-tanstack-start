@@ -1,22 +1,38 @@
 import { env } from "cloudflare:workers";
-import { sql } from "drizzle-orm";
-import { expect, it } from "vitest";
+import { drizzle } from "drizzle-orm/d1";
+import { expect, it, vi } from "vitest";
 import { getDb } from "@/db/db.server";
+import { authRelations } from "@/db/schema/auth";
 
-it("queries D1 using the default environment binding", async () => {
+vi.mock("drizzle-orm/d1");
+
+it("creates a database using the default Worker binding and auth relations", () => {
+	// Arrange
+	const database = {} as ReturnType<typeof drizzle>;
+	vi.mocked(drizzle).mockReturnValue(database);
+
 	// Act
-	const result = await getDb().get<{ value: number }>(sql`select 42 as value`);
+	const result = getDb();
 
 	// Assert
-	expect(result).toEqual({ value: 42 });
+	expect(drizzle).toHaveBeenCalledExactlyOnceWith(env.DB, {
+		relations: authRelations,
+	});
+	expect(result).toBe(database);
 });
 
-it("queries D1 using an explicitly supplied binding", async () => {
+it("creates a database using an explicitly supplied binding and auth relations", () => {
+	// Arrange
+	const binding = {} as typeof env.DB;
+	const database = {} as ReturnType<typeof drizzle>;
+	vi.mocked(drizzle).mockReturnValue(database);
+
 	// Act
-	const result = await getDb(env.DB).get<{ value: number }>(
-		sql`select 7 as value`,
-	);
+	const result = getDb(binding);
 
 	// Assert
-	expect(result).toEqual({ value: 7 });
+	expect(drizzle).toHaveBeenCalledExactlyOnceWith(binding, {
+		relations: authRelations,
+	});
+	expect(result).toBe(database);
 });

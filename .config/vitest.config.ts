@@ -9,6 +9,7 @@ export default defineConfig({
 		clearMocks: true,
 		coverage: {
 			exclude: [
+				"src/db/schema/**",
 				"**/__tests__/**",
 				"**/__mocks__/**",
 				"src/routes/**",

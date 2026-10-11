@@ -3,6 +3,7 @@ import { getRouter } from "@/router";
 
 vi.mock("@/components/ui/toast-manager");
 vi.mock("@/db/db.server.ts");
+vi.mock("@/lib/auth/auth.server.ts");
 vi.mock("@tanstack/react-router-ssr-query");
 
 test("creates the application router with its navigation defaults", () => {
