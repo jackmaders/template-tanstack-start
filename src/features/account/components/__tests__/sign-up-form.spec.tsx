@@ -55,9 +55,12 @@ test("submits entered values", async () => {
 	vi.mocked(signUp.email).mockResolvedValueOnce({ data: null, error: null });
 	// Act
 	render(<SignUpForm />);
-	await user.type(screen.getByLabelText("Name"), "Person");
-	await user.type(screen.getByLabelText("Email"), "person@example.com");
-	await user.type(screen.getByLabelText("Password"), "password");
+	await user.click(screen.getByLabelText("Name"));
+	await user.paste("Person");
+	await user.click(screen.getByLabelText("Email"));
+	await user.paste("person@example.com");
+	await user.click(screen.getByLabelText("Password"));
+	await user.paste("password");
 	await user.click(screen.getByRole("button", { name: "Sign up" }));
 
 	// Assert
