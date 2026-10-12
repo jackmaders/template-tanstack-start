@@ -40,5 +40,21 @@ or {
 		$filename <: r".*src/features/.*",
 		$source <: r".*@/(?:routes(?:/.*)?|router(?:\..*)?|client(?:\..*)?|routeTree\.gen(?:\..*)?|app(?:/.*)?)[\"']",
 		register_diagnostic(span=$statement, message="Features must not import application composition. Compose features in src/routes.", severity="error")
+	},
+	(or {
+		`import $_ from $source`,
+		`import $source`
+	}) as $statement where {
+		$filename <: r".*src/features/account/.*",
+		$source <: r".*@/features/posts(?:/.*)?[\"']",
+		register_diagnostic(span=$statement, message="Features must not import other features. Move shared code into shared modules or compose features in src/routes.", severity="error")
+	},
+	(or {
+		`import $_ from $source`,
+		`import $source`
+	}) as $statement where {
+		$filename <: r".*src/features/posts/.*",
+		$source <: r".*@/features/account(?:/.*)?[\"']",
+		register_diagnostic(span=$statement, message="Features must not import other features. Move shared code into shared modules or compose features in src/routes.", severity="error")
 	}
 }
