@@ -5,6 +5,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
 	HeadContent,
+	Link,
 	type LinkComponentProps,
 	Scripts,
 } from "@tanstack/react-router";
@@ -16,6 +17,7 @@ import appCss from "@/styles.css?inline";
 
 const links: LinkComponentProps[] = [
 	{ children: "Home", to: "/" },
+	{ children: "Posts", to: "/posts" },
 	{ children: "About", to: "/about" },
 ];
 
@@ -48,8 +50,19 @@ export const Route = createRootRouteWithContext<{
 			},
 		],
 	}),
+	notFoundComponent: NotFoundPage,
 	shellComponent: RootDocument,
 });
+
+function NotFoundPage() {
+	return (
+		<main>
+			<h1>Page not found</h1>
+			<p>The page you requested could not be found.</p>
+			<Link to="/">Return home</Link>
+		</main>
+	);
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (

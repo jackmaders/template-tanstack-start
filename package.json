@@ -74,7 +74,7 @@
 		"test:perf": "lhci autorun --config=.config/lighthouserc.json",
 		"test:watch": "vitest -c .config/vitest.config.ts",
 		"validate": "bun run build && bun run lint:ci && bun run lint:types && bun run lint:unused && bun run test:coverage && E2E_USE_PREVIEW=true bun run test:e2e",
-		"validate:fast": "bun run lint:ci && bun run lint:types && bun run lint:unused && bun run test"
+		"validate:fast": "bun run lint:ci && bun run lint:types && bun run lint:unused && bun run test --reporter=minimal"
 	},
 	"type": "module"
 }

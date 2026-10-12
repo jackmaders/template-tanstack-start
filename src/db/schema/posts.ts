@@ -8,7 +8,9 @@ export const posts = sqliteTable(
 	{
 		id: integer("id").primaryKey({ autoIncrement: true }),
 		title: text("title", { length: POST_TITLE_MAX_LENGTH }).notNull(),
-		userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
+		userId: text("user_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
 	},
 	(table) => [index("posts_user_id_idx").on(table.userId)],
 );

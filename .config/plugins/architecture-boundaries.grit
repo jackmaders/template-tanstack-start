@@ -1,0 +1,44 @@
+language js
+
+or {
+	(or {
+		`import $_ from $source`,
+		`import $source`
+	}) as $statement where {
+		$filename <: r".*src/.*",
+		$source <: r".*__mocks__.*",
+		register_diagnostic(span=$statement, message="Do not import from __mocks__ files. Import the original module and let Vitest load its mock.", severity="error")
+	},
+	(or {
+		`import $_ from $source`,
+		`import $source`
+	}) as $statement where {
+		$filename <: r".*src/.*",
+		$source <: r".*\.\./.*",
+		register_diagnostic(span=$statement, message="Use @/ imports instead of parent-directory imports so architecture boundaries are enforced.", severity="error")
+	},
+	(or {
+		`import $_ from $source`,
+		`import $source`
+	}) as $statement where {
+		$filename <: r".*src/(?:assets|components|config|db|hooks|lib|stores|testing|types|utils)/.*",
+		$source <: r".*@/(?:routes(?:/.*)?|router(?:\..*)?|client(?:\..*)?|routeTree\.gen(?:\..*)?|app(?:/.*)?)[\"']",
+		register_diagnostic(span=$statement, message="Shared modules must not import application composition. Compose features in src/routes.", severity="error")
+	},
+	(or {
+		`import $_ from $source`,
+		`import $source`
+	}) as $statement where {
+		$filename <: r".*src/(?:assets|components|config|db|hooks|lib|stores|testing|types|utils)/.*",
+		$source <: r".*@/features(?:/.*)?[\"']",
+		register_diagnostic(span=$statement, message="Shared modules must not import features. Move reusable code into shared modules.", severity="error")
+	},
+	(or {
+		`import $_ from $source`,
+		`import $source`
+	}) as $statement where {
+		$filename <: r".*src/features/.*",
+		$source <: r".*@/(?:routes(?:/.*)?|router(?:\..*)?|client(?:\..*)?|routeTree\.gen(?:\..*)?|app(?:/.*)?)[\"']",
+		register_diagnostic(span=$statement, message="Features must not import application composition. Compose features in src/routes.", severity="error")
+	}
+}

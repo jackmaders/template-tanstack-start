@@ -1,8 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { postsQueryOptions } from "@/features/posts/api/posts-queries";
-import { PostsPage } from "@/features/posts/components/posts-page";
 
 export const Route = createFileRoute("/about")({
-	component: PostsPage,
-	loader: ({ context }) => context.queryClient.query(postsQueryOptions),
+	component: AboutPage,
 });
+
+function AboutPage() {
+	return (
+		<main>
+			<h1>About this starter</h1>
+			<p>
+				This template combines TanStack Start, React, TypeScript, and Cloudflare
+				Workers to provide a foundation for full-stack applications.
+			</p>
+		</main>
+	);
+}

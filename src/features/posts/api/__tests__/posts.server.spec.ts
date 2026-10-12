@@ -45,7 +45,7 @@ test("creates and returns the inserted post", async () => {
 	const values = { title: "A new post" };
 	const post = createPostFixture(values);
 
-	const query = db.insert(posts).values(values);
+	const query = db.insert(posts).values({ ...values, userId: TEST_USER.id });
 	vi.mocked(query.returning).mockResolvedValueOnce([post]);
 	vi.clearAllMocks();
 
@@ -62,7 +62,9 @@ test("creates and returns the inserted post", async () => {
 
 test("throws when creating a post returns no row", async () => {
 	// Arrange
-	const query = db.insert(posts).values({ title: "A new post" });
+	const query = db
+		.insert(posts)
+		.values({ title: "A new post", userId: TEST_USER.id });
 	vi.mocked(query.returning).mockResolvedValueOnce([]);
 	vi.clearAllMocks();
 

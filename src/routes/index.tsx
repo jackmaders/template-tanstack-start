@@ -1,8 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { postsQueryOptions } from "@/features/posts/api/posts-queries";
-import { PostsPage } from "@/features/posts/components/posts-page";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-	component: PostsPage,
-	loader: ({ context }) => context.queryClient.query(postsQueryOptions),
+	component: HomePage,
 });
+
+function HomePage() {
+	return (
+		<main>
+			<h1>Welcome to TanStack Start</h1>
+			<p>Sign in or create an account to view your posts.</p>
+			<Link to="/posts">View posts</Link>
+		</main>
+	);
+}

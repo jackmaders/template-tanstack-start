@@ -42,17 +42,6 @@
 			},
 			"style": {
 				"noJsxLiterals": "off",
-				"noRestrictedImports": {
-					"level": "error",
-					"options": {
-						"patterns": [
-							{
-								"group": ["**/__mocks__/**", "**/__mocks__"],
-								"message": "Do not import from __mocks__ files. Import the original module and let Vitest load its mock."
-							}
-						]
-					}
-				},
 				"noTernary": "off",
 				"preset": "all",
 				"useExportsLast": "off"
@@ -89,124 +78,14 @@
 		},
 		{
 			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noMagicNumbers": "off"
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["**/__mocks__/**", "**/__mocks__"],
-										"message": "Do not import from __mocks__ files. Import the original module and let Vitest load its mock."
-									},
-									{
-										"group": ["../**"],
-										"message": "Use @/ imports instead of parent-directory imports so architecture boundaries are enforced."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": [
-				"**/src/{assets,components,config,db,hooks,lib,stores,testing,types,utils}/**"
-			],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["**/__mocks__/**", "**/__mocks__"],
-										"message": "Do not import from __mocks__ files. Import the original module and let Vitest load its mock."
-									},
-									{
-										"group": ["../**"],
-										"message": "Use @/ imports instead of parent-directory imports so architecture boundaries are enforced."
-									},
-									{
-										"group": [
-											"@/routes",
-											"@/routes/**",
-											"@/router",
-											"@/router.*",
-											"@/client",
-											"@/client.*",
-											"@/routeTree.gen",
-											"@/routeTree.gen.*",
-											"@/app",
-											"@/app/**"
-										],
-										"message": "Shared modules and features must not import application composition. Compose features in src/routes."
-									},
-									{
-										"group": ["@/features", "@/features/**"],
-										"message": "Shared modules must not import features. Move reusable code into shared modules."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"includes": ["**/src/features/**"],
-			"linter": {
-				"rules": {
-					"style": {
-						"noRestrictedImports": {
-							"level": "error",
-							"options": {
-								"patterns": [
-									{
-										"group": ["**/__mocks__/**", "**/__mocks__"],
-										"message": "Do not import from __mocks__ files. Import the original module and let Vitest load its mock."
-									},
-									{
-										"group": ["../**"],
-										"message": "Use @/ imports instead of parent-directory imports so architecture boundaries are enforced."
-									},
-									{
-										"group": [
-											"@/routes",
-											"@/routes/**",
-											"@/router",
-											"@/router.*",
-											"@/client",
-											"@/client.*",
-											"@/routeTree.gen",
-											"@/routeTree.gen.*",
-											"@/app",
-											"@/app/**"
-										],
-										"message": "Shared modules and features must not import application composition. Compose features in src/routes."
-									}
-								]
-							}
-						}
-					}
-				}
-			}
+			"linter": { "rules": { "style": { "noMagicNumbers": "off" } } }
 		}
 	],
 	"plugins": [
+		{
+			"includes": ["**"],
+			"path": "./plugins/architecture-boundaries.grit"
+		},
 		{
 			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
 			"path": "./plugins/prefer-once-mocks.grit"
@@ -216,10 +95,7 @@
 			"path": "./plugins/no-inline-vitest-mock.grit"
 		},
 		{
-			"includes": [
-				"**/__tests__/*.spec.{ts,tsx}",
-				"**/browser-tests/*.spec.ts"
-			],
+			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
 			"path": "./plugins/require-test-aaa.grit"
 		},
 		{

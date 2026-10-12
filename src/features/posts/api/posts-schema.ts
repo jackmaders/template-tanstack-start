@@ -4,7 +4,7 @@ import { posts } from "@/db/schema/posts";
 
 export const createPostSchema = createInsertSchema(posts, {
 	title: (schema) => schema.trim().min(1),
-}).omit({ id: true });
+}).omit({ id: true, userId: true });
 export const selectPostSchema = createSelectSchema(posts);
 export const deletePostSchema = selectPostSchema.pick({ id: true });
 
