@@ -8,8 +8,9 @@ import {
 	deletePost,
 	listPosts,
 } from "@/features/posts/api/posts.server";
-
 import { ensureSession } from "@/lib/auth/auth.functions";
+import { createPostFixture } from "@/testing/fixtures/post";
+import { TEST_USER } from "@/testing/fixtures/session";
 
 vi.mock("@/lib/auth/auth.functions");
 vi.mock("@tanstack/react-start");
@@ -17,7 +18,7 @@ vi.mock("@/features/posts/api/posts.server");
 
 test("lists posts and returns the server result", async () => {
 	// Arrange
-	const posts = [{ id: 1, title: "A post" }];
+	const posts = [createPostFixture()];
 	vi.mocked(listPosts).mockResolvedValueOnce(posts);
 
 	// Act
@@ -25,7 +26,7 @@ test("lists posts and returns the server result", async () => {
 
 	// Assert
 	expect(result).toBe(posts);
-	expect(listPosts).toHaveBeenCalledOnce();
+	expect(listPosts).toHaveBeenCalledExactlyOnceWith(TEST_USER);
 });
 
 test("validates and forwards new post data", async () => {
@@ -36,7 +37,7 @@ test("validates and forwards new post data", async () => {
 	await createPostFn({ data });
 
 	// Assert
-	expect(createPost).toHaveBeenCalledWith(data);
+	expect(createPost).toHaveBeenCalledWith(TEST_USER, data);
 });
 
 test("validates and forwards delete request", async () => {
@@ -47,7 +48,7 @@ test("validates and forwards delete request", async () => {
 	await deletePostFn({ data: { id } });
 
 	// Assert
-	expect(deletePost).toHaveBeenCalledWith(id);
+	expect(deletePost).toHaveBeenCalledWith(TEST_USER, id);
 });
 
 test("trims the title before creating a post", async () => {
@@ -58,7 +59,7 @@ test("trims the title before creating a post", async () => {
 	await createPostFn({ data });
 
 	// Assert
-	expect(createPost).toHaveBeenCalledWith({ title: "A post" });
+	expect(createPost).toHaveBeenCalledWith(TEST_USER, { title: "A post" });
 });
 
 test("rejects an empty title before writing", async () => {
@@ -88,8 +89,10 @@ test("rejects an invalid post id before deleting", async () => {
 test("rejects anonymous post creation before writing", async () => {
 	// Arrange
 	vi.mocked(ensureSession).mockRejectedValueOnce(new Error("Unauthorized"));
+
 	// Act
 	const result = createPostFn({ data: { title: "Blocked" } });
+
 	// Assert
 	await expect(result).rejects.toThrow("Unauthorized");
 	expect(createPost).not.toHaveBeenCalled();
@@ -98,8 +101,10 @@ test("rejects anonymous post creation before writing", async () => {
 test("rejects anonymous post deletion before writing", async () => {
 	// Arrange
 	vi.mocked(ensureSession).mockRejectedValueOnce(new Error("Unauthorized"));
+
 	// Act
 	const result = deletePostFn({ data: { id: 1 } });
+
 	// Assert
 	await expect(result).rejects.toThrow("Unauthorized");
 	expect(deletePost).not.toHaveBeenCalled();

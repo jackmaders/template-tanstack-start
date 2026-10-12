@@ -3,8 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { POST_TITLE_MAX_LENGTH } from "@/db/schema/posts";
 import { useCreatePost } from "@/features/posts/api/use-create-post";
 import { AddPostForm } from "@/features/posts/components/add-post-form";
+import { useSession } from "@/lib/auth/auth-client";
 
 vi.mock("@/features/posts/api/use-create-post");
+vi.mock("@/lib/auth/auth-client");
 
 test("renders an empty post form with title constraints", () => {
 	// Act
@@ -40,4 +42,21 @@ test("creates a post and resets the form after submission", async () => {
 	expect(mutateAsync).toHaveBeenCalledOnce();
 	await waitFor(() => expect(input).toHaveValue(""));
 	await waitFor(() => expect(button).toBeDisabled());
+});
+
+test("does not render for anonymous users", () => {
+	// Arrange
+	vi.mocked(useSession).mockReturnValueOnce({
+		data: null,
+		error: null,
+		isPending: false,
+		isRefetching: false,
+		refetch: vi.fn(),
+	} as ReturnType<typeof useSession>);
+
+	// Act
+	const { container } = render(<AddPostForm />);
+
+	// Assert
+	expect(container).toBeEmptyDOMElement();
 });

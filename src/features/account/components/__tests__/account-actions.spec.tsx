@@ -32,7 +32,13 @@ test("shows sign-in controls after signing out", async () => {
 		isRefetching: false,
 		refetch: vi.fn(),
 	};
-	vi.mocked(useSession).mockReturnValueOnce(session);
+	vi.mocked(useSession).mockReturnValueOnce(session).mockReturnValueOnce({
+		data: null,
+		error: null,
+		isPending: false,
+		isRefetching: false,
+		refetch: vi.fn(),
+	});
 	vi.mocked(signOut).mockResolvedValueOnce({
 		data: { success: true },
 		error: null,

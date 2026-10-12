@@ -30,7 +30,9 @@ export function AddPostForm() {
 		},
 	});
 
-	if (!session) return null;
+	if (!session) {
+		return null;
+	}
 
 	return (
 		<form.AppForm>

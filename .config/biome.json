@@ -16,7 +16,7 @@
 	"files": {
 		"includes": [
 			"**",
-			"!!**/{dist,coverage,public,.wrangler,test-results,playwright-report,.lighthouseci}",
+			"!!**/{dist,coverage,public,.wrangler,test-results,playwright-report,.lighthouseci,.agents}",
 			"!**/src/routeTree.gen.ts",
 			"!**/src/types/cloudflare-env.d.ts"
 		]

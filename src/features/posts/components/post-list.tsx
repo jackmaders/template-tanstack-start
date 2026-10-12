@@ -4,13 +4,20 @@ import { useSession } from "@/lib/auth/auth-client";
 import { DeletePostButton } from "./delete-post-button";
 
 export function PostList() {
-	const { data: posts } = useSuspenseQuery(postsQueryOptions);
 	const { data: session } = useSession();
 
-	if (!session) return <p>Sign in to create and view your posts.</p>;
+	if (!session) {
+		return <p>Sign in to create and view your posts.</p>;
+	}
+
+	return <AuthenticatedPostList />;
+}
+
+function AuthenticatedPostList() {
+	const { data: posts } = useSuspenseQuery(postsQueryOptions);
 
 	return (
-		<section>
+		<section aria-label="Your posts">
 			<h2>Your posts</h2>
 			<p>
 				{posts.length} {posts.length === 1 ? "post" : "posts"}
