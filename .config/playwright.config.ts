@@ -30,7 +30,7 @@ export default defineConfig({
 	],
 	reporter: isCi ? "github" : "list",
 	retries: isCi ? 2 : 0,
-	testDir: "../browser-tests",
+	testDir: "../tests/e2e",
 	use: {
 		baseURL: baseUrl,
 		trace: "on-first-retry",

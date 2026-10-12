@@ -73,7 +73,7 @@
 		"test:e2e": "playwright test -c .config/playwright.config.ts",
 		"test:perf": "lhci autorun --config=.config/lighthouserc.json",
 		"test:watch": "vitest -c .config/vitest.config.ts",
-		"validate": "bun run build && bun run lint:ci && bun run lint:types && bun run lint:unused && bun run test:coverage && E2E_USE_PREVIEW=true bun run test:e2e",
+		"validate": "bun run build && bun run lint:ci && bun run lint:types && bun run lint:unused && bun run test:coverage --reporter=minimal --coverage.reporter=text-summary && bun run test:e2e --project=chromium --reporter=line",
 		"validate:fast": "bun run lint:ci && bun run lint:types && bun run lint:unused && bun run test --reporter=minimal"
 	},
 	"type": "module"

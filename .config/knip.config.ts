@@ -15,6 +15,8 @@ const config: KnipConfig = {
 		".config/vitest/*",
 		"src/components/ui/*",
 		"src/testing/**",
+		"tests/e2e/**",
+		"tests/data/**",
 	],
 	ignoreBinaries: ["wrangler"],
 	ignoreDependencies: ["cloudflare"],

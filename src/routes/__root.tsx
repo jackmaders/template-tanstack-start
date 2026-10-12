@@ -10,6 +10,7 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { useEffect } from "react";
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/toast";
 import { AccountActions } from "@/features/account/components/account-actions";
@@ -65,6 +66,10 @@ function NotFoundPage() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+	useEffect(() => {
+		document.body.dataset.hydrated = "true";
+	}, []);
+
 	return (
 		<html className="dark" lang="en">
 			<head>
