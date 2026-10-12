@@ -1,0 +1,180 @@
+name: 🔍 PR Quality Checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  BETTER_AUTH_SECRET: template-ci-local-only-secret-value
+  BETTER_AUTH_URL: http://localhost:5173
+
+jobs:
+  unit-tests:
+    name: 🧪 Run Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 🛒 Checkout Source Code
+        uses: actions/checkout@v7.0.1
+
+      - name: ⚡ Setup Bun Environment
+        uses: ./.github/actions/setup-bun
+
+      - name: 🧪 Run Unit Tests
+        run: bun run test:coverage
+
+      - name: Upload Coverage Report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  check-build:
+    name: 📦 Verify Build Health
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 🛒 Checkout Source Code
+        uses: actions/checkout@v7.0.1
+
+      - name: ⚡ Setup Bun Environment
+        uses: ./.github/actions/setup-bun
+
+      - name: 🏗️ Build Application
+        run: bun run build
+
+      - name: 🔀 Verify Route Tree
+        run: git diff --exit-code -- src/routeTree.gen.ts
+
+      - name: 📦 Verify Worker Deployment
+        run: bun run cf:deploy --dry-run
+
+      - name: 📤 Upload Build Artifacts
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: build-output
+          path: dist/
+          include-hidden-files: true
+          retention-days: 1
+
+  artifact-drift:
+    name: 🛡️ Prevent Artifact Drift
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 🛒 Checkout Source Code
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: ⚡ Setup Bun Environment
+        uses: ./.github/actions/setup-bun
+
+      - name: ☁️ Verify Cloudflare Types
+        run: bun run cf:generate && git diff --exit-code -- src/types/cloudflare-env.d.ts
+
+      - name: 🗃️ Verify Database Migrations
+        run: |
+          bun run db:generate
+          git diff --exit-code -- drizzle
+          test -z "$(git ls-files --others --exclude-standard -- drizzle)"
+
+      - name: 🔒 Enforce Single Migration Per PR
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          NEW_MIGRATIONS=$(git diff --name-only --diff-filter=A "$BASE_SHA...$HEAD_SHA" -- "drizzle/**/*.sql" | wc -l)
+          [ "$NEW_MIGRATIONS" -le 1 ] || { echo "::error::PR introduces $NEW_MIGRATIONS migrations (max 1 allowed)."; exit 1; }
+
+  browser-tests:
+    name: 🎭 Run Browser Tests
+    needs: [check-build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+
+    steps:
+      - name: 🛒 Checkout Source Code
+        uses: actions/checkout@v7.0.1
+
+      - name: ⚡ Setup Bun Environment
+        uses: ./.github/actions/setup-bun
+
+      - name: 📥 Download Build Artifacts
+        uses: actions/download-artifact@v8.0.2
+        with:
+          name: build-output
+          path: dist/
+
+      - name: 🎭 Run Browser Tests
+        uses: ./.github/actions/run-playwright
+        with:
+          browser: ${{ matrix.browser }}
+          use-preview: "true"
+          report-name: playwright-report-${{ matrix.browser }}
+
+  lighthouse:
+    name: 🔦 Run Lighthouse Check
+    needs: [check-build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 🛒 Checkout Source Code
+        uses: actions/checkout@v7.0.1
+
+      - name: ⚡ Setup Bun Environment
+        uses: ./.github/actions/setup-bun
+
+      - name: 📥 Download Build Artifacts
+        uses: actions/download-artifact@v8.0.2
+        with:
+          name: build-output
+          path: dist/
+
+      - name: 🔦 Run Lighthouse Check
+        uses: ./.github/actions/run-lighthouse
+        with:
+          number-of-runs: "3"
+
+  code-quality:
+    name: ✨ Check Code Quality (${{ matrix.script }})
+    strategy:
+      fail-fast: false
+      matrix:
+        script: [lint:ci, lint:types, lint:unused]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 🛒 Checkout Source Code
+        uses: actions/checkout@v7.0.1
+
+      - name: ⚡ Setup Bun Environment
+        uses: ./.github/actions/setup-bun
+
+      - name: Run Quality Check
+        env:
+          CHECK_SCRIPT: ${{ matrix.script }}
+        run: bun run "$CHECK_SCRIPT"

@@ -42,10 +42,10 @@ function getWebServerConfig() {
 		return {};
 	}
 
-	const steps = ["bun run db:migrate"];
+	const steps = ["bun run db:migrate --local"];
 
 	if (usePreview) {
-		steps.push("bun run preview");
+		steps.push("bun run cf:preview");
 	} else {
 		steps.push("bun run dev");
 	}
