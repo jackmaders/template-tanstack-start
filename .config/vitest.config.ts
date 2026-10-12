@@ -1,6 +1,8 @@
 import { cloudflareTest } from "@cloudflare/vitest-plugin";
 import { defineConfig } from "vitest/config";
 
+process.env.WRANGLER_LOG ??= "error";
+
 export default defineConfig({
 	resolve: {
 		tsconfigPaths: true,
