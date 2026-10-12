@@ -1,6 +1,6 @@
 import { type ComponentProps, type MouseEvent, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import type { Post } from "@/features/posts/api/posts.schema";
+import type { Post } from "@/features/posts/api/posts-schema";
 import { useDeletePost } from "@/features/posts/api/use-delete-post";
 
 interface DeletePostButtonProps extends ComponentProps<"button"> {

@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { createPostFn } from "./posts.functions";
-import { postKeys } from "./posts.queries";
-import type { PostCreate } from "./posts.schema";
+import { postKeys } from "./posts-queries";
+import type { PostCreate } from "./posts-schema";
 
 export function useCreatePost() {
 	const queryClient = useQueryClient();

@@ -102,3 +102,64 @@ test("enables submission after the request completes", async () => {
 	// Assert
 	expect(screen.getByRole("button", { name: "Sign In" })).toBeEnabled();
 });
+
+test("displays authentication errors", async () => {
+	// Arrange
+	const user = userEvent.setup();
+	vi.mocked(signIn.email).mockResolvedValueOnce({
+		data: null,
+		error: {
+			message: "Invalid email or password",
+			status: 401,
+			statusText: "Unauthorized",
+		},
+	});
+	// Act
+	render(<SignInForm />);
+
+	await user.type(screen.getByLabelText("Email"), "person@example.com");
+	await user.type(screen.getByLabelText("Password"), "password");
+	await user.click(screen.getByRole("button", { name: "Sign In" }));
+	// Assert
+	expect(await screen.findByText("Invalid email or password")).toBeVisible();
+});
+
+test("displays a safe message when the authentication request rejects", async () => {
+	// Arrange
+	const user = userEvent.setup();
+	vi.mocked(signIn.email).mockRejectedValueOnce(new Error("Network details"));
+	// Act
+	render(<SignInForm />);
+
+	await user.type(screen.getByLabelText("Email"), "person@example.com");
+	await user.type(screen.getByLabelText("Password"), "password");
+	await user.click(screen.getByRole("button", { name: "Sign In" }));
+	// Assert
+	expect(
+		await screen.findByText("Something went wrong. Please try again."),
+	).toBeVisible();
+	expect(screen.queryByText("Network details")).not.toBeInTheDocument();
+});
+
+test("allows retrying after an authentication error", async () => {
+	// Arrange
+	const user = userEvent.setup();
+	vi.mocked(signIn.email)
+		.mockResolvedValueOnce({
+			data: null,
+			error: { message: "Try again", status: 401, statusText: "Unauthorized" },
+		})
+		.mockResolvedValueOnce({ data: null, error: null });
+	// Act
+	render(<SignInForm />);
+
+	await user.type(screen.getByLabelText("Email"), "person@example.com");
+	await user.type(screen.getByLabelText("Password"), "password");
+	await user.click(screen.getByRole("button", { name: "Sign In" }));
+	await screen.findByText("Try again");
+	await user.type(screen.getByLabelText("Password"), "corrected");
+	await user.click(screen.getByRole("button", { name: "Sign In" }));
+	// Assert
+	expect(signIn.email).toHaveBeenCalledTimes(2);
+	expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+});

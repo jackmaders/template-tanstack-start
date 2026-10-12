@@ -6,6 +6,7 @@ const form = {
 	Subscribe: vi.fn(({ children, selector }) =>
 		children(selector({ canSubmit: true, errorMap: {}, isSubmitting: false })),
 	),
+	setErrorMap: vi.fn(),
 };
 
 const field = {};

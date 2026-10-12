@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useId } from "react";
-import { postsQueryOptions } from "@/features/posts/api/posts.queries";
+import { postsQueryOptions } from "@/features/posts/api/posts-queries";
 import { DeletePostButton } from "./delete-post-button";
 
 export function PostList() {

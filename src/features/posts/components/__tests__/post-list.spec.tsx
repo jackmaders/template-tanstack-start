@@ -1,9 +1,10 @@
 import { render, screen } from "@testing-library/react";
-import { postsQueryOptions } from "@/features/posts/api/posts.queries";
+import { postsQueryOptions } from "@/features/posts/api/posts-queries";
 import { PostList } from "@/features/posts/components/post-list";
 import { createQueryTestContext } from "@/testing/query-client";
 
 vi.mock("@tanstack/react-start");
+vi.mock("@/lib/auth/auth.functions");
 vi.mock("@/features/posts/api/posts.server");
 vi.mock("@/features/posts/api/use-delete-post");
 

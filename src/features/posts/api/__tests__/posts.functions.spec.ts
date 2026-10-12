@@ -9,6 +9,9 @@ import {
 	listPosts,
 } from "@/features/posts/api/posts.server";
 
+import { ensureSession } from "@/lib/auth/auth.functions";
+
+vi.mock("@/lib/auth/auth.functions");
 vi.mock("@tanstack/react-start");
 vi.mock("@/features/posts/api/posts.server");
 
@@ -25,23 +28,23 @@ test("lists posts and returns the server result", async () => {
 	expect(listPosts).toHaveBeenCalledOnce();
 });
 
-test("validates and forwards new post data", () => {
+test("validates and forwards new post data", async () => {
 	// Arrange
 	const data = { title: "test" };
 
 	// Act
-	createPostFn({ data });
+	await createPostFn({ data });
 
 	// Assert
 	expect(createPost).toHaveBeenCalledWith(data);
 });
 
-test("validates and forwards delete request", () => {
+test("validates and forwards delete request", async () => {
 	// Arrange
 	const id = 1;
 
 	// Act
-	deletePostFn({ data: { id } });
+	await deletePostFn({ data: { id } });
 
 	// Assert
 	expect(deletePost).toHaveBeenCalledWith(id);
@@ -53,7 +56,7 @@ test("registers the correct schemas", async () => {
 
 	const { createServerFn } = await import("@tanstack/react-start");
 	const { createPostSchema, deletePostSchema } = await import(
-		"@/features/posts/api/posts.schema"
+		"@/features/posts/api/posts-schema"
 	);
 
 	// Act
@@ -64,4 +67,24 @@ test("registers the correct schemas", async () => {
 	// Assert
 	expect(builder?.validator).toHaveBeenNthCalledWith(1, createPostSchema);
 	expect(builder?.validator).toHaveBeenNthCalledWith(2, deletePostSchema);
+});
+
+test("rejects anonymous post creation before writing", async () => {
+	// Arrange
+	vi.mocked(ensureSession).mockRejectedValueOnce(new Error("Unauthorized"));
+	// Act
+	const result = createPostFn({ data: { title: "Blocked" } });
+	// Assert
+	await expect(result).rejects.toThrow("Unauthorized");
+	expect(createPost).not.toHaveBeenCalled();
+});
+
+test("rejects anonymous post deletion before writing", async () => {
+	// Arrange
+	vi.mocked(ensureSession).mockRejectedValueOnce(new Error("Unauthorized"));
+	// Act
+	const result = deletePostFn({ data: { id: 1 } });
+	// Assert
+	await expect(result).rejects.toThrow("Unauthorized");
+	expect(deletePost).not.toHaveBeenCalled();
 });

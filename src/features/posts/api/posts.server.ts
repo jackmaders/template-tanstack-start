@@ -1,7 +1,7 @@
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/db/db.server";
 import { posts } from "@/db/schema/posts";
-import type { PostCreate } from "./posts.schema";
+import type { PostCreate } from "./posts-schema";
 
 const LIST_POSTS_LIMIT = 50;
 

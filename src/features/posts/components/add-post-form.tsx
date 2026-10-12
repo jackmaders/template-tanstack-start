@@ -8,7 +8,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { POST_TITLE_MAX_LENGTH } from "@/db/schema/posts";
-import { createPostSchema } from "@/features/posts/api/posts.schema";
+import { createPostSchema } from "@/features/posts/api/posts-schema";
 import { useCreatePost } from "@/features/posts/api/use-create-post";
 
 export function AddPostForm() {
@@ -48,6 +48,7 @@ export function AddPostForm() {
 						</form.AppField>
 					</CardContent>
 					<CardFooter>
+						<form.FormError />
 						<form.SubmitButton type="submit">Add post</form.SubmitButton>
 					</CardFooter>
 				</Card>

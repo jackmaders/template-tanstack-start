@@ -1,10 +1,11 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { postKeys } from "@/features/posts/api/posts.queries";
 import { createPost } from "@/features/posts/api/posts.server";
+import { postKeys } from "@/features/posts/api/posts-queries";
 import { useCreatePost } from "@/features/posts/api/use-create-post";
 import { createQueryTestContext } from "@/testing/query-client";
 
 vi.mock("@tanstack/react-start");
+vi.mock("@/lib/auth/auth.functions");
 vi.mock("@/features/posts/api/posts.server");
 
 test("forwards mutation data and exposes the successful result", async () => {

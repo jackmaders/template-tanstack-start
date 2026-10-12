@@ -5,7 +5,7 @@ import { useFormContext } from "./form-context";
 const selectSubmitError = (state: { errorMap: { onSubmit?: unknown } }) =>
 	state.errorMap.onSubmit;
 
-export function SubmitError(
+export function FormError(
 	props: Omit<ComponentProps<typeof FieldError>, "children" | "errors">,
 ) {
 	const form = useFormContext();

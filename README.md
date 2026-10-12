@@ -53,6 +53,8 @@ TanStack Start splits its application layer across the client entry point, route
 
 Put URL-served static files in root `public/`, and imported assets in `src/assets/`.
 
+Posts form a shared board: reading is public, while creating and deleting posts require a server-verified session. Any signed-in user can delete any post; there is no per-user ownership policy.
+
 Tool configuration lives in root `.config/`. Unit tests live in `__tests__` folders; reusable fixtures and test helpers belong in `src/testing`. Browser tests live in root `browser-tests/`.
 
 Biome's `noRestrictedImports` rules enforce the import direction:

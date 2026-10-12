@@ -2,8 +2,8 @@ import { revalidateLogic } from "@tanstack/react-form";
 import type { ComponentProps } from "react";
 import { useAppForm } from "@/components/forms/app-form";
 import type { Form } from "@/components/forms/form";
-import { loginSchema } from "@/features/account/api/account.schema";
-import { signIn } from "@/lib/auth/auth-client";
+import { loginSchema } from "@/features/account/api/account-schema";
+import { signInWithEmail } from "@/features/account/api/email-auth";
 
 interface SignInFormProps
 	extends Omit<ComponentProps<typeof Form>, "children"> {}
@@ -11,7 +11,7 @@ interface SignInFormProps
 export function SignInForm({ ...props }: SignInFormProps) {
 	const form = useAppForm({
 		defaultValues: { email: "", password: "" },
-		onSubmit: ({ value }) => signIn.email(value),
+		onSubmit: ({ value }) => signInWithEmail(value),
 		validationLogic: revalidateLogic({ mode: "change" }),
 		validators: { onDynamic: loginSchema },
 	});
@@ -39,7 +39,7 @@ export function SignInForm({ ...props }: SignInFormProps) {
 						/>
 					)}
 				</form.AppField>
-				<form.SubmitError />
+				<form.FormError />
 				<form.SubmitButton>Sign In</form.SubmitButton>
 			</form.Form>
 		</form.AppForm>
