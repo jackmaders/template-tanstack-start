@@ -27,6 +27,12 @@ export default defineConfig({
 				statements: 100,
 			},
 		},
+		experimental: {
+			diagnostics: {
+				isolate: false,
+				transform: false,
+			},
+		},
 		projects: [
 			{
 				extends: true,
