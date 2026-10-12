@@ -12,10 +12,22 @@
 			"source": "grahamcrackers/skills",
 			"sourceType": "github"
 		},
+		"database-schema-designer": {
+			"computedHash": "6a26ca15216bb4bfee66ebf813edcb1e31a8002f3f641f16f550df814b522217",
+			"skillPath": "skills/database-schema-designer/SKILL.md",
+			"source": "softaworks/agent-toolkit",
+			"sourceType": "github"
+		},
 		"playwright-best-practices": {
 			"computedHash": "7eb144f734450fee649dc1d209114775ddda07cbf45be84fe969d3d4f3971dce",
 			"skillPath": "playwright-best-practices/SKILL.md",
 			"source": "currents-dev/playwright-best-practices-skill",
+			"sourceType": "github"
+		},
+		"security-best-practices": {
+			"computedHash": "c27616fb4e27999605b90b261dc729784420c8d77bd1a98748384ffaa5b35704",
+			"skillPath": "skills/.curated/security-best-practices/SKILL.md",
+			"source": "openai/skills",
 			"sourceType": "github"
 		},
 		"shadcn": {
@@ -34,6 +46,12 @@
 			"computedHash": "21af2b13d47d31f3094b61c0f41abc8d6a7eed0df3c9a4029ea671f6978b7209",
 			"skillPath": "skills/vitest/SKILL.md",
 			"source": "antfu/skills",
+			"sourceType": "github"
+		},
+		"web-design-guidelines": {
+			"computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a",
+			"skillPath": "skills/web-design-guidelines/SKILL.md",
+			"source": "vercel-labs/agent-skills",
 			"sourceType": "github"
 		},
 		"workers-best-practices": {
