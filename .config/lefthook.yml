@@ -9,7 +9,7 @@ pre-commit:
   commands:
     biome-check:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,css,scss}"
-      run: bun biome check --config-path=.config/biome.json --write --unsafe --linter-enabled=false --assist-enabled=true {staged_files}
+      run: bun biome check --write --unsafe --linter-enabled=false --assist-enabled=true {staged_files}
       stage_fixed: true
 
 commit-msg:

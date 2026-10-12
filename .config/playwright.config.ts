@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 import { defineConfig, devices } from "@playwright/test";
 
 const isCi = Boolean(process.env.CI);

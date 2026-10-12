@@ -84,30 +84,30 @@
 	"plugins": [
 		{
 			"includes": ["**"],
-			"path": "./plugins/architecture-boundaries.grit"
+			"path": "./.config/plugins/architecture-boundaries.grit"
 		},
 		{
 			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
-			"path": "./plugins/prefer-once-mocks.grit"
+			"path": "./.config/plugins/prefer-once-mocks.grit"
 		},
 		{
 			"includes": ["**"],
-			"path": "./plugins/no-inline-vitest-mock.grit"
+			"path": "./.config/plugins/no-inline-vitest-mock.grit"
 		},
 		{
 			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
-			"path": "./plugins/require-test-aaa.grit"
+			"path": "./.config/plugins/require-test-aaa.grit"
 		},
 		{
 			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
-			"path": "./plugins/no-side-effects-in-wait-for.grit"
+			"path": "./.config/plugins/no-side-effects-in-wait-for.grit"
 		},
 		{
 			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
-			"path": "./plugins/prefer-user-event.grit"
+			"path": "./.config/plugins/prefer-user-event.grit"
 		}
 	],
-	"root": false,
+	"root": true,
 	"vcs": {
 		"clientKind": "git",
 		"enabled": true,
