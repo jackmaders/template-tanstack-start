@@ -1,9 +1,51 @@
 {
 	"skills": {
+		"better-auth-best-practices": {
+			"computedHash": "0c30be0e118c2b7a0c4c57bd9e63bf110c7e420a79ec6ce7997153f3b1e066ee",
+			"skillPath": "better-auth/best-practices/SKILL.md",
+			"source": "better-auth/skills",
+			"sourceType": "github"
+		},
 		"bulletproof-react-patterns": {
 			"computedHash": "21440284bed25f9ed947b2c09e7d5a1d0908717f9df85615cd267f6ba12a1638",
 			"skillPath": "skills/bulletproof-react-patterns/SKILL.md",
 			"source": "grahamcrackers/skills",
+			"sourceType": "github"
+		},
+		"playwright-best-practices": {
+			"computedHash": "7eb144f734450fee649dc1d209114775ddda07cbf45be84fe969d3d4f3971dce",
+			"skillPath": "playwright-best-practices/SKILL.md",
+			"source": "currents-dev/playwright-best-practices-skill",
+			"sourceType": "github"
+		},
+		"shadcn": {
+			"computedHash": "da388f632cd83783c02967446e21941c9ee8291ccb43ba74c23f7d4e9b7c298c",
+			"skillPath": "skills/shadcn/SKILL.md",
+			"source": "shadcn-ui/ui",
+			"sourceType": "github"
+		},
+		"vite": {
+			"computedHash": "88ee465fd10f711efecc76e91e96accae2b229dda371614dcf219099c264a486",
+			"skillPath": "skills/vite/SKILL.md",
+			"source": "antfu/skills",
+			"sourceType": "github"
+		},
+		"vitest": {
+			"computedHash": "21af2b13d47d31f3094b61c0f41abc8d6a7eed0df3c9a4029ea671f6978b7209",
+			"skillPath": "skills/vitest/SKILL.md",
+			"source": "antfu/skills",
+			"sourceType": "github"
+		},
+		"workers-best-practices": {
+			"computedHash": "e1c30e93854345114dfa6a0a077363119eb99c03e5c64a8f2109349802e1f2aa",
+			"skillPath": "skills/workers-best-practices/SKILL.md",
+			"source": "cloudflare/skills",
+			"sourceType": "github"
+		},
+		"wrangler": {
+			"computedHash": "6d2bade1438d89034a750b1ddf30d0e5b62823306eccf85a5b25ccc4352ff8a9",
+			"skillPath": "skills/wrangler/SKILL.md",
+			"source": "cloudflare/skills",
 			"sourceType": "github"
 		}
 	},

@@ -34,7 +34,7 @@ export default defineConfig({
 					globals: true,
 					include: [
 						"src/**/__tests__/*.spec.{ts,tsx}",
-						".config/plugins/__tests__/*.spec.ts",
+						".config/**/__tests__/*.spec.ts",
 					],
 					name: "client",
 					setupFiles: [

@@ -82,6 +82,23 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: 🔒 Prevent Migration History Rewrites
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000')
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            BASE_SHA=$(git merge-base "$BASE_SHA" "$HEAD_SHA")
+          fi
+          CHANGED_HISTORY=$(git diff --no-renames --name-only --diff-filter=MDT "$BASE_SHA" "$HEAD_SHA" -- drizzle)
+          if [ -n "$CHANGED_HISTORY" ]; then
+            echo "::error::Existing migrations and snapshots are immutable. Add a new migration instead of modifying, deleting, or renaming history."
+            printf '%s\n' "$CHANGED_HISTORY"
+            exit 1
+          fi
+
       - name: ⚡ Setup Bun Environment
         uses: ./.github/actions/setup-bun
 
