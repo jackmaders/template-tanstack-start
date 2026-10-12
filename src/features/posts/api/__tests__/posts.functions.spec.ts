@@ -50,23 +50,39 @@ test("validates and forwards delete request", async () => {
 	expect(deletePost).toHaveBeenCalledWith(id);
 });
 
-test("registers the correct schemas", async () => {
+test("trims the title before creating a post", async () => {
 	// Arrange
-	vi.resetModules();
-
-	const { createServerFn } = await import("@tanstack/react-start");
-	const { createPostSchema, deletePostSchema } = await import(
-		"@/features/posts/api/posts-schema"
-	);
+	const data = { title: "  A post  " };
 
 	// Act
-	await import("@/features/posts/api/posts.functions");
-
-	const builder = vi.mocked(createServerFn).mock.results[0]?.value;
+	await createPostFn({ data });
 
 	// Assert
-	expect(builder?.validator).toHaveBeenNthCalledWith(1, createPostSchema);
-	expect(builder?.validator).toHaveBeenNthCalledWith(2, deletePostSchema);
+	expect(createPost).toHaveBeenCalledWith({ title: "A post" });
+});
+
+test("rejects an empty title before writing", async () => {
+	// Arrange
+	const data = { title: "   " };
+
+	// Act
+	const result = createPostFn({ data });
+
+	// Assert
+	await expect(result).rejects.toThrow();
+	expect(createPost).not.toHaveBeenCalled();
+});
+
+test("rejects an invalid post id before deleting", async () => {
+	// Arrange
+	const data = { id: Number.NaN };
+
+	// Act
+	const result = deletePostFn({ data });
+
+	// Assert
+	await expect(result).rejects.toThrow();
+	expect(deletePost).not.toHaveBeenCalled();
 });
 
 test("rejects anonymous post creation before writing", async () => {
