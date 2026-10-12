@@ -10,9 +10,11 @@ import {
 import { POST_TITLE_MAX_LENGTH } from "@/db/schema/posts";
 import { createPostSchema } from "@/features/posts/api/posts-schema";
 import { useCreatePost } from "@/features/posts/api/use-create-post";
+import { useSession } from "@/lib/auth/auth-client";
 
 export function AddPostForm() {
 	const { mutateAsync: createPost } = useCreatePost();
+	const { data: session } = useSession();
 
 	const form = useAppForm({
 		defaultValues: { title: "" },
@@ -27,6 +29,8 @@ export function AddPostForm() {
 			onMount: createPostSchema,
 		},
 	});
+
+	if (!session) return null;
 
 	return (
 		<form.AppForm>
