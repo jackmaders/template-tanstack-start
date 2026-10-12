@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { toast } from "@/components/ui/toast-manager";
 import { LogoutButton } from "@/features/account/components/logout-button";
 import { signOut } from "@/lib/auth/auth-client";
-import { createTestPromise } from "@/testing/test-promise";
+import { createTestPromise } from "@/testing/utils/test-promise";
 
 vi.mock("@/lib/auth/auth-client");
 vi.mock("@/components/ui/toast-manager");

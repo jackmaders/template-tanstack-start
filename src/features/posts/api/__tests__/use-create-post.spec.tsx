@@ -3,7 +3,7 @@ import { createPost } from "@/features/posts/api/posts.server";
 import { postKeys } from "@/features/posts/api/posts-queries";
 import type { Post } from "@/features/posts/api/posts-schema";
 import { useCreatePost } from "@/features/posts/api/use-create-post";
-import { createTestPromise } from "@/testing/test-promise";
+import { createTestPromise } from "@/testing/utils/test-promise";
 import { createQueryTestContext } from "@/testing/wrappers/query-client";
 
 vi.mock("@tanstack/react-start");

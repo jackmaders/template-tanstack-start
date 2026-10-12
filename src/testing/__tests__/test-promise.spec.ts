@@ -1,4 +1,4 @@
-import { createTestPromise } from "@/testing/test-promise";
+import { createTestPromise } from "@/testing/utils/test-promise";
 
 test("allows rejecting a pending request and safely cleans it up", async () => {
 	// Arrange

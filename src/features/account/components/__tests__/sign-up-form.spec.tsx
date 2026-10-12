@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SignUpForm } from "@/features/account/components/sign-up-form";
 import { signUp } from "@/lib/auth/auth-client";
-import { createTestPromise } from "@/testing/test-promise";
+import { createTestPromise } from "@/testing/utils/test-promise";
 
 vi.mock("@/lib/auth/auth-client");
 
