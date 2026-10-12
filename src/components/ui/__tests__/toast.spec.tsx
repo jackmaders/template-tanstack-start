@@ -26,19 +26,16 @@ test("renders toasts from the manager with icons for each supported type", () =>
 		toastManager.add({ title: "Unknown toast", type: "custom" });
 	});
 
-	// Assert
-	for (const title of [
-		"Success toast",
-		"Info toast",
-		"Warning toast",
-		"Error toast",
-		"Loading toast",
-		"Unknown toast",
-	]) {
-		expect(screen.getByText(title)).toBeInTheDocument();
-	}
-
 	const iconContainers = document.querySelectorAll('[data-slot="toast-icon"]');
+
+	// Assert
+	expect(screen.getByText("Success toast")).toBeInTheDocument();
+	expect(screen.getByText("Info toast")).toBeInTheDocument();
+	expect(screen.getByText("Warning toast")).toBeInTheDocument();
+	expect(screen.getByText("Error toast")).toBeInTheDocument();
+	expect(screen.getByText("Loading toast")).toBeInTheDocument();
+	expect(screen.getByText("Unknown toast")).toBeInTheDocument();
+
 	expect(iconContainers).toHaveLength(5);
 	expect(
 		screen
@@ -97,26 +94,21 @@ test("forwards props through toast parts and supports custom action and close co
 	);
 
 	const toast = screen.getByTestId("custom-toast");
+	const content = screen.getByTestId("custom-content");
+	const title = screen.getByTestId("custom-title");
+	const description = screen.getByTestId("custom-description");
+	const action = screen.getByTestId("custom-action");
+	const close = screen.getByTestId("custom-close");
 
 	// Assert
 	expect(toast).toHaveAttribute("data-slot", "toast");
-
-	const content = screen.getByTestId("custom-content");
 	expect(content).toHaveAttribute("data-slot", "toast-content");
-
-	const title = screen.getByTestId("custom-title");
 	expect(title).toHaveAttribute("data-slot", "toast-title");
 	expect(title).toHaveTextContent("Manual title");
-
-	const description = screen.getByTestId("custom-description");
 	expect(description).toHaveAttribute("data-slot", "toast-description");
 	expect(description).toHaveTextContent("Manual description");
-
-	const action = screen.getByTestId("custom-action");
 	expect(action).toHaveAttribute("data-slot", "toast-action");
 	expect(action).toHaveTextContent("Undo");
-
-	const close = screen.getByTestId("custom-close");
 	expect(close).toHaveAttribute("data-slot", "toast-close");
 	expect(close).toHaveAttribute("aria-label", "Close toast");
 	expect(close).toHaveTextContent("Dismiss");

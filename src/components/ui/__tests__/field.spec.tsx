@@ -186,6 +186,7 @@ test("renders field separators with and without content", () => {
 	);
 
 	const emptySeparator = screen.getByTestId("empty-separator");
+	const labeledSeparator = screen.getByTestId("labeled-separator");
 
 	// Assert
 	expect(emptySeparator).toHaveAttribute("data-slot", "field-separator");
@@ -195,7 +196,6 @@ test("renders field separators with and without content", () => {
 		emptySeparator.querySelector('[data-slot="field-separator-content"]'),
 	).toBeNull();
 
-	const labeledSeparator = screen.getByTestId("labeled-separator");
 	expect(labeledSeparator).toHaveAttribute("data-content", "true");
 	expect(
 		labeledSeparator.querySelector('[data-slot="separator"]'),

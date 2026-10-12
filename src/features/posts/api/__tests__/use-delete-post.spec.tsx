@@ -1,8 +1,10 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { deletePost } from "@/features/posts/api/posts.server";
 import { postKeys } from "@/features/posts/api/posts-queries";
+import type { Post } from "@/features/posts/api/posts-schema";
 import { useDeletePost } from "@/features/posts/api/use-delete-post";
 import { createQueryTestContext } from "@/testing/query-client";
+import { createTestPromise } from "@/testing/test-promise";
 
 vi.mock("@tanstack/react-start");
 vi.mock("@/lib/auth/auth.functions");
@@ -69,15 +71,13 @@ test("exposes mutation errors without invalidating cached posts", async () => {
 	expect(queryClient.getQueryState(postKeys.all)?.isInvalidated).toBe(false);
 });
 
-test("stays pending until the server operation completes", async () => {
+test("stays pending while the server operation is unresolved", async () => {
 	// Arrange
-	let resolve!: (value: Awaited<ReturnType<typeof deletePost>>) => void;
-	const deferred = new Promise<Awaited<ReturnType<typeof deletePost>>>(
-		(resolvePromise) => {
-			resolve = resolvePromise;
-		},
-	);
-	vi.mocked(deletePost).mockReturnValueOnce(deferred);
+
+	const { promise } = createTestPromise<Post[]>([
+		{ id: 1, title: "Deleted post" },
+	]);
+	vi.mocked(deletePost).mockReturnValueOnce(promise);
 	const { wrapper } = createQueryTestContext();
 	const { result } = renderHook(() => useDeletePost(), { wrapper });
 
@@ -86,9 +86,22 @@ test("stays pending until the server operation completes", async () => {
 
 	// Assert
 	await waitFor(() => expect(result.current.isPending).toBe(true));
-	await act(async () => {
-		resolve([{ id: 1, title: "Deleted post" }]);
-		await deferred;
-	});
+});
+
+test("exposes success after a pending server operation completes", async () => {
+	// Arrange
+	const { promise, resolve } = createTestPromise<Post[]>([
+		{ id: 1, title: "Deleted post" },
+	]);
+	vi.mocked(deletePost).mockReturnValueOnce(promise);
+	const { wrapper } = createQueryTestContext();
+	const { result } = renderHook(() => useDeletePost(), { wrapper });
+
+	// Act
+	act(() => result.current.mutate({ id: 1 }));
+	await resolve([{ id: 1, title: "Deleted post" }]);
+
+	// Assert
 	await waitFor(() => expect(result.current.isSuccess).toBe(true));
+	expect(result.current.isPending).toBe(false);
 });

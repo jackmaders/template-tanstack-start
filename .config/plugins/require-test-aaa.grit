@@ -1,5 +1,27 @@
 language js
 
+pattern expect_expression() {
+	or {
+		`$callee($...)` where { $callee <: r"(?s)^expect(?:\s*\(|\.)[\s\S]*$" },
+		`await $callee($...)` where {
+			$callee <: r"(?s)^expect(?:\s*\(|\.)[\s\S]*$"
+		}
+	}
+}
+
+pattern assertion_callback() {
+	or {
+		JsArrowFunctionExpression(body=expect_expression()),
+		or {
+			JsArrowFunctionExpression(body=JsFunctionBody(statements=$body)),
+			JsFunctionExpression(body=JsFunctionBody(statements=$body))
+		} where {
+			$body <: [$_, ...],
+			$body <: every JsExpressionStatement(expression=expect_expression())
+		}
+	}
+}
+
 or {
 	`$fn($name, $callback, $...)` where {
 		$callback <: or {
@@ -16,9 +38,31 @@ or {
 } as $call where {
 	$fn <: r"^(?:test|it)(?:[.(].*)?$",
 	or {
-		not $callback <: r"(?ms)^[\s\S]*?^[\t ]*// Act[\t ]*\r?$[\s\S]*?^[\t ]*// Assert[\t ]*\r?$[\s\S]*$",
-		$callback <: r"(?ms)^[\s\S]*?^[\t ]*// (?:Act|Assert)[\t ]*\r?$[\s\S]*?^[\t ]*// Arrange[\t ]*\r?$[\s\S]*$",
-		$callback <: r"(?ms)^[\s\S]*?^[\t ]*// Assert[\t ]*\r?$[\s\S]*?^[\t ]*// Act[\t ]*\r?$[\s\S]*$"
-	},
-	register_diagnostic(span=$call, message="Tests must include separate // Act and // Assert comments in that order. Optional // Arrange must come first. Do not combine Act and Assert.", severity="error")
+		and {
+			or {
+				not $callback <: r"(?ms)^[\s\S]*?^[\t ]*// Act[\t ]*\r?$[\s\S]*?^[\t ]*// Assert[\t ]*\r?$[\s\S]*$",
+				$callback <: r"(?ms)^[\s\S]*?^[\t ]*// (?:Act|Assert)[\t ]*\r?$[\s\S]*?^[\t ]*// Arrange[\t ]*\r?$[\s\S]*$",
+				$callback <: r"(?ms)^[\s\S]*?^[\t ]*// Assert[\t ]*\r?$[\s\S]*?^[\t ]*// Act[\t ]*\r?$[\s\S]*$"
+			},
+			register_diagnostic(span=$call, message="Tests must include separate // Act and // Assert comments in that order. Optional // Arrange must come first. Do not combine Act and Assert.", severity="error")
+		},
+		and {
+			$callback <: r"(?ms)^[\s\S]*?^[\t ]*// Assert[\t ]*\r?\n([\s\S]*)$"($assertions),
+			$callback <: or {
+				JsArrowFunctionExpression(body=JsFunctionBody(statements=$statements)),
+				JsFunctionExpression(body=JsFunctionBody(statements=$statements))
+			},
+			$statements <: some $statement where {
+				$parts = split(string=$assertions, separator=$statement),
+				$parts <: [$_, $_, ...],
+				not $statement <: JsExpressionStatement(expression=or {
+					expect_expression(),
+					`await waitFor($wait_callback, $...)` where {
+						$wait_callback <: assertion_callback()
+					}
+				}),
+				register_diagnostic(span=$statement, message="Only expect statements and awaited waitFor calls with assertion-only callbacks are allowed after // Assert. Move setup and actions before // Assert.", severity="error")
+			}
+		}
+	}
 }

@@ -76,8 +76,8 @@ test("disables the button and shows a busy label while submitting", () => {
 	vi.mocked(form.Subscribe).mockImplementationOnce(mockFormSubmitting);
 	// Act
 	render(<SubmitButton>Save</SubmitButton>);
-	// Assert
 	const button = screen.getByRole("button", { name: "Please wait…" });
+	// Assert
 	expect(button).toBeDisabled();
 	expect(button).toHaveAttribute("aria-busy", "true");
 });

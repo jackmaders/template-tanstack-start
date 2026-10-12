@@ -1,7 +1,8 @@
-import { act, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SignUpForm } from "@/features/account/components/sign-up-form";
 import { signUp } from "@/lib/auth/auth-client";
+import { createTestPromise } from "@/testing/test-promise";
 
 vi.mock("@/lib/auth/auth-client");
 
@@ -71,7 +72,7 @@ test("disables submission while the request is pending", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const response = { data: null, error: null };
-	const { promise, resolve } = Promise.withResolvers();
+	const { promise } = createTestPromise(response);
 	vi.mocked(signUp.email).mockReturnValueOnce(promise);
 	// Act
 	render(<SignUpForm />);
@@ -82,18 +83,13 @@ test("disables submission while the request is pending", async () => {
 
 	// Assert
 	expect(screen.getByRole("button", { name: "Please wait…" })).toBeDisabled();
-
-	await act(async () => {
-		resolve(response);
-		await promise;
-	});
 });
 
 test("enables submission after the request completes", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const response = { data: null, error: null };
-	const { promise, resolve } = Promise.withResolvers();
+	const { promise, resolve } = createTestPromise(response);
 	vi.mocked(signUp.email).mockReturnValueOnce(promise);
 	// Act
 	render(<SignUpForm />);
@@ -101,10 +97,7 @@ test("enables submission after the request completes", async () => {
 	await user.type(screen.getByLabelText("Email"), "person@example.com");
 	await user.type(screen.getByLabelText("Password"), "password");
 	await user.click(screen.getByRole("button", { name: "Sign up" }));
-	await act(async () => {
-		resolve(response);
-		await promise;
-	});
+	await resolve(response);
 	// Assert
 	expect(screen.getByRole("button", { name: "Sign up" })).toBeEnabled();
 });
