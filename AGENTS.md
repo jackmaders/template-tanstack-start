@@ -21,7 +21,5 @@ Do not edit the top-level documentation files without explicit permission. If yo
 ## Conventions
 
 - Derive database types from Drizzle schemas and validation types from Zod schemas. Let TypeScript infer types wherever possible.
-- Add file routes in `src/routes`; TanStack Router generates `src/routeTree.gen.ts`.
 - Default to putting feature-specific code in `src/features/<feature>` and move to a shared module when another feature needs it.
 - Keep unit tests in colocated `__tests__` folders and follow the existing patterns. Review at least two existing test suites before adding a new file.
-- All browser test code belong in `tests/e2e`.

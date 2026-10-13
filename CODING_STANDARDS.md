@@ -1,104 +1,141 @@
 # Coding Standards
 
-This document records patterns currently used in this repository. Patterns based on a small number of examples are marked as such; treat them as local precedent rather than a universal rule.
+## Naming
 
-## Project structure
+- Name server-only modules `<name>.server.ts`; include `import "@tanstack/react-start/server-only"` in each module.
+- Name server-function definition modules `<name>.functions.ts`.
+- Name unit tests `__tests__/<module>.spec.ts` or `__tests__/<module>.spec.tsx`; use `<module>.workers.spec.ts` for tests which require a worker environment.
+- Name browser tests `tests/e2e/<scenario>.test.ts`.
+- Name query key and query options modules `<entity>-queries.ts`.
+- Name Zod schema modules `<entity>-schema.ts`.
+- Name mutation hook modules `use-<verb>-<entity>.ts`.
+- Use snake_case for SQL column names.
+- Use framework-required names; scope any necessary Biome suppression to the affected declaration.
 
-- Add file-based routes in `src/routes`. TanStack Router generates `src/routeTree.gen.ts`; do not edit that generated file by hand.
-- Put feature-specific code under `src/features/<feature>`, grouped by role such as `api` and `components`. Move code into shared `src/components`, `src/lib`, or another shared location when multiple features need it.
-- Put reusable UI primitives and form components in `src/components`.
-- Keep unit tests in a colocated `__tests__` directory. Keep browser tests in `tests/e2e`.
-- Keep database schema definitions in `src/db/schema` and database access in server-only modules.
-- Keep shared test fixtures and test wrappers in `src/testing`.
+## Routes
 
-## TypeScript and naming
+- Place routes that require authentication under `src/routes/_authenticated`.
+- Populate the TanStack Query cache in route loaders for data required when the page loads.
 
-- Derive database row types from Drizzle schemas, for example `typeof posts.$inferSelect`.
-- Derive validation input types from Zod schemas with `z.infer<typeof schema>`.
-- Prefer inferred types where possible; add explicit types at public boundaries and where they clarify a contract.
-- Use named exports for components and functions. Components are generally named function declarations.
-- Use camelCase for TypeScript identifiers and properties. Database column names use snake_case.
-- When a framework requires a naming convention that differs from the repository convention, isolate the exception and document it with a Biome ignore comment. `src/components/forms/app-form.ts` does this for TanStack Form's registered PascalCase components.
+## Server Functions
 
-## Routes, server functions, and data loading
+- Use `createServerFn` for client-invoked server operations; use `GET` for reads and `POST` for writes.
+- Limit server functions to validation and middleware wiring; handlers only forward input and context to an extracted server operation.
+- Attach auth middleware to server functions that require authentication.
+- Validate server-function input with `.validator(schema)`.
+- Pass the authenticated user from middleware context to database functions; derive ownership fields from that user.
 
-- Define routes with `createFileRoute(path)({...})` and export the resulting `Route`.
-- The root route owns the document shell, global styles, shared navigation, toaster, and development tools. It creates the router context type with `createRootRouteWithContext`.
-- Route components should delegate feature-specific UI to components under `src/features/<feature>/components`.
-- Protected pages currently use `beforeLoad` to check the session and redirect guests. The `/posts` route demonstrates this pattern; other routes are static.
-- Use `createServerFn` for server functions. Use `GET` for reads and `POST` for writes, as the posts feature does.
-- Attach auth middleware to protected server functions. Validate mutation input with `.validator(schema)` before handling it.
-- Pass the authenticated user from middleware context into server-side data functions. Derive ownership fields such as `userId` on the server rather than trusting client input.
-- Keep database operations in server-side modules, separate from server-function declarations. Current data functions accept an optional database argument defaulting to `getDb()`, which allows tests to inject or mock the database.
-- Reuse TanStack Query options and keys between route loaders and feature hooks. In the posts feature, route loading uses the same query options that mutations invalidate after success.
-- The router creates a QueryClient per router instance, configures a global mutation error toast, enables intent preloading and scroll restoration, and installs SSR query integration.
-- Current examples rely on suspense for the posts query and global mutation error handling. There is no consistent route-level pending or error component pattern yet.
+## Database
 
-## Authentication
+- Declare foreign keys with explicit deletion behavior.
+- Declare indexes in the table callback.
+- Generate table-backed Zod schemas with Drizzle.
+- Limit input schemas to fields the client must supply; omit generated and server-owned fields from create inputs.
+- Scope reads and writes of user-owned records by the authenticated user's ID.
+- Throw an error when `.returning()` produces no row for an operation that expects one.
 
-- Keep Better Auth server setup in `src/lib/auth/auth.server.ts`, marked server-only. The current setup reads Worker environment bindings, uses the Drizzle SQLite adapter, and installs the TanStack Start cookie plugin.
-- Keep client auth exports in `src/lib/auth/auth-client.ts`; the current module exposes the specific sign-in, sign-up, session, and sign-out operations used by the app.
-- Use a server function to read the session from request headers. `ensureSession` throws when no session exists.
-- Use function middleware to protect server functions and pass the session through function context.
-- Protect page navigation separately in route `beforeLoad` when the page should redirect guests.
-- Convert auth API errors into `FormSubmissionError` for form submission handling. Use a fallback message when the returned error has no message.
-- Account input validation currently uses standalone Zod schemas rather than deriving them from database tables. Signup validates email, a trimmed nonempty name, and an 8–128 character password; login requires a nonempty password.
+## Error Handling
 
-## Database and validation
+- Throw errors from server operations; use `try/catch` only for recovery or rethrowing with added context.
+- Use TanStack Query's `data` and `error` result state in client code; handle suspense query failures with error boundaries.
+- Let `queryFn` and `mutationFn` failures reject; handle rejected `mutateAsync` calls with `try/catch`.
 
-- Define tables with Drizzle in `src/db/schema`. The current schema uses camelCase TypeScript properties mapped to snake_case SQL columns.
-- Declare foreign keys and their deletion behavior in the schema. Current user-owned rows cascade on user deletion.
-- Declare indexes in the table callback. Define Drizzle relations where application queries need them; auth relations are currently defined centrally in `src/db/schema/auth.ts`.
-- Keep database initialization centralized in `src/db/db.server.ts`. It is server-only and uses the Worker D1 binding by default, while allowing an explicit binding for tests.
-- Use Drizzle-generated Zod schemas where validation follows a database table. For create inputs, omit generated or server-owned fields; for narrower operations, pick only the required fields.
-- Keep current schema definitions as the source of truth for the present database shape. The SQL files under `drizzle/` record incremental migration history.
-- Put queries and writes in feature server modules. Scope user-owned reads and writes by the authenticated user's ID.
-- Check results from `.returning()` when the operation expects a row, and throw an error when no row was returned.
-- Current list queries order posts by descending ID and apply a limit. This is demonstrated by the posts feature and is not yet a repository-wide pagination convention.
+## Components
 
-## React components and styling
+- Put feature components in `src/features/<feature>/components`
+- Derive wrapper prop types from the wrapped component or native element using `React.ComponentProps` or the component's exported prop type.
 
-- Build feature UI in `src/features/<feature>/components`; keep reusable primitives in `src/components/ui`.
-- UI primitives generally wrap Base UI or native elements, preserve their underlying props, add a `data-slot`, and combine styles with `cn()`.
-- Derive wrapper prop types from the underlying primitive or native element using `React.ComponentProps` or the primitive's exported prop type.
-- Export related compound components from one module when consumers compose them together, as with Card, Dialog, and shared form components.
-- Use Tailwind utility classes in `className`. Keep shared theme tokens and global base styles in `src/styles.css`.
-- Use CSS custom properties for design tokens and map them into Tailwind theme tokens. The current stylesheet defines light and dark palettes; the root document currently applies the `dark` class.
-- Use class-variance-authority for components with named variants or sizes, as in Button and Field. Expose supported variants through component props and, where useful, corresponding data attributes.
-- Use TanStack Router `Link` for internal navigation.
+<!-- s4.codes start -->
 
-## Forms and UI state
+## Solid
 
-- Use the shared TanStack Form setup through `useAppForm` for application forms.
-- Define form `defaultValues`, submit handling, validation, and revalidation behavior at the feature form. Current account and post forms use Zod validators and commonly revalidate on change.
-- Render fields through the form's typed field context and shared field components such as `TextField`.
-- Associate labels and inputs with matching IDs. Connect validation feedback with `aria-describedby` and `aria-invalid`.
-- Use the shared `Form` wrapper to handle submission and map failures into form-level feedback.
-- Use `SubmitButton` to reflect invalid and submitting states. It disables submission when the form cannot submit, marks pending work with `aria-busy`, and displays pending copy.
-- Give users clear feedback for empty lists and failed submissions. Current form errors appear inline; unhandled mutation errors use the router's global toast.
-- Disable actions while their mutation is pending. Use suspense where the feature's data-loading pattern requires it.
-- Use semantic HTML landmarks, headings, lists, and form elements. Provide accessible names for controls, including dialog close buttons and navigation controls.
-- Include visible focus and invalid-state styling in reusable controls. Mark decorative icons as hidden from assistive technology.
+- Flag classes whose methods serve distinct responsibilities that can change independently.
+- Flag classes serving groups with different change requests when a change for one group can alter behavior expected by another.
 
-## Testing
+## Classes
 
-- Put unit tests in colocated `__tests__` directories and name them `*.spec.ts` or `*.spec.tsx`.
-- Put browser tests in `tests/e2e` and name them `*.test.ts`.
-- Use the configured Vitest and Playwright setups rather than creating one-off test infrastructure.
-- Structure behavior tests around Arrange, Act, and Assert when it makes the test clearer. Many current tests mark these sections with comments.
-- For component tests, prefer accessible queries such as roles and labels. Use `userEvent.setup()` for user interactions.
-- Declare module mocks with `vi.mock` at module scope. Configure mock behavior within each test with `vi.mocked(...)`.
-- Put reusable typed fixtures in `src/testing/fixtures`. Fixture factories may accept partial overrides; keep shared session and user values in the session fixture.
-- Use test wrappers for router and QueryClient context when exercising hooks or routed components.
-- Use deferred promises when testing pending UI behavior.
-- Name Worker-specific tests `*.workers.spec.ts`; the Worker test project runs them separately.
-- In E2E tests, use the shared extended Playwright `test` fixture. Its `app.goto()` helper waits for hydration.
-- Use accessible role, label, and text locators in browser tests. Use the account page object for account workflows; other current E2E tests use locators inline.
-- Use the `signedInAccount` fixture for authenticated browser scenarios. It signs up before the test and signs out during fixture teardown.
-- E2E account data is generated per test. Current setup does not show direct database cleanup.
+- Flag classes whose methods perform unrelated jobs, especially when describing the class requires joining responsibilities with and.
+- Flag service methods that accept several fields from one domain object and perform behavior that belongs with that object.
+- Flag long functions whose blocks share local state but lack cohesive method or class boundaries around that state.
+- Flag modules that mix workflow policy with low-level implementation details, forcing unrelated changes into one file.
+- Flag abstractions built for speculative requirements instead of a stated change that requires the flexibility.
+- Flag class splits that add no independent test seam, remove no duplication, name no concept, and isolate no changing behavior.
 
-## Scope notes
+## Function Design
 
-- This file describes current repository practice, not a claim that every pattern is used by every feature.
-- Route auth and query-loader integration are demonstrated by `/posts`; other routes do not currently exercise them.
-- Several conventions, including compound component APIs and server-injected databases, are based on a small starter application. Revisit them as additional features establish broader patterns.
+- Flag modules that expose low-level helpers when callers should depend only on stable, high-level operations.
+- Flag function names that describe implementation mechanics instead of the purpose or outcome of the function.
+- Flag broad-scope variables with generic names and narrow helpers whose names fail to distinguish their specific operations.
+
+## Unit Tests
+
+- Flag new behavior without a failing test that states the expected result before the implementation is considered complete.
+- Flag tests with brittle or opaque setup that makes routine feature changes require tangled edits or encourages skipping tests.
+- Flag tests that assert implementation details instead of externally observable behavior, preventing safe implementation changes.
+- Flag tests where setup, action, and assertion are not clearly separated.
+- Flag one test that verifies multiple independent behaviors whose failures should be diagnosed separately.
+- Flag unit tests that are slow, order-dependent, share mutable state, or rely on an uncontrolled environment.
+
+## Boundaries
+
+- Flag vendor SDK calls scattered through application logic instead of isolated behind an application-owned adapter.
+- Flag consumers coupled to a concrete dependency when a consumer-defined interface could express the behavior they need.
+
+## Error Handling
+
+- Flag normal success logic buried inside nested failure branches so the operation cannot be read as one clear algorithm.
+- Flag failure-sensitive operations without a test for the expected exception path and its recovery behavior.
+- Flag application code that catches vendor-specific exceptions directly when it needs one application-owned error contract.
+- Flag exceptions used to select an expected, ordinary branch that could be represented as an explicit condition or result.
+- Flag APIs that use null for ordinary absence and force repeated null checks throughout their callers.
+
+## Objects and Data
+
+- Flag public getters and setters that expose storage representation and make callers depend on internal field layout.
+- Flag designs where adding a type requires editing every behavior handler, or adding behavior requires editing every type, without a deliberate extension axis.
+- Flag method chains that navigate through objects returned by collaborators and couple logic to their internal object structure.
+- Flag classes that expose raw state while also owning behavior that must vary independently, coupling callers to both representation and policy.
+
+## Formatting
+
+- Flag modules where low-level helpers precede and obscure the high-level workflow described by the entry point.
+- Flag adjacent blocks for distinct concepts that lack blank-line separation and are difficult to scan.
+- Flag variables declared well before their first use when the extra scope makes readers retain irrelevant state.
+
+## Comments
+
+- Flag comments that contradict the code behavior they describe.
+- Flag nonobvious business constraints whose rationale is absent from code and whose removal could change product behavior.
+- Flag risky, costly, or surprising code paths whose safe use depends on a warning that is missing at the use site.
+- Flag public APIs without documentation of their behavior, inputs, outputs, and relevant side effects.
+- Flag comments that only restate what adjacent code already says.
+- Flag comments that name an outcome but omit the condition or rationale needed to interpret it.
+- Flag commented-out executable code retained in source instead of deleted or recovered from version history.
+- Flag oversized or deeply nested functions that need closing-brace comments to make their structure navigable.
+- Flag TODO comments without a specific action and enough context to know when they are resolved.
+- Flag complicated code whose comments paraphrase implementation where a clear name or extracted helper could express intent.
+
+## Functions
+
+- Flag functions that combine multiple operations into a long, hard-to-follow body instead of delegating focused steps.
+- Flag functions with independently changeable responsibilities that require separate tests or can fail for unrelated reasons.
+- Flag functions that mix high-level orchestration with low-level implementation details.
+- Flag repeated switches on the same type across functions when each copy must change for every new type variant.
+- Flag calls with several independent positional arguments whose order or combinations are difficult to understand and test.
+- Flag boolean mode arguments whose call sites do not reveal which behavior true or false selects.
+- Flag calls that pass unrelated values as anonymous positional pairs that callers can swap or misorder.
+- Flag functions whose side effects exceed the behavior promised by their names.
+- Flag methods whose names and return values leave callers unable to tell what condition was checked.
+- Flag functions that return ignorable error codes and force callers to repeat nested failure checks.
+- Flag repeated logic that encodes the same rule in multiple places and can diverge when changed.
+- Flag functions left with deep nesting, mixed responsibilities, or inconsistent abstraction levels after implementation.
+
+## Meaningful Names
+
+- Flag nontrivial variables whose names do not reveal what their values represent at the point of use.
+- Flag identifiers that describe the wrong data shape or behavior, such as a variable named list that holds a map.
+- Flag sibling functions whose names do not distinguish the behaviors callers must choose between.
+- Flag cryptic identifiers that reviewers must translate before they can discuss the code.
+- Flag meaningful domain values encoded only as single letters or raw numbers when a descriptive, searchable name would clarify them.
+- Flag type prefixes that repeat type information already available from the declaration and add no domain meaning.
+- Flag identifiers whose meaning requires tracing assignments through surrounding code instead of reading the name.
