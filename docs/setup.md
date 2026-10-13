@@ -1,18 +1,18 @@
 # New Project Setup
 
-Run these steps from the repository root after creating the GitHub repository and pushing the initial project commit to **main**.
+> [!IMPORTANT]
+> Before starting, create your repository from the GitHub template and ensure its initial commit is on **main**. Install the prerequisites in [README.md](../README.md), plus the [GitHub CLI](https://cli.github.com/), Git, Perl, and OpenSSL. Your GitHub plan must support [rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) and [deployment environments](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments) for the repository's visibility. Private repositories require GitHub Pro, Team, or Enterprise for these features.
 
-Use Bash for the command blocks. Install the prerequisites in [README.md](../README.md), plus the [GitHub CLI](https://cli.github.com/), Git, Perl, and OpenSSL, then install the project dependencies:
+Run the command blocks in Bash from the repository root. Install the project dependencies:
 
 ```bash
 bun install --frozen-lockfile
 ```
 
-Your GitHub plan must support [rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) and [deployment environments](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments) for the repository's visibility. Private repositories require GitHub Pro, Team, or Enterprise for these features.
-
 ## GitHub Setup
 
-Sign in with an account that has repository administration access.
+> [!IMPORTANT]
+> Complete the interactive sign-in when prompted by `gh auth login`, using an account with repository administration access. Confirm that `gh repo view` identifies the new repository.
 
 ```bash
 gh auth login
@@ -56,9 +56,9 @@ perl -i -0777 -pe 's/on:\n  workflow_dispatch:/on:\n  workflow_dispatch:\n  pull
 git add .github/workflows/pull-request.yml
 git commit -m "chore: ⚒️ enable pull request checks"
 git push --set-upstream origin HEAD
-gh pr create --base main
+gh pr create --base main --fill
 gh pr checks --watch
-gh pr merge
+gh pr merge --squash
 ```
 
 ## Cloudflare Setup
@@ -71,9 +71,8 @@ git pull --ff-only
 git switch -c feat/cloudflare-deploy
 ```
 
-Choose a Worker name unique within your Cloudflare account, such as `my-app`. Edit `name` in [.config/wrangler.json](../.config/wrangler.json) to use that name before building or deploying.
-
-Create a Cloudflare API token scoped to the target account with permission to create and deploy Workers and create and migrate D1 databases. See [Workers roles and permissions](https://developers.cloudflare.com/workers/authorization/workers/) and [API token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) for the current role names and scopes.
+> [!IMPORTANT]
+> Choose a Worker name unique within your Cloudflare account, such as `my-app`. Edit `name` in [.config/wrangler.json](../.config/wrangler.json) to use that name before building or deploying.
 
 Create the ignored production environment file and generate the auth secret. This block refuses to overwrite an existing file; when resuming setup, edit the existing file and retain its secret.
 
@@ -107,7 +106,10 @@ export CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID
 bun x wrangler whoami
 ```
 
-Confirm that `whoami` shows the intended account. Create a remote D1 database, replacing `my-app-db` with your project's database name. The `--binding DB --update-config` options replace the placeholder `DB` entry and preserve its migration settings.
+> [!IMPORTANT]
+> Confirm that `whoami` shows the intended account. Replace `my-app-db` in the next command with your project's database name.
+
+Create the remote D1 database. The `--binding DB --update-config` options replace the placeholder `DB` entry and preserve its migration settings.
 
 ```bash
 bun x wrangler d1 create my-app-db \
@@ -118,7 +120,10 @@ bun x wrangler d1 create my-app-db \
 bun run cf:generate
 ```
 
-Check that `.config/wrangler.json` contains the chosen Worker name and the new database's name and ID, and that `migrations_dir` and `migrations_pattern` are retained. The template's `starter-db` entry is a configuration placeholder; there is no database to delete.
+> [!IMPORTANT]
+> Check that `.config/wrangler.json` contains the chosen Worker name and the new database's name and ID, and that `migrations_dir` and `migrations_pattern` are retained.
+
+The template's `starter-db` entry is a configuration placeholder; there is no database to delete.
 
 ## Setup Deployment
 
@@ -170,7 +175,8 @@ bun run cf:deploy \
 )
 ```
 
-Confirm that the deployed URL matches `PRODUCTION_URL` and that sign-up and sign-in work. If deployment fails, resolve it before continuing.
+> [!IMPORTANT]
+> Confirm that the deployed URL matches `PRODUCTION_URL` and that sign-up and sign-in work. If deployment fails, resolve it before continuing.
 
 ### Enable Automatic Deployment
 
@@ -182,12 +188,15 @@ git add .config/wrangler.json src/types/cloudflare-env.d.ts .github/workflows/de
 git diff --cached
 git commit -m "build: 🚀 configure cloudflare deployment"
 git push --set-upstream origin HEAD
-gh pr create --base main
+gh pr create --base main --fill
 gh pr checks --watch
-gh pr merge
+gh pr merge --squash
 ```
 
-Merging the PR starts the production deployment workflow. Check **Actions → Deploy Production** for the deployment, browser test, and Lighthouse results.
+Merging the PR starts the production deployment workflow.
+
+> [!IMPORTANT]
+> Open **Actions → Deploy Production** in the new repository and confirm that deployment, browser tests, and Lighthouse checks pass.
 
 ## References
 
