@@ -4,10 +4,12 @@
 
 - **Server-only modules:** Name server-only modules `<name>.server.ts`; include `import "@tanstack/react-start/server-only"` in each module.
 - **Server functions:** Name server-function definition modules `<name>.functions.ts`.
+- **Server-function values:** Suffix `createServerFn` exports with `Fn` to distinguish them from extracted server-side operations.
 - **Default Unit tests:** Name other unit tests `__tests__/<module>.spec.ts` or `__tests__/<module>.spec.tsx`.
 - **Worker Unit tests:** When unit tests require a worker environment, use `__tests__/<module>.workers.spec.ts`.
 - **Browser tests:** Name browser tests `tests/e2e/<scenario>.test.ts`.
-- **Query modules:** Name query key and query options modules `<entity>-queries.ts`.
+- **Query modules:** Name query key modules `<entity>-query-options.ts`.
+- **Database modules:** Name database operations modules with `<entity>-db-queries.ts`.
 - **Schema modules:** Name Zod schema modules `<entity>-schema.ts`.
 - **Mutation hooks:** Name mutation hook modules `use-<verb>-<entity>.ts`.
 - **SQL columns:** Use snake_case for SQL column names.
@@ -75,6 +77,8 @@
 - **Behavior:** Assert externally observable results so implementation changes that preserve behavior leave tests passing.
 - **Arrange–Act–Assert:** Separate test setup, the action under test, and assertions into distinct sections.
 - **Focused tests:** Test one behavior per test; split independent claims so each failure identifies the behavior that broke.
+- **Suite grouping:** Use `describe` only when the module under test exports at least two distinct units that each need a separate test suite.
+- **Parameterized tests:** Use `test.each` only when it prevents repeating a very similar test body three or more times.
 - **Determinism:** Keep unit tests fast and runnable in any order; isolate mutable state and control external inputs such as time, randomness, and network responses.
 
 ### Boundaries

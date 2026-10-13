@@ -22,12 +22,12 @@ test("opens an empty mobile menu by default", async () => {
 	).not.toBeInTheDocument();
 });
 
-test("closes the menu and forwards header props", async () => {
+test("closes the mobile menu with the close button", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { wrapper } = await createRouterTestContext();
 	// Act
-	render(<Navbar aria-label="Site header" />, { wrapper });
+	render(<Navbar />, { wrapper });
 	await user.click(
 		screen.getByRole("button", { name: "Open navigation menu" }),
 	);
@@ -36,10 +36,26 @@ test("closes the menu and forwards header props", async () => {
 	);
 	// Assert
 	expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+});
+
+test("renders the home logo link", async () => {
+	// Arrange
+	const { wrapper } = await createRouterTestContext();
+	// Act
+	render(<Navbar />, { wrapper });
+	// Assert
 	expect(screen.getByRole("link", { name: "LOGO" })).toHaveAttribute(
 		"href",
 		"/",
 	);
+});
+
+test("forwards header props", async () => {
+	// Arrange
+	const { wrapper } = await createRouterTestContext();
+	// Act
+	render(<Navbar aria-label="Site header" />, { wrapper });
+	// Assert
 	expect(screen.getByRole("banner")).toHaveAttribute(
 		"aria-label",
 		"Site header",

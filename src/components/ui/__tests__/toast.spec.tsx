@@ -10,54 +10,89 @@ import {
 } from "@/components/ui/toast";
 import { createToastManager } from "@/components/ui/toast-manager";
 
-test("renders toasts from the manager with icons for each supported type", () => {
+test.each([
+	{ hasIcon: true, type: "success" },
+	{ hasIcon: true, type: "info" },
+	{ hasIcon: true, type: "warning" },
+	{ hasIcon: true, type: "error" },
+	{ hasIcon: true, type: "loading" },
+	{ hasIcon: false, type: "custom" },
+] as const)(
+	"renders a $type toast with the expected icon presence",
+	({ type, hasIcon }) => {
+		// Arrange
+		const toastManager = createToastManager();
+		render(<Toaster timeout={0} toastManager={toastManager} />);
+		const title = `${type} toast`;
+
+		// Act
+		act(() => {
+			toastManager.add({ title, type });
+		});
+
+		const toast = screen.getByText(title).closest('[data-slot="toast"]');
+		const icon = toast?.querySelector('[data-slot="toast-icon"]');
+
+		// Assert
+		expect(toast).toBeInTheDocument();
+		expect(icon !== null && icon !== undefined).toBe(hasIcon);
+	},
+);
+
+test("styles the error toast icon as destructive", () => {
 	// Arrange
 	const toastManager = createToastManager();
-
-	// Act
 	render(<Toaster timeout={0} toastManager={toastManager} />);
 
+	// Act
 	act(() => {
-		toastManager.add({ title: "Success toast", type: "success" });
-		toastManager.add({ title: "Info toast", type: "info" });
-		toastManager.add({ title: "Warning toast", type: "warning" });
 		toastManager.add({ title: "Error toast", type: "error" });
-		toastManager.add({ title: "Loading toast", type: "loading" });
-		toastManager.add({ title: "Unknown toast", type: "custom" });
 	});
 
-	const iconContainers = document.querySelectorAll('[data-slot="toast-icon"]');
+	const toast = screen.getByText("Error toast").closest('[data-slot="toast"]');
 
 	// Assert
-	expect(screen.getByText("Success toast")).toBeInTheDocument();
-	expect(screen.getByText("Info toast")).toBeInTheDocument();
-	expect(screen.getByText("Warning toast")).toBeInTheDocument();
-	expect(screen.getByText("Error toast")).toBeInTheDocument();
-	expect(screen.getByText("Loading toast")).toBeInTheDocument();
-	expect(screen.getByText("Unknown toast")).toBeInTheDocument();
-
-	expect(iconContainers).toHaveLength(5);
-	expect(
-		screen
-			.getByText("Error toast")
-			.closest('[data-slot="toast"]')
-			?.querySelector('[data-slot="toast-icon"] svg'),
-	).toHaveClass("text-destructive");
-	expect(
-		screen
-			.getByText("Loading toast")
-			.closest('[data-slot="toast"]')
-			?.querySelector('[data-slot="toast-icon"] svg'),
-	).toHaveClass("animate-spin");
-	expect(document.querySelectorAll('[data-slot="toast-close"]')).toHaveLength(
-		6,
+	expect(toast?.querySelector('[data-slot="toast-icon"] svg')).toHaveClass(
+		"text-destructive",
 	);
-	expect(
-		document.querySelector('[data-slot="toast-viewport"]'),
-	).toBeInTheDocument();
-	expect(
-		document.querySelector('[data-slot="toast-portal"]'),
-	).toBeInTheDocument();
+});
+
+test("animates the loading toast icon", () => {
+	// Arrange
+	const toastManager = createToastManager();
+	render(<Toaster timeout={0} toastManager={toastManager} />);
+
+	// Act
+	act(() => {
+		toastManager.add({ title: "Loading toast", type: "loading" });
+	});
+
+	const toast = screen
+		.getByText("Loading toast")
+		.closest('[data-slot="toast"]');
+
+	// Assert
+	expect(toast?.querySelector('[data-slot="toast-icon"] svg')).toHaveClass(
+		"animate-spin",
+	);
+});
+
+test("renders a close control for manager-created toasts", () => {
+	// Arrange
+	const toastManager = createToastManager();
+	render(<Toaster timeout={0} toastManager={toastManager} />);
+
+	// Act
+	act(() => {
+		toastManager.add({ title: "Success toast", type: "success" });
+	});
+
+	const toast = screen
+		.getByText("Success toast")
+		.closest('[data-slot="toast"]');
+
+	// Assert
+	expect(toast?.querySelector('[data-slot="toast-close"]')).toBeInTheDocument();
 });
 
 test("forwards props through toast parts and supports custom action and close content", () => {
