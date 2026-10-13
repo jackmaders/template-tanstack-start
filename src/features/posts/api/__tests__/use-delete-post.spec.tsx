@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { deletePostFn } from "@/features/posts/api/posts.functions";
-import { postKeys } from "@/features/posts/api/posts-queries";
+import { postKeys } from "@/features/posts/api/posts-query-options";
 import type { Post } from "@/features/posts/api/posts-schema";
 import { useDeletePost } from "@/features/posts/api/use-delete-post";
 import { createTestPromise } from "@/testing/utils/test-promise";

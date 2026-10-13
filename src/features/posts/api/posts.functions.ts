@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
-import { createPost, deletePost, listPosts } from "./posts.server";
+import { createPost, deletePost, listPosts } from "./posts-db-queries";
 import { createPostSchema, deletePostSchema } from "./posts-schema";
 
 export const listPostsFn = createServerFn({ method: "GET" })

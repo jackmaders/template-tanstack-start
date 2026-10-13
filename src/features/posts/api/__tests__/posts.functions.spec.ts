@@ -7,14 +7,14 @@ import {
 	createPost,
 	deletePost,
 	listPosts,
-} from "@/features/posts/api/posts.server";
-import { ensureSession } from "@/lib/auth/auth.functions";
+} from "@/features/posts/api/posts-db-queries";
+import { ensureSessionFn } from "@/lib/auth/auth.functions";
 import { createPostFixture } from "@/testing/fixtures/post";
 import { TEST_USER } from "@/testing/fixtures/session";
 
 vi.mock("@/lib/auth/auth.functions");
 vi.mock("@tanstack/react-start");
-vi.mock("@/features/posts/api/posts.server");
+vi.mock("@/features/posts/api/posts-db-queries");
 
 test("lists posts and returns the server result", async () => {
 	// Arrange
@@ -88,7 +88,7 @@ test("rejects an invalid post id before deleting", async () => {
 
 test("rejects anonymous post creation before writing", async () => {
 	// Arrange
-	vi.mocked(ensureSession).mockRejectedValueOnce(new Error("Unauthorized"));
+	vi.mocked(ensureSessionFn).mockRejectedValueOnce(new Error("Unauthorized"));
 
 	// Act
 	const result = createPostFn({ data: { title: "Blocked" } });
@@ -100,7 +100,7 @@ test("rejects anonymous post creation before writing", async () => {
 
 test("rejects anonymous post deletion before writing", async () => {
 	// Arrange
-	vi.mocked(ensureSession).mockRejectedValueOnce(new Error("Unauthorized"));
+	vi.mocked(ensureSessionFn).mockRejectedValueOnce(new Error("Unauthorized"));
 
 	// Act
 	const result = deletePostFn({ data: { id: 1 } });

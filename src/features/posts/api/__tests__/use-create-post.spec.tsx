@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createPostFn } from "@/features/posts/api/posts.functions";
-import { postKeys } from "@/features/posts/api/posts-queries";
+import { postKeys } from "@/features/posts/api/posts-query-options";
 import type { Post } from "@/features/posts/api/posts-schema";
 import { useCreatePost } from "@/features/posts/api/use-create-post";
 import { createTestPromise } from "@/testing/utils/test-promise";

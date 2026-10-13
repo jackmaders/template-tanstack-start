@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
-import { postsQueryOptions } from "@/features/posts/api/posts-queries";
+import { postsQueryOptions } from "@/features/posts/api/posts-query-options";
 import { PostList } from "@/features/posts/components/post-list";
 import { useSession } from "@/lib/auth/auth-client";
 import { createQueryTestContext } from "@/testing/wrappers/query-client";
 
 vi.mock("@tanstack/react-start");
 vi.mock("@/lib/auth/auth.functions");
-vi.mock("@/features/posts/api/posts.server");
+vi.mock("@/features/posts/api/posts-db-queries");
 vi.mock("@/features/posts/api/use-delete-post");
 
 vi.mock("@/lib/auth/auth-client");

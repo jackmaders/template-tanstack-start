@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { postsQueryOptions } from "@/features/posts/api/posts-queries";
+import { postsQueryOptions } from "@/features/posts/api/posts-query-options";
 import { useSession } from "@/lib/auth/auth-client";
 import { DeletePostButton } from "./delete-post-button";
 

@@ -5,7 +5,7 @@ import {
 	createPost,
 	deletePost,
 	listPosts,
-} from "@/features/posts/api/posts.server";
+} from "@/features/posts/api/posts-db-queries";
 import { createPostFixture } from "@/testing/fixtures/post";
 import { TEST_USER } from "@/testing/fixtures/session";
 
