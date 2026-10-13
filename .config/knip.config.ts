@@ -5,6 +5,7 @@ const config: KnipConfig = {
 	commitlint: { config: [".config/commitlint.config.mjs"] },
 	drizzle: { config: [".config/drizzle.config.ts"] },
 	entry: [
+		".config/rolldown.config.ts",
 		"src/routeTree.gen.ts!",
 		"src/client.tsx!",
 		"src/server.ts!",

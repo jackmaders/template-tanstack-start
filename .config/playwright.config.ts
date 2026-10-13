@@ -44,7 +44,7 @@ function getWebServerConfig() {
 		return {};
 	}
 
-	const steps = ["bun run db:migrate --local"];
+	const steps = ["bun run db:migrate --local --persist-to .wrangler/state"];
 
 	if (usePreview) {
 		steps.push("bun run cf:preview");

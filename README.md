@@ -14,7 +14,7 @@ A starter template for building web applications with TanStack Start, React, Typ
 ```bash
 cp --update=none .config/.env.example .config/.env
 bun install
-bun run db:migrate
+bun run db:migrate --local --persist-to .wrangler/state
 ```
 
 > [!NOTE]
@@ -33,7 +33,7 @@ bun run dev
 - `bun run validate:full`: Run a production build, lint and type checks, unused code checks, coverage tests, and Chromium end-to-end tests.
 - `bun run validate:fast`: Run lint, type checks, unused code checks, and unit tests.
 - `bun run db:generate`: Generate database migrations from the schema.
-- `bun run db:migrate`: Apply database migrations to the local database.
+- `bun run db:migrate --local --persist-to .wrangler/state`: Apply database migrations to the local database shared by development and preview servers.
 - `bun run cf:generate`: Generate TypeScript definitions for the Cloudflare environment.
 - `bun run cf:preview`: Preview the production build locally with Wrangler. Requires a successful build first.
 - `bun run test`: Run the test suite.
