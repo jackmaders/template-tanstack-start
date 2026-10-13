@@ -58,7 +58,7 @@ git push --set-upstream origin HEAD
 gh pr create --base main --fill
 
 # Ensure CI checks pass and merge
-gh pr checks --watch
+sleep 5 && gh pr checks --watch --required
 gh pr merge --squash
 ```
 
