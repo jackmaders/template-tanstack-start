@@ -7,8 +7,8 @@
 			"binding": "DB",
 			"database_id": "2b481fa5-b30b-4471-bee7-d56064a20b3a",
 			"database_name": "template-tanstack-start",
-			"migrations_dir": "../drizzle",
-			"migrations_pattern": "../drizzle/*/migration.sql"
+			"migrations_dir": "./drizzle",
+			"migrations_pattern": "./drizzle/*/migration.sql"
 		}
 	],
 	"main": "@tanstack/react-start/server-entry",

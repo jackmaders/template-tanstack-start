@@ -2,6 +2,8 @@ name: 🔍 PR Quality Checks
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: read
@@ -117,10 +119,15 @@ jobs:
           [ "$NEW_MIGRATIONS" -le 1 ] || { echo "::error::PR introduces $NEW_MIGRATIONS migrations (max 1 allowed)."; exit 1; }
 
   browser-tests:
-    name: 🎭 Run Browser Tests
+    name: 🎭 Run Browser Tests (${{ matrix.browser }})
     needs: [check-build]
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
 
     steps:
       - name: 🛒 Checkout Source Code
@@ -135,26 +142,12 @@ jobs:
           name: build-output
           path: dist/
 
-      - name: 🎭 Run Chromium Tests
+      - name: 🎭 Run Browser Tests
         uses: ./.github/actions/run-playwright
         with:
-          browser: chromium
+          browser: ${{ matrix.browser }}
           use-preview: "true"
-          report-name: playwright-report-chromium
-
-      - name: 🎭 Run Firefox Tests
-        uses: ./.github/actions/run-playwright
-        with:
-          browser: firefox
-          use-preview: "true"
-          report-name: playwright-report-firefox
-
-      - name: 🎭 Run WebKit Tests
-        uses: ./.github/actions/run-playwright
-        with:
-          browser: webkit
-          use-preview: "true"
-          report-name: playwright-report-webkit
+          report-name: playwright-report-${{ matrix.browser }}
 
   lighthouse:
     name: 🔦 Run Lighthouse Check
