@@ -193,10 +193,38 @@ gh pr checks --watch
 gh pr merge --squash
 ```
 
-Merging the PR starts the production deployment workflow.
+Merging this PR installs the push trigger on **main**. Since the trigger is first added by this merge, verify it with a subsequent PR merge.
+
+### Verify the Merge Trigger with a Third PR
+
+Open a documentation-only PR after the Cloudflare setup PR is merged. Use a small, useful documentation change so the merge is safe to deploy. This third PR checks that a later merge to **main** starts the production workflow automatically.
+
+```bash
+git switch main
+git pull --ff-only
+git switch -c test/verify-deploy-trigger
+
+# Make a small documentation-only change, then stage it.
+git add docs/setup.md
+git diff --cached
+git commit -m "docs: 📝 verify automatic deployment trigger"
+git push --set-upstream origin HEAD
+gh pr create --base main --fill
+gh pr checks --watch
+gh pr merge --squash
+```
+
+After the merge, find and monitor the run for the merged **main** commit:
+
+```bash
+gh run list --workflow .github/workflows/deploy.yml --branch main --limit 5
+gh run watch <run-id>
+```
+
+Confirm the deployment, browser tests, and Lighthouse checks pass. The production workflow applies any pending D1 migrations and deploys the Worker, so use a real documentation-only change for this check.
 
 > [!IMPORTANT]
-> Open **Actions → Deploy Production** in the new repository and confirm that deployment, browser tests, and Lighthouse checks pass.
+> If no run appears for the third PR's merge commit, check **Actions → Deploy Production** and verify that the workflow is active and its `push` trigger includes **main**.
 
 ## References
 
