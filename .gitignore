@@ -13,6 +13,7 @@ __unconfig*
 todos.json
 coverage
 .lighthouseci
+stats.html
 
 # Playwright
 /test-results/
