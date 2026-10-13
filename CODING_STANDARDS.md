@@ -15,7 +15,7 @@
 ## Routes
 
 - Place routes that require authentication under `src/routes/_authenticated`.
-- Populate the TanStack Query cache in route loaders for data required when the page loads.
+- Populate the TanStack Query cache in route loaders with data needed at page load.
 
 ## Server Functions
 
@@ -43,99 +43,99 @@
 ## Components
 
 - Put feature components in `src/features/<feature>/components`
-- Derive wrapper prop types from the wrapped component or native element using `React.ComponentProps` or the component's exported prop type.
+- Derive wrapper prop types from the wrapped component or native element. Use `React.ComponentProps` or the component's exported prop type.
 
 <!-- s4.codes start -->
 
-## Solid
+## SOLID
 
-- Flag classes whose methods serve distinct responsibilities that can change independently.
-- Flag classes serving groups with different change requests when a change for one group can alter behavior expected by another.
+- **Single responsibility:** Give each module one responsibility; separate operations that change for independent reasons.
+- **Stakeholder isolation:** Separate behavior for user groups with different requirements. Changes for one group should leave the others’ behavior unchanged.
 
-## Classes
+## Modules
 
-- Flag classes whose methods perform unrelated jobs, especially when describing the class requires joining responsibilities with and.
-- Flag service methods that accept several fields from one domain object and perform behavior that belongs with that object.
-- Flag long functions whose blocks share local state but lack cohesive method or class boundaries around that state.
-- Flag modules that mix workflow policy with low-level implementation details, forcing unrelated changes into one file.
-- Flag abstractions built for speculative requirements instead of a stated change that requires the flexibility.
-- Flag class splits that add no independent test seam, remove no duplication, name no concept, and isolate no changing behavior.
+- **Cohesion:** Group operations that serve the same purpose; split a module when its responsibilities need separate names joined by "and."
+- **Data ownership:** When a service repeatedly uses several fields from one module, move that behavior there.
+- **Shared state:** Group related state and operations when blocks in a long function share mutable variables. Extract each group into a focused module.
+- **Separation of concerns:** Separate workflow sequencing from the implementation of individual steps. Each should change independently.
+- **YAGNI:** Add abstractions for a stated requirement that needs them; keep the design simple until that requirement exists.
+- **Useful extraction:** Extract modules only to enable independent testing, remove duplication, or name concepts. Isolating independently changing behavior also justifies extraction.
 
 ## Function Design
 
-- Flag modules that expose low-level helpers when callers should depend only on stable, high-level operations.
-- Flag function names that describe implementation mechanics instead of the purpose or outcome of the function.
-- Flag broad-scope variables with generic names and narrow helpers whose names fail to distinguish their specific operations.
+- **Public interface:** Expose operations callers need. Keep helpers private when exposing them would couple callers to changing implementation details.
+- **Intent:** Name functions for their purpose or result rather than their implementation mechanics.
+- **Scope:** Give widely used variables descriptive names. Give related private helpers names that distinguish their specific operations.
 
 ## Unit Tests
 
-- Flag new behavior without a failing test that states the expected result before the implementation is considered complete.
-- Flag tests with brittle or opaque setup that makes routine feature changes require tangled edits or encourages skipping tests.
-- Flag tests that assert implementation details instead of externally observable behavior, preventing safe implementation changes.
-- Flag tests where setup, action, and assertion are not clearly separated.
-- Flag one test that verifies multiple independent behaviors whose failures should be diagnosed separately.
-- Flag unit tests that are slow, order-dependent, share mutable state, or rely on an uncontrolled environment.
+- **Test-first:** Write a failing test that states the expected result before implementing new behavior.
+- **Readable setup:** Make test preconditions explicit and keep setup simple. Routine behavior changes should affect only the relevant test data and expectations.
+- **Behavior:** Assert externally observable results so implementation changes that preserve behavior leave tests passing.
+- **Arrange–Act–Assert:** Separate test setup, the action under test, and assertions into distinct sections.
+- **Focused tests:** Test one behavior per test; split independent claims so each failure identifies the behavior that broke.
+- **Determinism:** Keep unit tests fast and runnable in any order; isolate mutable state and control external inputs such as time, randomness, and network responses.
 
 ## Boundaries
 
-- Flag vendor SDK calls scattered through application logic instead of isolated behind an application-owned adapter.
-- Flag consumers coupled to a concrete dependency when a consumer-defined interface could express the behavior they need.
+- **Adapters:** Isolate vendor SDK calls behind an application-owned adapter. Keep vendor API changes inside that adapter.
+- **Dependency inversion:** Define dependency interfaces around the operations consumers need. Use them when concrete dependencies would couple consumers to unrelated implementation details.
 
 ## Error Handling
 
-- Flag normal success logic buried inside nested failure branches so the operation cannot be read as one clear algorithm.
-- Flag failure-sensitive operations without a test for the expected exception path and its recovery behavior.
-- Flag application code that catches vendor-specific exceptions directly when it needs one application-owned error contract.
-- Flag exceptions used to select an expected, ordinary branch that could be represented as an explicit condition or result.
-- Flag APIs that use null for ordinary absence and force repeated null checks throughout their callers.
+- **Guard clauses:** Handle failures with early exits or separate error handling. Keep the success path readable as sequential steps without nested failure checks.
+- **Failure paths:** Test expected exceptions, including the required recovery or propagation behavior.
+- **Error translation:** Translate vendor exceptions at the adapter boundary when callers need application-owned error types.
+- **Control flow:** Represent expected alternatives with conditions, explicit results, or default behavior; reserve exceptions for failures.
+- **Absence:** Use empty values only when they preserve the API's meaning. For example, return an empty collection to avoid repeated null checks. Use null when absence is a distinct result callers need to handle.
 
 ## Objects and Data
 
-- Flag public getters and setters that expose storage representation and make callers depend on internal field layout.
-- Flag designs where adding a type requires editing every behavior handler, or adding behavior requires editing every type, without a deliberate extension axis.
-- Flag method chains that navigate through objects returned by collaborators and couple logic to their internal object structure.
-- Flag classes that expose raw state while also owning behavior that must vary independently, coupling callers to both representation and policy.
+- **Encapsulation:** Expose operations that preserve the freedom to change internal storage; replace getters and setters that make callers depend on how fields are stored.
+- **Extensibility:** Choose which extension the design supports: new types or new operations. Support adding types without changing operations, or adding operations without changing types.
+- **Law of Demeter:** Ask collaborators for operations directly. Avoid chaining through objects they return; ordinary access to plain data is fine.
+- **Data and behavior:** Separate raw data from business behavior that must change independently. Callers should be able to use the data without depending on that behavior.
 
 ## Formatting
 
-- Flag modules where low-level helpers precede and obscure the high-level workflow described by the entry point.
-- Flag adjacent blocks for distinct concepts that lack blank-line separation and are difficult to scan.
-- Flag variables declared well before their first use when the extra scope makes readers retain irrelevant state.
+- **Top-down order:** Place the entry point before its implementation helpers. Show readers the workflow before its details.
+- **Visual grouping:** Separate adjacent blocks that express different concepts with blank lines.
+- **Local scope:** Declare local variables near their first use, inside the smallest block needing them.
 
 ## Comments
 
-- Flag comments that contradict the code behavior they describe.
-- Flag nonobvious business constraints whose rationale is absent from code and whose removal could change product behavior.
-- Flag risky, costly, or surprising code paths whose safe use depends on a warning that is missing at the use site.
-- Flag public APIs without documentation of their behavior, inputs, outputs, and relevant side effects.
-- Flag comments that only restate what adjacent code already says.
-- Flag comments that name an outcome but omit the condition or rationale needed to interpret it.
-- Flag commented-out executable code retained in source instead of deleted or recovered from version history.
-- Flag oversized or deeply nested functions that need closing-brace comments to make their structure navigable.
-- Flag TODO comments without a specific action and enough context to know when they are resolved.
-- Flag complicated code whose comments paraphrase implementation where a clear name or extracted helper could express intent.
+- **Accuracy:** Keep comments consistent with the behavior of the code they describe.
+- **Rationale:** Explain business constraints whose purpose is unclear from the code. Include why removing them could change product behavior.
+- **Warnings:** Document risks or costs callers must understand to use the code safely. Place warnings at the point of use.
+- **API documentation:** Document public API behavior, inputs, outputs, and relevant side effects.
+- **Redundancy:** Keep comments that add information beyond the adjacent code; remove comments that merely restate it.
+- **Context:** Include conditions or reasons needed to interpret a comment's claim about an outcome.
+- **Dead code:** Delete commented-out executable code; use version history to recover it when needed.
+- **Structure:** Simplify or extract functions that need closing-brace comments to explain their structure.
+- **TODOs:** State each TODO’s required action and the condition that marks it resolved.
+- **Self-documenting code:** Prefer clear names or extracted helpers when they can replace comments explaining complicated mechanics.
 
 ## Functions
 
-- Flag functions that combine multiple operations into a long, hard-to-follow body instead of delegating focused steps.
-- Flag functions with independently changeable responsibilities that require separate tests or can fail for unrelated reasons.
-- Flag functions that mix high-level orchestration with low-level implementation details.
-- Flag repeated switches on the same type across functions when each copy must change for every new type variant.
-- Flag calls with several independent positional arguments whose order or combinations are difficult to understand and test.
-- Flag boolean mode arguments whose call sites do not reveal which behavior true or false selects.
-- Flag calls that pass unrelated values as anonymous positional pairs that callers can swap or misorder.
-- Flag functions whose side effects exceed the behavior promised by their names.
-- Flag methods whose names and return values leave callers unable to tell what condition was checked.
-- Flag functions that return ignorable error codes and force callers to repeat nested failure checks.
-- Flag repeated logic that encodes the same rule in multiple places and can diverge when changed.
-- Flag functions left with deep nesting, mixed responsibilities, or inconsistent abstraction levels after implementation.
+- **Decomposition:** Extract focused steps from long functions. Make the main body read as a sequence of named operations.
+- **Single responsibility:** Separate responsibilities that change independently, need separate tests, or fail for unrelated reasons.
+- **Abstraction level:** Keep orchestration and the implementation details of its steps in separate functions.
+- **Dispatch:** Centralize repeated switches on the same type. Adding a variant should not require matching case updates across multiple functions.
+- **Parameters:** Use named parameter objects when positional arguments are hard to understand or test. Make argument roles and valid combinations explicit.
+- **Boolean modes:** Replace boolean mode arguments with separate operations or named options. Make the selected behavior clear at the call site.
+- **Named arguments:** Name unrelated argument pairs explicitly. Make each value's role clear without relying on position.
+- **Side effects:** Make side effects explicit in the function's name or contract; keep checks separate from unrelated state changes.
+- **Predicates:** Name condition checks so callers understand what true and false mean.
+- **Error propagation:** Throw errors for failures callers must handle. Replace ignorable error codes that require repeated nested checks.
+- **DRY:** Keep each shared rule in one authoritative implementation to prevent conflicting copies.
+- **Refactoring:** Simplify deep nesting and separate unrelated responsibilities before completing a function. Keep each function at one level of detail.
 
 ## Meaningful Names
 
-- Flag nontrivial variables whose names do not reveal what their values represent at the point of use.
-- Flag identifiers that describe the wrong data shape or behavior, such as a variable named list that holds a map.
-- Flag sibling functions whose names do not distinguish the behaviors callers must choose between.
-- Flag cryptic identifiers that reviewers must translate before they can discuss the code.
-- Flag meaningful domain values encoded only as single letters or raw numbers when a descriptive, searchable name would clarify them.
-- Flag type prefixes that repeat type information already available from the declaration and add no domain meaning.
-- Flag identifiers whose meaning requires tracing assignments through surrounding code instead of reading the name.
+- **Meaning:** Name nontrivial variables for what their values represent where they are used.
+- **Accuracy:** Match identifiers to the actual data shape or behavior; reserve names such as `list` for values that are lists.
+- **Distinction:** Name related functions so callers can distinguish their behaviors without reading their implementations.
+- **Pronounceability:** Use readable words and familiar abbreviations that reviewers can discuss without decoding.
+- **Searchability:** Give domain values descriptive names that can be found in a code search; use named constants for numbers with business meaning.
+- **Type redundancy:** Use names that convey domain meaning; omit prefixes that only repeat the declared type.
+- **Explicit meaning:** Name values by their role so readers can understand them without tracing assignments.
