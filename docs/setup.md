@@ -17,7 +17,7 @@ bun install --frozen-lockfile
 
 > [!IMPORTANT]
 > Complete the interactive sign-in when prompted by `gh auth login`.  
-> Confirm that `gh repo view` identifies the new repository.
+> Confirm that `gh repo view --json name` identifies the new repository.
 
 ```bash
 # Set main as the default branch, only allow squash merges, and delete source branches after merge.
