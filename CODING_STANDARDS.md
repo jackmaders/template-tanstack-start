@@ -2,7 +2,8 @@
 
 ## Naming
 
-- **Server imports:** Name modules that directly import server-only runtime APIs `<name>.server.ts`; include `import "@tanstack/react-start/server-only"` in each.
+- **Server imports:** Name modules that directly import server-only runtime APIs `<name>.server.ts`.
+- **Server only:** Include `import "@tanstack/react-start/server-only"` in each source code file which imports server-only runtime APIs.
 - **Server functions:** Name server-function definition modules `<name>.functions.ts`.
 - **Server-function exports:** Suffix exports created by `createServerFn` with `Fn` to distinguish them from extracted server-side operations.
 - **Default Unit tests:** Name other unit tests `__tests__/<module>.spec.ts` or `__tests__/<module>.spec.tsx`.
@@ -52,7 +53,7 @@
 ## Testing
 
 - **Unit-test location:** Put unit tests in a colocated `__tests__` directory next to the module under test.
-- **Suite grouping:** Use `describe` only when the module under test exports at least two distinct units that each need a separate test suite.
+- **Suite grouping:** Use `describe` in unit tests only when the module under test exports at least two distinct units that each need a separate test suite.
 - **Parameterized tests:** Use `test.each` only when it prevents repeating a very similar test body three or more times.
 - **Browser test data:** Use unique data when parallel runs need isolation. Clean up persistent test data where practical.
 

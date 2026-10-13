@@ -1,5 +1,3 @@
-import "@tanstack/react-start/server-only";
-
 import type { User } from "better-auth";
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db/db.server";
