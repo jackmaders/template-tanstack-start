@@ -46,12 +46,14 @@
 - **Feature placement:** Put feature components in `src/features/<feature>/components`
 - **Prop derivation:** Derive wrapper prop types from the wrapped component or native element. Use `React.ComponentProps` or the component's exported prop type.
 
-## SOLID
+## s4.codes
+
+### SOLID
 
 - **Single responsibility:** When operations change for independent reasons, separate them. Give each module one responsibility.
 - **Stakeholder isolation:** When user groups have different requirements, separate their behavior. Changes for one group should leave the others’ behavior unchanged.
 
-## Modules
+### Modules
 
 - **Cohesion:** When module responsibilities need separate names joined by "and," split the module. Group operations that serve the same purpose.
 - **Data ownership:** When a service repeatedly uses several fields from one module, move that behavior there.
@@ -60,13 +62,13 @@
 - **YAGNI:** When a stated requirement needs an abstraction, add it. Until then, keep the design simple.
 - **Useful extraction:** If extraction enables independent tests, removes duplication, names concepts, or isolates independently changing behavior, split the module. Otherwise, keep the module intact.
 
-## Function Design
+### Function Design
 
 - **Public interface:** When exposing helpers would couple callers to changing implementation details, keep those helpers private. Expose operations callers need.
 - **Intent:** Name functions for their purpose or result rather than their implementation mechanics.
 - **Scope:** Give widely used variables descriptive names. Give related private helpers names that distinguish their specific operations.
 
-## Unit Tests
+### Unit Tests
 
 - **Test-first:** When implementing new behavior, first write a failing test stating the expected result.
 - **Readable setup:** Make test preconditions explicit and keep setup simple. Routine behavior changes should affect only the relevant test data and expectations.
@@ -75,12 +77,12 @@
 - **Focused tests:** Test one behavior per test; split independent claims so each failure identifies the behavior that broke.
 - **Determinism:** Keep unit tests fast and runnable in any order; isolate mutable state and control external inputs such as time, randomness, and network responses.
 
-## Boundaries
+### Boundaries
 
 - **Adapters:** Isolate vendor SDK calls behind an application-owned adapter. Keep vendor API changes inside that adapter.
 - **Dependency inversion:** When concrete dependencies would couple consumers to unrelated implementation details, use dependency interfaces. Define those interfaces around the operations consumers need.
 
-## Error Handling
+### Error Handling
 
 - **Guard clauses:** Handle failures with early exits or separate error handling. Keep the success path readable as sequential steps without nested failure checks.
 - **Failure paths:** Test expected exceptions, including the required recovery or propagation behavior.
@@ -88,20 +90,20 @@
 - **Control flow:** Represent expected alternatives with conditions, explicit results, or default behavior; reserve exceptions for failures.
 - **Absence:** When empty values preserve the API's meaning, use them to avoid repeated null checks. For example, return an empty collection. When absence is a distinct result callers need to handle, use null.
 
-## Objects and Data
+### Objects and Data
 
 - **Encapsulation:** When getters or setters couple callers to internal storage, replace them with operations. Preserve the freedom to change how data is stored.
 - **Extensibility:** Choose which extension the design supports: new types or new operations. Support adding types without changing operations, or adding operations without changing types.
 - **Law of Demeter:** Ask collaborators for operations directly. Avoid chaining through objects they return; ordinary access to plain data is fine.
 - **Data and behavior:** When business behavior must change independently, separate it from raw data. Callers should be able to use the data without depending on that behavior.
 
-## Formatting
+### Formatting
 
 - **Top-down order:** Place the entry point before its implementation helpers. Show readers the workflow before its details.
 - **Visual grouping:** When adjacent blocks express different concepts, separate them with blank lines.
 - **Local scope:** Declare local variables near their first use, inside the smallest block needing them.
 
-## Comments
+### Comments
 
 - **Accuracy:** Keep comments consistent with the behavior of the code they describe.
 - **Rationale:** When a business constraint's purpose is unclear from code, explain it. Include why removing it could change product behavior.
@@ -114,7 +116,7 @@
 - **TODOs:** State each TODO’s required action and the condition that marks it resolved.
 - **Self-documenting code:** When clear names or extracted helpers can replace comments explaining complicated mechanics, prefer them.
 
-## Functions
+### Functions
 
 - **Decomposition:** Extract focused steps from long functions. Make the main body read as a sequence of named operations.
 - **Single responsibility:** When responsibilities change independently, need separate tests, or fail for unrelated reasons, separate them.
@@ -129,7 +131,7 @@
 - **DRY:** Keep each shared rule in one authoritative implementation to prevent conflicting copies.
 - **Refactoring:** When completing a function, first simplify deep nesting and separate unrelated responsibilities. Keep each function at one level of detail.
 
-## Meaningful Names
+### Meaningful Names
 
 - **Meaning:** Name nontrivial variables for what their values represent where they are used.
 - **Accuracy:** Match identifiers to the actual data shape or behavior; reserve names such as `list` for values that are lists.
