@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { ensureSession, getSession } from "@/lib/auth/session";
+import { ensureSession, getSession } from "@/lib/auth/session.server";
 
 export const getSessionFn = createServerFn({ method: "GET" }).handler(() =>
 	getSession(),

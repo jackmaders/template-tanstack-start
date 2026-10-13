@@ -2,14 +2,14 @@
 
 ## Naming
 
-- **Server-only modules:** Name server-only modules `<name>.server.ts`; include `import "@tanstack/react-start/server-only"` in each module.
+- **Server imports:** Name modules that directly import server-only runtime APIs `<name>.server.ts`; include `import "@tanstack/react-start/server-only"` in each.
 - **Server functions:** Name server-function definition modules `<name>.functions.ts`.
-- **Server-function values:** Suffix `createServerFn` exports with `Fn` to distinguish them from extracted server-side operations.
+- **Server-function exports:** Suffix exports created by `createServerFn` with `Fn` to distinguish them from extracted server-side operations.
 - **Default Unit tests:** Name other unit tests `__tests__/<module>.spec.ts` or `__tests__/<module>.spec.tsx`.
 - **Worker Unit tests:** When unit tests require a worker environment, use `__tests__/<module>.workers.spec.ts`.
 - **Browser tests:** Name browser tests `tests/e2e/<scenario>.test.ts`.
-- **Query modules:** Name query key modules `<entity>-query-options.ts`.
-- **Database modules:** Name database operations modules with `<entity>-db-queries.ts`.
+- **Query modules:** Name modules that define TanStack Query keys and query options `<entity>-query-options.ts`.
+- **Database operation modules:** Name modules containing entity-specific database reads and writes `<entity>-db-queries.ts`.
 - **Schema modules:** Name Zod schema modules `<entity>-schema.ts`.
 - **Mutation hooks:** Name mutation hook modules `use-<verb>-<entity>.ts`.
 - **SQL columns:** Use snake_case for SQL column names.
@@ -26,13 +26,13 @@
 - **Thin handlers:** Limit server functions to validation and middleware wiring; handlers only forward input and context to an extracted server operation.
 - **Authentication:** When server functions require authentication, attach auth middleware.
 - **Input validation:** Validate server-function input with `.validator(schema)`.
-- **Trusted identity:** Pass the authenticated user from middleware context to database functions; derive ownership fields from that user.
+- **Trusted identity:** Pass the authenticated user from middleware context to database operations; derive ownership fields from that user.
 
 ## Database
 
 - **Referential integrity:** Declare foreign keys with explicit deletion behavior.
-- **Indexes:** Declare indexes in the table callback.
-- **Schema derivation:** Generate table-backed Zod schemas with Drizzle.
+- **Indexes:** Declare indexes in the table callback. Column-level unique constraints may be declared on the column; declare composite unique constraints on the table.
+- **Schema derivation:** Use Drizzle-generated Zod schemas when validation mirrors table fields.
 - **Client inputs:** Limit input schemas to fields the client must supply; omit generated and server-owned fields from create inputs.
 - **Ownership:** Scope reads and writes of user-owned records by the authenticated user's ID.
 - **Expected results:** If an operation expects a row but `.returning()` returns none, throw an error.
@@ -45,8 +45,23 @@
 
 ## Components
 
-- **Feature placement:** Put feature components in `src/features/<feature>/components`
+- **Feature placement:** Put feature-specific components in `src/features/<feature>/components` and application-wide UI, layout, and form components in `src/components`.
+- **Shared placement:** When another feature needs feature-specific components, move into to shared directory.
 - **Prop derivation:** Derive wrapper prop types from the wrapped component or native element. Use `React.ComponentProps` or the component's exported prop type.
+
+## Testing
+
+- **Unit-test location:** Put unit tests in a colocated `__tests__` directory next to the module under test.
+- **Suite grouping:** Use `describe` only when the module under test exports at least two distinct units that each need a separate test suite.
+- **Parameterized tests:** Use `test.each` only when it prevents repeating a very similar test body three or more times.
+- **Browser test data:** Use unique data when parallel runs need isolation. Clean up persistent test data where practical.
+
+## CI/CD
+
+- **Reproducible installs:** Install dependencies from the lockfile in frozen mode.
+- **Pull request checks:** Run lint, type checks, unit tests, browser tests, and relevant build checks in CI.
+- **Generated artifacts:** Verify generated route trees, types, and migrations are current.
+- **Deployment permissions:** Scope credentials to the steps that use them and grant jobs only the permissions they need.
 
 ## s4.codes
 
@@ -77,8 +92,6 @@
 - **Behavior:** Assert externally observable results so implementation changes that preserve behavior leave tests passing.
 - **Arrange–Act–Assert:** Separate test setup, the action under test, and assertions into distinct sections.
 - **Focused tests:** Test one behavior per test; split independent claims so each failure identifies the behavior that broke.
-- **Suite grouping:** Use `describe` only when the module under test exports at least two distinct units that each need a separate test suite.
-- **Parameterized tests:** Use `test.each` only when it prevents repeating a very similar test body three or more times.
 - **Determinism:** Keep unit tests fast and runnable in any order; isolate mutable state and control external inputs such as time, randomness, and network responses.
 
 ### Boundaries
@@ -97,7 +110,7 @@
 ### Objects and Data
 
 - **Encapsulation:** When getters or setters couple callers to internal storage, replace them with operations. Preserve the freedom to change how data is stored.
-- **Extensibility:** Choose which extension the design supports: new types or new operations. Support adding types without changing operations, or adding operations without changing types.
+- **Extensibility:** Choose an extension strategy when a requirement calls for variation. Do not design for hypothetical types or operations.
 - **Law of Demeter:** Ask collaborators for operations directly. Avoid chaining through objects they return; ordinary access to plain data is fine.
 - **Data and behavior:** When business behavior must change independently, separate it from raw data. Callers should be able to use the data without depending on that behavior.
 
