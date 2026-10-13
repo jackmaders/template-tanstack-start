@@ -12,14 +12,10 @@ A starter template for building web applications with TanStack Start, React, Typ
 ### Initial setup
 
 ```bash
-cp --update=none .config/.env.example .config/.env
+cp --update=none .env.example .env
 bun install
 bun run db:migrate --local --persist-to .wrangler/state
 ```
-
-> [!NOTE]
-> `.env` file loaded by Vite, all variables available for tooling and variables prefixed with `VITE_` available in the browser.  
-> `.config/.env` is loaded by Wrangler, and overrides the Cloudflare Worker variables set in `.config/wrangler.json`.
 
 ### Run the project
 

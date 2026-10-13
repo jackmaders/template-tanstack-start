@@ -56,7 +56,6 @@ export default defineConfig({
 				plugins: [
 					cloudflareTest({
 						main: "src/db/db.server.ts",
-						wrangler: { configPath: ".config/wrangler.json" },
 					}),
 				],
 				test: {

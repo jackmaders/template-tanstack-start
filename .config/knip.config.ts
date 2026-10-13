@@ -41,7 +41,7 @@ const config: KnipConfig = {
 	treatConfigHintsAsErrors: true,
 	vite: { config: [".config/vite.config.ts"] },
 	vitest: { config: [".config/vitest.config.ts"] },
-	wrangler: { config: [".config/wrangler.json"] },
+	wrangler: { config: ["wrangler.json"] },
 };
 
 export default config;

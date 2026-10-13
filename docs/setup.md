@@ -1,28 +1,26 @@
 # New Project Setup
 
-> [!IMPORTANT]
-> Before starting, create your repository from the GitHub template and ensure its initial commit is on **main**. Install the prerequisites in [README.md](../README.md), plus the [GitHub CLI](https://cli.github.com/), Git, Perl, and OpenSSL. Your GitHub plan must support [rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) and [deployment environments](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments) for the repository's visibility. Private repositories require GitHub Pro, Team, or Enterprise for these features.
+## Prerequisites
 
-Run the command blocks in Bash from the repository root. Install the project dependencies:
+- jq command line tool
+
+> [!IMPORTANT]
+> Decide on a new, unique name for this project.
+> Set this in the `name` fields within `package.json`.
 
 ```bash
+# Install project dependencies
 bun install --frozen-lockfile
 ```
 
 ## GitHub Setup
 
 > [!IMPORTANT]
-> Complete the interactive sign-in when prompted by `gh auth login`, using an account with repository administration access. Confirm that `gh repo view` identifies the new repository.
+> Complete the interactive sign-in when prompted by `gh auth login`.  
+> Confirm that `gh repo view` identifies the new repository.
 
 ```bash
-gh auth login
-gh auth status
-gh repo view
-```
-
-Set **main** as the default branch, allow squash merges only, and delete source branches after merge.
-
-```bash
+# Set main as the default branch, only allow squash merges, and delete source branches after merge.
 gh repo edit \
   --default-branch main \
   --enable-squash-merge \
@@ -31,13 +29,11 @@ gh repo edit \
   --delete-branch-on-merge
 ```
 
-The ruleset in [.github/rulesets/protect-main.json](../.github/rulesets/protect-main.json) protects **main**, requires pull requests and the configured CI checks, blocks force pushes and branch deletion, and requires review conversations to be resolved.
+The ruleset in `.github/rulesets/protect-main.json` protects **main**, requiring pull requests and the configured CI checks, blocking force pushes and branch deletion, and requiring review conversations to be resolved.
 
 ```bash
 GH_REPOSITORY="$(gh repo view --json nameWithOwner --jq '.nameWithOwner')"
-
 RULESET_FILE=".github/rulesets/protect-main.json"
-
 RULESET_ID="$(gh api "repos/$GH_REPOSITORY/rulesets" \
     --method POST \
     --input "$RULESET_FILE" \
@@ -46,24 +42,31 @@ RULESET_ID="$(gh api "repos/$GH_REPOSITORY/rulesets" \
 gh ruleset view "$RULESET_ID"
 ```
 
-Start work from an up-to-date **main**, then open and merge a pull request:
-
 ```bash
+# Create a new branch
 git switch main
 git pull --ff-only
 git switch -c chore/github-setup
+
+# Apply workflow changes
 perl -i -0777 -pe 's/on:\n  workflow_dispatch:/on:\n  workflow_dispatch:\n  pull_request:\n    branches: [main]/g' .github/workflows/pull-request.yml
 git add .github/workflows/pull-request.yml
 git commit -m "chore: ⚒️ enable pull request checks"
+
+# Create a pull request
 git push --set-upstream origin HEAD
 gh pr create --base main --fill
+
+# Ensure CI checks pass and merge
 gh pr checks --watch
 gh pr merge --squash
 ```
 
 ## Cloudflare Setup
 
-Start a branch for the project's Cloudflare configuration and deployment setup:
+> [!IMPORTANT]
+> Complete the interactive sign-in when prompted by `bunx wrangler login`.  
+> Confirm that `bunx wrangler whoami` identifies the account.
 
 ```bash
 git switch main
@@ -71,59 +74,29 @@ git pull --ff-only
 git switch -c feat/cloudflare-deploy
 ```
 
-> [!IMPORTANT]
-> Choose a Worker name unique within your Cloudflare account, such as `my-app`. Edit `name` in [.config/wrangler.json](../.config/wrangler.json) to use that name before building or deploying.
-
-Create the ignored production environment file and generate the auth secret. This block refuses to overwrite an existing file; when resuming setup, edit the existing file and retain its secret.
-
 ```bash
-(
-set -euo pipefail
-set -C
-umask 077
-BETTER_AUTH_SECRET="$(openssl rand -base64 32 | tr -d '\n')"
-cat > .config/.env.production.local <<EOF
-CLOUDFLARE_API_TOKEN=""
-CLOUDFLARE_ACCOUNT_ID=""
-PRODUCTION_URL=""
-BETTER_AUTH_URL=""
-BETTER_AUTH_SECRET="$BETTER_AUTH_SECRET"
-EOF
-)
-```
-
-> [!IMPORTANT]
-> Edit `.config/.env.production.local` using these dashboard links:
->
-> - `CLOUDFLARE_API_TOKEN`: open [API Tokens](https://dash.cloudflare.com/profile/api-tokens/), select **Create Token**, and create a token with permission to create/deploy Workers and create/migrate D1 databases, scoped to the target account. Follow the [token creation instructions](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) and [Workers permission requirements](https://developers.cloudflare.com/workers/authorization/workers/#wrangler). Copy the token when it is shown; it is displayed only once.
-> - `CLOUDFLARE_ACCOUNT_ID`: open [Workers & Pages](https://dash.cloudflare.com/?to=/:account/workers-and-pages), select the target account, then copy **Account ID** from **Account Details**. See [finding your account ID](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/#find-account-id-in-workers--pages).
-> - `PRODUCTION_URL` and `BETTER_AUTH_URL`: find **Your subdomain** on the same [Workers & Pages](https://dash.cloudflare.com/?to=/:account/workers-and-pages) page. Set both values to `https://<worker-name>.<account-subdomain>.workers.dev`, without a trailing slash, using the Worker name chosen above. See [Workers subdomain setup](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/#configure-workersdev).
-> - `BETTER_AUTH_SECRET`: keep the value generated by the command above.
-
-```bash
-source .config/.env.production.local
-export CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID
-bun x wrangler whoami
-```
-
-> [!IMPORTANT]
-> Confirm that `whoami` shows the intended account. Replace `my-app-db` in the next command with your project's database name.
-
-Create the remote D1 database. The `--binding DB --update-config` options replace the placeholder `DB` entry and preserve its migration settings.
-
-```bash
-bun x wrangler d1 create my-app-db \
+# Create the D1 database and update the config
+APP_NAME="$(jq -r '.name' package.json)"
+bun x wrangler d1 create $APP_NAME \
   --binding DB \
-  --update-config \
-  --config .config/wrangler.json
-
+  --update-config
 bun run cf:generate
+
+git add wrangler.json src/types/cloudflare-env.d.ts
+git commit -m "chore: 📦 update wranger config with new D1 binding"
 ```
 
-> [!IMPORTANT]
-> Check that `.config/wrangler.json` contains the chosen Worker name and the new database's name and ID, and that `migrations_dir` and `migrations_pattern` are retained.
+```bash
+# Generate Better Auth secret
+BETTER_AUTH_SECRET="$(openssl rand -base64 32 | tr -d '\n')"
+echo $BETTER_AUTH_SECRET | bunx wrangler secret put BETTER_AUTH_SECRET
 
-The template's `starter-db` entry is a configuration placeholder; there is no database to delete.
+bun run build
+WORKERS_DEV_URL="$(bun run cf:deploy |  rg -o 'https://[^[:space:]]+\.workers\.dev' | tail -n 1)"
+perl -0pi -e 's{("BETTER_AUTH_URL"\s*:\s*")https://your-app\.example\.com(")}{$1 . $ENV{WORKERS_DEV_URL} . $2}e' wrangler.json
+
+bun run cf:deploy
+```
 
 ## Setup Deployment
 
@@ -184,7 +157,7 @@ On the same `feat/cloudflare-deploy` branch, enable deployment on pushes to **ma
 
 ```bash
 perl -i -0777 -pe 's/on:\n  workflow_dispatch:/on:\n  workflow_dispatch:\n  push:\n    branches: [main]/g' .github/workflows/deploy.yml
-git add .config/wrangler.json src/types/cloudflare-env.d.ts .github/workflows/deploy.yml
+git add wrangler.json src/types/cloudflare-env.d.ts .github/workflows/deploy.yml
 git diff --cached
 git commit -m "build: 🚀 configure cloudflare deployment"
 git push --set-upstream origin HEAD

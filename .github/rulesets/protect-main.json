@@ -33,9 +33,7 @@
 					{ "context": "🎭 Run Browser Tests (firefox)" },
 					{ "context": "🎭 Run Browser Tests (webkit)" },
 					{ "context": "🔦 Run Lighthouse Check" },
-					{ "context": "✨ Check Code Quality (lint:ci)" },
-					{ "context": "✨ Check Code Quality (lint:types)" },
-					{ "context": "✨ Check Code Quality (lint:unused)" }
+					{ "context": "✨ Check Code Quality" }
 				],
 				"strict_required_status_checks_policy": true
 			},

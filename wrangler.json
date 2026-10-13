@@ -1,12 +1,12 @@
 {
-	"$schema": "../node_modules/wrangler/config-schema.json",
+	"$schema": "./node_modules/wrangler/config-schema.json",
 	"compatibility_date": "2026-09-19",
 	"compatibility_flags": ["nodejs_compat"],
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_id": "YOUR_D1_DATABASE_ID",
-			"database_name": "starter-db",
+			"database_id": "2b481fa5-b30b-4471-bee7-d56064a20b3a",
+			"database_name": "template-tanstack-start",
 			"migrations_dir": "../drizzle",
 			"migrations_pattern": "../drizzle/*/migration.sql"
 		}
@@ -15,8 +15,6 @@
 	"name": "template-tanstack-start",
 	"observability": { "enabled": true },
 	"secrets": { "required": ["BETTER_AUTH_SECRET"] },
-	"vars": {
-		"BETTER_AUTH_URL": "https://your-app.example.com"
-	},
+	"vars": { "BETTER_AUTH_URL": "https://your-app.example.com" },
 	"workers_dev": true
 }

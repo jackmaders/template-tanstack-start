@@ -16,7 +16,6 @@ const config = defineConfig({
 	},
 	plugins: [
 		cloudflare({
-			configPath: ".config/wrangler.json",
 			viteEnvironment: { name: "ssr" },
 		}),
 		tanstackStart(),

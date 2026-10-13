@@ -122,11 +122,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit]
-
     steps:
       - name: 🛒 Checkout Source Code
         uses: actions/checkout@v7.0.1
@@ -140,12 +135,26 @@ jobs:
           name: build-output
           path: dist/
 
-      - name: 🎭 Run Browser Tests
+      - name: 🎭 Run Chromium Tests
         uses: ./.github/actions/run-playwright
         with:
-          browser: ${{ matrix.browser }}
+          browser: chromium
           use-preview: "true"
-          report-name: playwright-report-${{ matrix.browser }}
+          report-name: playwright-report-chromium
+
+      - name: 🎭 Run Firefox Tests
+        uses: ./.github/actions/run-playwright
+        with:
+          browser: firefox
+          use-preview: "true"
+          report-name: playwright-report-firefox
+
+      - name: 🎭 Run WebKit Tests
+        uses: ./.github/actions/run-playwright
+        with:
+          browser: webkit
+          use-preview: "true"
+          report-name: playwright-report-webkit
 
   lighthouse:
     name: 🔦 Run Lighthouse Check
@@ -172,11 +181,7 @@ jobs:
           number-of-runs: "3"
 
   code-quality:
-    name: ✨ Check Code Quality (${{ matrix.script }})
-    strategy:
-      fail-fast: false
-      matrix:
-        script: [lint:ci, lint:types, lint:unused]
+    name: ✨ Check Code Quality
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -187,7 +192,11 @@ jobs:
       - name: ⚡ Setup Bun Environment
         uses: ./.github/actions/setup-bun
 
-      - name: Run Quality Check
-        env:
-          CHECK_SCRIPT: ${{ matrix.script }}
-        run: bun run "$CHECK_SCRIPT"
+      - name: 🧹 Run Lint Check
+        run: bun run lint:ci
+
+      - name: 🔎 Run Type Check
+        run: bun run lint:types
+
+      - name: 🧽 Check for Unused Code
+        run: bun run lint:unused
