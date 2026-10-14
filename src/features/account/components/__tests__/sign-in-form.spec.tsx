@@ -104,6 +104,7 @@ test("displays authentication errors", async () => {
 	vi.mocked(signIn.email).mockResolvedValueOnce({
 		data: null,
 		error: {
+			code: "INVALID_EMAIL_OR_PASSWORD",
 			message: "Invalid email or password",
 			status: 401,
 			statusText: "Unauthorized",
@@ -116,7 +117,12 @@ test("displays authentication errors", async () => {
 	await user.type(screen.getByLabelText("Password"), "password");
 	await user.click(screen.getByRole("button", { name: "Sign In" }));
 	// Assert
-	expect(await screen.findByText("Invalid email or password")).toBeVisible();
+	expect(
+		await screen.findByText("The email or password is incorrect."),
+	).toBeVisible();
+	expect(
+		screen.queryByText("Invalid email or password"),
+	).not.toBeInTheDocument();
 });
 
 test("displays a safe message when the authentication request rejects", async () => {
@@ -142,7 +148,12 @@ test("allows retrying after an authentication error", async () => {
 	vi.mocked(signIn.email)
 		.mockResolvedValueOnce({
 			data: null,
-			error: { message: "Try again", status: 401, statusText: "Unauthorized" },
+			error: {
+				code: "INVALID_EMAIL_OR_PASSWORD",
+				message: "Invalid email or password",
+				status: 401,
+				statusText: "Unauthorized",
+			},
 		})
 		.mockResolvedValueOnce({ data: null, error: null });
 	// Act
@@ -151,7 +162,7 @@ test("allows retrying after an authentication error", async () => {
 	await user.type(screen.getByLabelText("Email"), "person@example.com");
 	await user.type(screen.getByLabelText("Password"), "password");
 	await user.click(screen.getByRole("button", { name: "Sign In" }));
-	await screen.findByText("Try again");
+	await screen.findByText("The email or password is incorrect.");
 	await user.type(screen.getByLabelText("Password"), "corrected");
 	await user.click(screen.getByRole("button", { name: "Sign In" }));
 	// Assert

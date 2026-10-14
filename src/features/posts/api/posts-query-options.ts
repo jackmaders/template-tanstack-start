@@ -1,4 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
+import { withApplicationErrorNormalization } from "@/lib/errors";
 import { listPostsFn } from "./posts.functions";
 
 export const postKeys = {
@@ -6,6 +7,6 @@ export const postKeys = {
 };
 
 export const postsQueryOptions = queryOptions({
-	queryFn: listPostsFn,
+	queryFn: () => withApplicationErrorNormalization(() => listPostsFn()),
 	queryKey: postKeys.all,
 });

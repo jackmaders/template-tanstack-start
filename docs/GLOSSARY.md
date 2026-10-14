@@ -7,6 +7,9 @@ Shared terms for describing the project's code and design.
 **Module**:
 A unit of code with a defined responsibility and interface, such as a file, component, or class.
 
+**Application error code**:
+A stable identifier for an expected application failure. It selects safe user-facing feedback without exposing vendor or database messages.
+
 ## CI/CD
 
 **Composite action**:

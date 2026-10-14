@@ -34,7 +34,7 @@ test("shows a high priority toast when a mutation fails", async () => {
 	await expect(result).rejects.toBe(error);
 
 	expect(toast.add).toHaveBeenCalledWith({
-		description: "mutation failed",
+		description: "Something went wrong. Please try again.",
 		priority: "high",
 		type: "error",
 	});

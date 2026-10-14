@@ -6,7 +6,8 @@ import {
 } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast-manager";
-import { signOut } from "@/lib/auth/auth-client";
+import { signOutUser } from "@/features/account/api/email-auth";
+import { getUserFacingErrorMessage, reportUnexpectedError } from "@/lib/errors";
 
 interface LogoutButtonProps extends ComponentProps<"button"> {}
 
@@ -22,15 +23,14 @@ export function LogoutButton({
 		async (e: MouseEvent<HTMLButtonElement>) => {
 			setPending(true);
 			try {
-				const { error } = await signOut();
-
-				if (error) {
-					toast.add({
-						description: error.message,
-						priority: "high",
-						type: "error",
-					});
-				}
+				await signOutUser();
+			} catch (error) {
+				reportUnexpectedError(error, "Sign out failed");
+				toast.add({
+					description: getUserFacingErrorMessage(error),
+					priority: "high",
+					type: "error",
+				});
 			} finally {
 				setPending(false);
 				onClick?.(e);

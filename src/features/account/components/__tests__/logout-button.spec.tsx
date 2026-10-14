@@ -114,7 +114,7 @@ test("shows server errors in a toast", async () => {
 	await user.click(screen.getByRole("button"));
 	// Assert
 	expect(toast.add).toHaveBeenCalledExactlyOnceWith({
-		description: "Logout failed",
+		description: "Unable to log out. Please try again.",
 		priority: "high",
 		type: "error",
 	});

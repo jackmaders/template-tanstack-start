@@ -1,6 +1,6 @@
 import { type ComponentProps, type SubmitEvent, useCallback } from "react";
+import { getUserFacingErrorMessage, reportUnexpectedError } from "@/lib/errors";
 import { useFormContext } from "./form-context";
-import { FormSubmissionError } from "./form-submission-error";
 
 interface FormProps
 	extends Omit<ComponentProps<"form">, "onSubmit" | "onError"> {
@@ -17,13 +17,11 @@ export function Form({ onError, ...props }: FormProps) {
 			try {
 				await form.handleSubmit();
 			} catch (error) {
+				reportUnexpectedError(error, "Form submission failed");
 				form.setErrorMap({
 					onSubmit: {
 						fields: {},
-						form:
-							error instanceof FormSubmissionError
-								? error.message
-								: "Something went wrong. Please try again.",
+						form: getUserFacingErrorMessage(error),
 					},
 				});
 				onError?.(error);

@@ -111,9 +111,10 @@ test("displays authentication errors", async () => {
 	vi.mocked(signUp.email).mockResolvedValueOnce({
 		data: null,
 		error: {
+			code: "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
 			message: "An account already exists",
-			status: 401,
-			statusText: "Unauthorized",
+			status: 422,
+			statusText: "Unprocessable Entity",
 		},
 	});
 	// Act
@@ -123,7 +124,12 @@ test("displays authentication errors", async () => {
 	await user.type(screen.getByLabelText("Password"), "password");
 	await user.click(screen.getByRole("button", { name: "Sign up" }));
 	// Assert
-	expect(await screen.findByText("An account already exists")).toBeVisible();
+	expect(
+		await screen.findByText("An account with that email already exists."),
+	).toBeVisible();
+	expect(
+		screen.queryByText("An account already exists"),
+	).not.toBeInTheDocument();
 });
 
 test("displays a safe message when the authentication request rejects", async () => {
@@ -149,7 +155,12 @@ test("allows retrying after an authentication error", async () => {
 	vi.mocked(signUp.email)
 		.mockResolvedValueOnce({
 			data: null,
-			error: { message: "Try again", status: 401, statusText: "Unauthorized" },
+			error: {
+				code: "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
+				message: "An account already exists",
+				status: 422,
+				statusText: "Unprocessable Entity",
+			},
 		})
 		.mockResolvedValueOnce({ data: null, error: null });
 	// Act
@@ -158,7 +169,7 @@ test("allows retrying after an authentication error", async () => {
 	await user.type(screen.getByLabelText("Email"), "person@example.com");
 	await user.type(screen.getByLabelText("Password"), "password");
 	await user.click(screen.getByRole("button", { name: "Sign up" }));
-	await screen.findByText("Try again");
+	await screen.findByText("An account with that email already exists.");
 	await user.type(screen.getByLabelText("Password"), "corrected");
 	await user.click(screen.getByRole("button", { name: "Sign up" }));
 	// Assert

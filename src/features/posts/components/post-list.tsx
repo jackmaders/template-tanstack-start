@@ -1,19 +1,44 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { postsQueryOptions } from "@/features/posts/api/posts-query-options";
 import type { Post } from "@/features/posts/api/posts-schema";
 import { useSession } from "@/lib/auth/auth-client";
+import { reportAuthFailureIfUnexpected } from "@/lib/auth/auth-errors";
+import { reportUnexpectedError } from "@/lib/errors";
 import { DeletePostButton } from "./delete-post-button";
 import { EditPostForm } from "./edit-post-form";
 
 export function PostList() {
-	const { data: session } = useSession();
+	const { data: session, error, isPending, refetch } = useSession();
+	const retrySession = useCallback(async () => {
+		try {
+			await refetch();
+		} catch (failure) {
+			reportAuthFailureIfUnexpected(failure, "session");
+		}
+	}, [refetch]);
+
+	if (isPending) {
+		return <p role="status">Checking your sign-in status…</p>;
+	}
+
+	if (error) {
+		return (
+			<div role="alert">
+				<p>Unable to check your sign-in status.</p>
+				<Button onClick={retrySession} type="button" variant="outline">
+					Try again
+				</Button>
+			</div>
+		);
+	}
 
 	if (!session) {
 		return <p>Sign in to create and view your posts.</p>;
@@ -23,7 +48,25 @@ export function PostList() {
 }
 
 function AuthenticatedPostList() {
-	const { data: posts } = useSuspenseQuery(postsQueryOptions);
+	const {
+		data: posts,
+		error,
+		isFetching,
+		refetch,
+	} = useSuspenseQuery(postsQueryOptions);
+	const retryPosts = useCallback(async () => {
+		try {
+			await refetch();
+		} catch (failure) {
+			reportUnexpectedError(failure, "Posts refresh retry failed");
+		}
+	}, [refetch]);
+
+	useEffect(() => {
+		if (error && !isFetching) {
+			reportUnexpectedError(error, "Posts refresh failed");
+		}
+	}, [error, isFetching]);
 
 	return (
 		<section aria-label="Your posts">
@@ -31,6 +74,14 @@ function AuthenticatedPostList() {
 			<p>
 				{posts.length} {posts.length === 1 ? "post" : "posts"}
 			</p>
+			{error && !isFetching && (
+				<div role="status">
+					<p>Couldn't refresh posts. Showing the last loaded results.</p>
+					<Button onClick={retryPosts} type="button" variant="outline">
+						Retry
+					</Button>
+				</div>
+			)}
 
 			{posts.length === 0 ? (
 				<p>No posts yet. Your new posts will show up here.</p>
