@@ -2,6 +2,8 @@ import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
 	entry: [
+		"rolldown.config.ts!",
+		"vite.config.ts!",
 		"src/routeTree.gen.ts!",
 		"src/client.tsx!",
 		"src/server.ts!",
