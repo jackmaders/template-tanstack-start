@@ -7,6 +7,7 @@ interface TestFixtures {
 	app: {
 		goto: (url: string) => Promise<void>;
 	};
+	browserDiagnostics: undefined;
 	signedInAccount: TestAccount;
 }
 
@@ -22,6 +23,36 @@ export const test = base.extend<TestFixtures>({
 			},
 		});
 	},
+	browserDiagnostics: [
+		async ({ page }, use, testInfo) => {
+			const problems: string[] = [];
+
+			page.on("console", (message) => {
+				if (!["warning", "error"].includes(message.type())) {
+					return;
+				}
+
+				problems.push(`[console.${message.type()}] ${message.text()}`);
+			});
+
+			page.on("pageerror", (error) => {
+				problems.push(`[pageerror] ${error.message}`);
+			});
+
+			await use();
+
+			if (problems.length > 0) {
+				const report = problems.join("\n");
+				await testInfo.attach("browser-diagnostics", {
+					body: report,
+					contentType: "text/plain",
+				});
+
+				throw new Error(`Browser warnings or errors detected:\n${report}`);
+			}
+		},
+		{ auto: true },
+	],
 	signedInAccount: async ({ account, app, page }, use) => {
 		await app.goto("/");
 		const accountActions = new AccountActions(page);
