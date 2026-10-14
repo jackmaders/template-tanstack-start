@@ -7,15 +7,12 @@ inputs:
     required: true
   base-url:
     description: "Optional URL for tests against an already deployed application"
-    required: false
     default: ""
   use-preview:
     description: "Use the local production preview server when no base URL is provided"
-    required: false
     default: "false"
   report-name:
     description: "Artifact name for the Playwright failure report"
-    required: false
     default: "playwright-report"
 
 runs:

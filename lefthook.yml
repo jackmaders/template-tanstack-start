@@ -9,10 +9,10 @@ pre-commit:
   commands:
     biome-check:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,css,scss}"
-      run: bun biome check --write --unsafe --linter-enabled=false --assist-enabled=true {staged_files}
+      run: bun biome check --write --unsafe --linter-enabled=false {staged_files}
       stage_fixed: true
 
 commit-msg:
   commands:
     commitlint:
-      run: bun commitlint --edit {1} --config .config/commitlint.config.mjs
+      run: bun commitlint --default-config --edit {1}

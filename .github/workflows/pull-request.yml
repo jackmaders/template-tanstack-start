@@ -65,7 +65,9 @@ jobs:
         uses: actions/upload-artifact@v7.0.2
         with:
           name: build-output
-          path: dist/
+          path: |
+            dist/
+            .wrangler/deploy/config.json
           include-hidden-files: true
           retention-days: 1
 
@@ -140,7 +142,7 @@ jobs:
         uses: actions/download-artifact@v8.0.2
         with:
           name: build-output
-          path: dist/
+          path: .
 
       - name: 🎭 Run Browser Tests
         uses: ./.github/actions/run-playwright
@@ -166,12 +168,10 @@ jobs:
         uses: actions/download-artifact@v8.0.2
         with:
           name: build-output
-          path: dist/
+          path: .
 
       - name: 🔦 Run Lighthouse Check
         uses: ./.github/actions/run-lighthouse
-        with:
-          number-of-runs: "3"
 
   code-quality:
     name: ✨ Check Code Quality

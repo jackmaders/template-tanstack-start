@@ -5,7 +5,6 @@ inputs:
   browsers:
     default: "chromium"
     description: "Space-separated list of browsers to install (e.g. 'chromium' or 'chromium firefox')"
-    required: false
 
 runs:
   using: "composite"

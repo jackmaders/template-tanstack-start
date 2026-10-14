@@ -1,5 +1,3 @@
-/// <reference types="node" />
-
 import { defineConfig, devices } from "@playwright/test";
 
 const isCi = Boolean(process.env.CI);
@@ -30,7 +28,7 @@ export default defineConfig({
 	],
 	reporter: isCi ? "github" : "list",
 	retries: isCi ? 2 : 0,
-	testDir: "../tests/e2e",
+	testDir: "./tests/e2e",
 	use: {
 		baseURL: baseUrl,
 		trace: "on-first-retry",
@@ -44,7 +42,7 @@ function getWebServerConfig() {
 		return {};
 	}
 
-	const steps = ["bun run db:migrate --local --persist-to .wrangler/state"];
+	const steps = ["bun run db:migrate --local"];
 
 	if (usePreview) {
 		steps.push("bun run cf:preview");
@@ -55,7 +53,6 @@ function getWebServerConfig() {
 	return {
 		webServer: {
 			command: steps.join(" && "),
-			reuseExistingServer: false,
 			url: baseUrl,
 		},
 	};

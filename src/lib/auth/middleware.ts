@@ -1,9 +1,9 @@
 import { createMiddleware } from "@tanstack/react-start";
-import { ensureSessionFn } from "@/lib/auth/auth.functions";
+import { ensureSession } from "./session.server";
 
 export const authMiddleware = createMiddleware({
 	type: "function",
 }).server(async ({ next }) => {
-	const session = await ensureSessionFn();
+	const session = await ensureSession();
 	return await next({ context: { session } });
 });

@@ -20,8 +20,6 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
-    outputs:
-      production-url: ${{ steps.deploy-worker.outputs.production-url }}
 
     steps:
       - name: 🛒 Checkout Source Code
@@ -92,5 +90,4 @@ jobs:
         uses: ./.github/actions/run-lighthouse
         with:
           base-url: ${{ vars.PRODUCTION_URL }}
-          number-of-runs: "3"
           start-server-command: ""

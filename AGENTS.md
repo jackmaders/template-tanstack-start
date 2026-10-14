@@ -2,7 +2,7 @@
 
 ## Configuration
 
-Do not edit configuration, dependency, or workflow files without explicit permission. If a task requires changes to these files, present the diff and wait for the user to approve the exact proposed change. This includes, but is not limited to, `biome.json`, `package.json`, `bun.lock`, `.config/*`, and `.github/workflows/*`.
+Do not edit configuration, dependency, or workflow files without explicit permission. If a task requires changes to these files, present the diff and wait for the user to approve the exact proposed change. This includes, but is not limited to, `biome.json`, `package.json`, `bun.lock`, `*.config.*`, and `.github/workflows/*`.
 
 ## Documentation
 
