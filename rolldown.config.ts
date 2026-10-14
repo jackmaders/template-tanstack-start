@@ -1,8 +1,6 @@
-import type { UserConfig } from "vite";
+import type { RolldownOptions } from "rolldown";
 
-export const rolldownOptions: NonNullable<
-	NonNullable<UserConfig["build"]>["rolldownOptions"]
-> = {
+export const rolldownOptions: RolldownOptions = {
 	output: {
 		codeSplitting: {
 			groups: [
