@@ -1,4 +1,8 @@
-import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
+import {
+	createInsertSchema,
+	createSelectSchema,
+	createUpdateSchema,
+} from "drizzle-orm/zod";
 import type { z } from "zod";
 import { posts } from "@/db/schema/posts";
 
@@ -12,7 +16,9 @@ export type Post = typeof posts.$inferSelect;
 export type PostCreate = z.infer<typeof createPostSchema>;
 export type PostDelete = z.infer<typeof deletePostSchema>;
 
-export const updatePostSchema = createPostSchema.extend({
-	id: selectPostSchema.shape.id,
-});
+export const updatePostSchema = createUpdateSchema(posts, {
+	title: createPostSchema.shape.title,
+})
+	.pick({ id: true, title: true })
+	.required();
 export type PostUpdate = z.infer<typeof updatePostSchema>;

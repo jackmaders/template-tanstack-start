@@ -1,6 +1,11 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
-import { Button } from "@/components/ui/button";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
 import { postsQueryOptions } from "@/features/posts/api/posts-query-options";
 import type { Post } from "@/features/posts/api/posts-schema";
 import { useSession } from "@/lib/auth/auth-client";
@@ -41,23 +46,26 @@ function AuthenticatedPostList() {
 }
 
 function PostListItem({ post }: { post: Post }) {
-	const [isEditing, setIsEditing] = useState(false);
-	const startEditing = useCallback(() => setIsEditing(true), []);
-	const stopEditing = useCallback(() => setIsEditing(false), []);
+	const [expanded, setExpanded] = useState<number[]>([]);
+	const stopEditing = useCallback(() => setExpanded([]), []);
 	return (
-		<li className="flex gap-2">
-			{isEditing ? (
-				<EditPostForm onClose={stopEditing} post={post} />
-			) : (
-				<>
-					<p>{post.title}</p>
-					<Button
-						onClick={startEditing}
-						type="button"
-					>{`Edit ${post.title}`}</Button>
-					<DeletePostButton post={post} />
-				</>
-			)}
+		<li>
+			<Accordion onValueChange={setExpanded} value={expanded}>
+				<AccordionItem value={post.id}>
+					<div className="flex items-center gap-2">
+						<p>{post.title}</p>
+						<AccordionTrigger aria-label={`Edit ${post.title}`}>
+							Edit
+						</AccordionTrigger>
+						<DeletePostButton post={post} />
+					</div>
+					<AccordionContent>
+						{expanded.includes(post.id) && (
+							<EditPostForm onClose={stopEditing} post={post} />
+						)}
+					</AccordionContent>
+				</AccordionItem>
+			</Accordion>
 		</li>
 	);
 }
