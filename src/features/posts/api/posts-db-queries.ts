@@ -2,7 +2,7 @@ import type { User } from "better-auth";
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db/db.server";
 import { posts } from "@/db/schema/posts";
-import type { PostCreate } from "./posts-schema";
+import type { PostCreate, PostUpdate } from "./posts-schema";
 
 const LIST_POSTS_LIMIT = 50;
 
@@ -39,4 +39,16 @@ export async function deletePost(user: User, id: number, db = getDb()) {
 	}
 
 	return deleted;
+}
+
+export async function updatePost(user: User, values: PostUpdate, db = getDb()) {
+	const [post] = await db
+		.update(posts)
+		.set({ title: values.title })
+		.where(and(eq(posts.id, values.id), eq(posts.userId, user.id)))
+		.returning();
+	if (!post) {
+		throw new Error("Post not found or unauthorized.");
+	}
+	return post;
 }

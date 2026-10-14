@@ -5,6 +5,7 @@ import {
 	createPost,
 	deletePost,
 	listPosts,
+	updatePost,
 } from "@/features/posts/api/posts-db-queries";
 import { createPostFixture } from "@/testing/fixtures/post";
 import { TEST_USER } from "@/testing/fixtures/session";
@@ -109,6 +110,42 @@ test("throws when the post is not owned by the user", async () => {
 
 	// Act
 	const result = deletePost(TEST_USER, 7);
+
+	// Assert
+	await expect(result).rejects.toThrow("Post not found or unauthorized.");
+});
+
+test("updates and returns only a post owned by the user", async () => {
+	// Arrange
+	const values = { id: 7, title: "Updated post" };
+	const post = createPostFixture(values);
+	const update = db.update(posts);
+	const changes = update.set({ title: values.title });
+	const query = changes.where(
+		and(eq(posts.id, values.id), eq(posts.userId, TEST_USER.id)),
+	);
+	vi.mocked(query.returning).mockResolvedValueOnce([post]);
+	vi.clearAllMocks();
+
+	// Act
+	const result = await updatePost(TEST_USER, values);
+
+	// Assert
+	expect(result).toBe(post);
+	expect(update.set).toHaveBeenCalledWith({ title: "Updated post" });
+	expect(changes.where).toHaveBeenCalledWith(
+		and(eq(posts.id, 7), eq(posts.userId, TEST_USER.id)),
+	);
+});
+
+test("rejects updating a missing post or another user's post", async () => {
+	// Arrange
+	vi.mocked(
+		db.update(posts).set({ title: "Updated" }).where(eq(posts.id, 7)).returning,
+	).mockResolvedValueOnce([]);
+
+	// Act
+	const result = updatePost(TEST_USER, { id: 7, title: "Updated" });
 
 	// Assert
 	await expect(result).rejects.toThrow("Post not found or unauthorized.");

@@ -8,6 +8,8 @@ export const db = {
 	orderBy: vi.fn().mockReturnThis(),
 	returning: vi.fn().mockReturnThis(),
 	select: vi.fn().mockReturnThis(),
+	set: vi.fn().mockReturnThis(),
+	update: vi.fn().mockReturnThis(),
 	values: vi.fn().mockReturnThis(),
 	where: vi.fn().mockReturnThis(),
 };
