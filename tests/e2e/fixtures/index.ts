@@ -39,7 +39,7 @@ export const test = base.extend<TestFixtures>({
 				problems.push(`[pageerror] ${error.message}`);
 			});
 
-			await use();
+			await use(undefined);
 
 			if (problems.length > 0) {
 				const report = problems.join("\n");
