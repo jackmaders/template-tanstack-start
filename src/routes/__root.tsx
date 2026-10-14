@@ -65,7 +65,7 @@ function NotFoundPage() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	useEffect(() => {
-		document.body.dataset.hydrated = "true";
+		document.body.setAttribute("data-hydrated", "true");
 	}, []);
 
 	return (

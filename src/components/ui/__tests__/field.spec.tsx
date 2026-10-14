@@ -238,7 +238,7 @@ test("renders unique field error messages and ignores messages without text", ()
 				undefined,
 				{ message: "Name is required" },
 				{ message: "Name is too short" },
-				{ message: undefined },
+				{},
 			]}
 		/>,
 	);
