@@ -1,4 +1,5 @@
 import { getRequestHeaders } from "@tanstack/react-start/server";
+import { it } from "vitest";
 import { auth } from "@/lib/auth/auth.server";
 import { getSessionFn } from "@/lib/auth/session.functions";
 import { TEST_SESSION } from "@/testing/fixtures/session";
@@ -7,7 +8,7 @@ vi.mock("@tanstack/react-start");
 vi.mock("@tanstack/react-start/server");
 vi.mock("@/lib/auth/auth.server");
 
-test("forwards request headers when looking up a session through the server function", async () => {
+it("forwards request headers when looking up a session through the server function", async () => {
 	// Arrange
 	const headers = new Headers({ cookie: "session=test-session" });
 	vi.mocked(getRequestHeaders).mockReturnValueOnce(headers);
@@ -21,7 +22,7 @@ test("forwards request headers when looking up a session through the server func
 	expect(auth.api.getSession).toHaveBeenCalledExactlyOnceWith({ headers });
 });
 
-test("returns no session to an anonymous route caller", async () => {
+it("returns no session to an anonymous route caller", async () => {
 	// Arrange
 	vi.mocked(auth.api.getSession).mockResolvedValueOnce(null);
 

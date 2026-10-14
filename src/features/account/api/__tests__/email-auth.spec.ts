@@ -1,3 +1,4 @@
+import { it } from "vitest";
 import { FormSubmissionError } from "@/components/forms/form-submission-error";
 import {
 	signInWithEmail,
@@ -7,7 +8,7 @@ import { signIn, signUp } from "@/lib/auth/auth-client";
 
 vi.mock("@/lib/auth/auth-client");
 
-test("uses a fallback for an empty sign in error message", async () => {
+it("uses a fallback for an empty sign in error message", async () => {
 	// Arrange
 	vi.mocked(signIn.email).mockResolvedValueOnce({
 		data: null,
@@ -23,7 +24,7 @@ test("uses a fallback for an empty sign in error message", async () => {
 	await expect(result).rejects.toThrow("Unable to sign in. Please try again.");
 });
 
-test("uses a fallback for an empty sign up error message", async () => {
+it("uses a fallback for an empty sign up error message", async () => {
 	// Arrange
 	vi.mocked(signUp.email).mockResolvedValueOnce({
 		data: null,

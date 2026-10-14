@@ -11,23 +11,29 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 
+const EMPTY_NAVIGATION: LinkComponentProps[] = [];
+
 interface NavbarProps extends ComponentProps<"header"> {
 	actions?: ReactNode;
 	links?: LinkComponentProps[];
 }
 
-export function Navbar({ links = [], actions, ...props }: NavbarProps) {
+export function Navbar({
+	links = EMPTY_NAVIGATION,
+	actions,
+	...props
+}: NavbarProps) {
 	return (
 		<header {...props}>
 			<nav aria-label="Main navigation">
 				<div className="flex items-center justify-between gap-4">
 					<Link to="/">LOGO</Link>
-					<div className="max-sm:hidden flex gap-2">
+					<div className="flex gap-2 max-sm:hidden">
 						{links.map((link) => (
 							<Link key={link.to} {...link} />
 						))}
 					</div>
-					<div className="max-sm:hidden flex items-center gap-2">{actions}</div>
+					<div className="flex items-center gap-2 max-sm:hidden">{actions}</div>
 					<MobileNavDrawer
 						actions={actions}
 						className="sm:hidden"
@@ -45,7 +51,7 @@ interface MobileNavDrawerProps extends ComponentProps<typeof DrawerTrigger> {
 }
 
 function MobileNavDrawer({
-	navigation = [],
+	navigation = EMPTY_NAVIGATION,
 	actions,
 	...props
 }: MobileNavDrawerProps) {
@@ -62,7 +68,7 @@ function MobileNavDrawer({
 			/>
 
 			<DrawerContent>
-				<DrawerHeader className="flex-row justify-between items-center">
+				<DrawerHeader className="flex-row items-center justify-between">
 					<DrawerTitle>Menu</DrawerTitle>
 
 					<DrawerClose

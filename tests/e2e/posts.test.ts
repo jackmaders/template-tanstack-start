@@ -1,11 +1,11 @@
 import { expect } from "@playwright/test";
-import { test } from "./fixtures";
+import { test as it } from "./fixtures";
 import { PostsPage } from "./pages/posts-page";
 
-const POSTS_URL = /\/posts$/;
+const POSTS_URL = /\/posts$/u;
 
-test.describe("posts", () => {
-	test("creates, edits, and deletes a post", async ({
+it.describe("posts", () => {
+	it("creates, edits, and deletes a post", async ({
 		page,
 		signedInAccount,
 	}) => {

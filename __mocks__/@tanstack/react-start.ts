@@ -9,7 +9,7 @@ export const createServerFn = vi.fn(() => {
 			const context: Record<string, unknown> = {};
 			const data = (await validator?.parse(options?.data)) ?? options?.data;
 
-			const runHandler = async (index: number): Promise<unknown> => {
+			async function runHandler(index: number): Promise<unknown> {
 				const middleware = middlewares[index];
 				if (!middleware) {
 					return await handlerFn({ ...options, context, data });
@@ -23,7 +23,7 @@ export const createServerFn = vi.fn(() => {
 						return runHandler(index + 1);
 					}),
 				});
-			};
+			}
 
 			return runHandler(0);
 		}),

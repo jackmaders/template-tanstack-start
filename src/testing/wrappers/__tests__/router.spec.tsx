@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { render, screen } from "@testing-library/react";
+import { it } from "vitest";
 import { createRouterTestContext } from "@/testing/wrappers/router";
 
-test("starts at a custom location and supports rerendering its children", async () => {
+it("starts at a custom location and supports rerendering its children", async () => {
 	// Arrange
 	const { router, wrapper } = await createRouterTestContext("/about");
 	const { rerender } = render(<Link to="/about">Original</Link>, { wrapper });

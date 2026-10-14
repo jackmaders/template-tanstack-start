@@ -23,40 +23,82 @@
 	},
 	"linter": {
 		"rules": {
-			"a11y": {
-				"preset": "all"
-			},
-			"complexity": {
-				"preset": "all"
-			},
-			"nursery": {
-				"preset": "all"
-			},
-			"performance": {
-				"preset": "all",
-				"useSolidForComponent": "off"
-			},
-			"security": {
-				"noSecrets": "off",
-				"preset": "all"
-			},
-			"style": {
-				"noJsxLiterals": "off",
-				"noTernary": "off",
-				"preset": "all",
-				"useExportsLast": "off"
-			},
-			"suspicious": {
-				"noReactSpecificProps": "off",
-				"preset": "all"
-			}
+			"a11y": "error",
+			"complexity": "error",
+			"correctness": "error",
+			"nursery": "error",
+			"performance": "error",
+			"security": "error",
+			"style": "error",
+			"suspicious": "error"
 		}
 	},
 	"overrides": [
 		{
+			"includes": ["src/components/ui/**"],
+			"linter": {
+				"rules": {
+					"nursery": {
+						"noTailwindArbitraryValue": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": ["src/styles.css"],
+			"linter": {
+				"rules": {
+					"nursery": {
+						"noDuplicateSelectors": "off",
+						"useLayeredStyles": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": ["**/__tests__/**", "**/__mocks__/**"],
+			"javascript": {
+				"globals": ["expect", "test", "vi"]
+			}
+		},
+		{
+			"includes": ["**"],
+			"linter": {
+				"rules": {
+					"nursery": {
+						"noReactNativeRawText": "off",
+						"useConsistentFunctionStyle": {
+							"level": "error",
+							"options": { "style": "declaration" }
+						},
+						"useExplicitReturnType": "off",
+						"useExplicitType": "off"
+					},
+					"performance": {
+						"noJsxPropsBind": "off",
+						"useSolidForComponent": "off"
+					},
+					"security": {
+						"noSecrets": "off"
+					},
+					"style": {
+						"noJsxLiterals": "off",
+						"noTernary": "off",
+						"useExportsLast": "off"
+					},
+					"suspicious": {
+						"noReactSpecificProps": "off"
+					}
+				}
+			}
+		},
+		{
 			"includes": ["**/*.config.*"],
 			"linter": {
 				"rules": {
+					"correctness": {
+						"noNodejsModules": "off"
+					},
 					"style": {
 						"noDefaultExport": "off",
 						"noProcessEnv": "off",
@@ -78,7 +120,13 @@
 		},
 		{
 			"includes": ["**/__tests__/*.spec.{ts,tsx}"],
-			"linter": { "rules": { "style": { "noMagicNumbers": "off" } } }
+			"linter": {
+				"rules": {
+					"style": {
+						"noMagicNumbers": "off"
+					}
+				}
+			}
 		}
 	],
 	"plugins": [

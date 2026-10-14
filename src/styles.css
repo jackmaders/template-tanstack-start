@@ -12,7 +12,7 @@
 html,
 body,
 #app {
-	min-height: 100%;
+	min-block-size: 100%;
 }
 
 body {

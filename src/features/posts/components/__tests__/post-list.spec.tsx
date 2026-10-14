@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { it } from "vitest";
 import { listPosts, updatePost } from "@/features/posts/api/posts-db-queries";
 import { postsQueryOptions } from "@/features/posts/api/posts-query-options";
 import { PostList } from "@/features/posts/components/post-list";
@@ -12,7 +13,7 @@ vi.mock("@/features/posts/api/posts-db-queries");
 vi.mock("@/features/posts/api/use-delete-post");
 
 vi.mock("@/lib/auth/auth-client");
-test("shows an empty state when there are no posts", () => {
+it("shows an empty state when there are no posts", () => {
 	// Arrange
 	const { queryClient, wrapper } = createQueryTestContext();
 	queryClient.setQueryDefaults(postsQueryOptions.queryKey, {
@@ -34,7 +35,7 @@ test("shows an empty state when there are no posts", () => {
 	expect(screen.queryByRole("list")).not.toBeInTheDocument();
 });
 
-test("shows a single post with its delete button", () => {
+it("shows a single post with its delete button", () => {
 	// Arrange
 	const { queryClient, wrapper } = createQueryTestContext();
 	queryClient.setQueryDefaults(postsQueryOptions.queryKey, {
@@ -55,7 +56,7 @@ test("shows a single post with its delete button", () => {
 	).toBeInTheDocument();
 });
 
-test("shows multiple posts", () => {
+it("shows multiple posts", () => {
 	// Arrange
 	const { queryClient, wrapper } = createQueryTestContext();
 	queryClient.setQueryDefaults(postsQueryOptions.queryKey, {
@@ -76,15 +77,17 @@ test("shows multiple posts", () => {
 	expect(screen.getByText("Second post")).toBeInTheDocument();
 });
 
-test("asks anonymous users to sign in without loading posts", () => {
+it("asks anonymous users to sign in without loading posts", () => {
 	// Arrange
 	vi.mocked(useSession).mockReturnValueOnce({
 		data: null,
 		error: null,
 		isPending: false,
 		isRefetching: false,
-		refetch: vi.fn(),
-	} as ReturnType<typeof useSession>);
+		refetch: vi
+			.fn<ReturnType<typeof useSession>["refetch"]>()
+			.mockResolvedValueOnce(undefined),
+	});
 
 	// Act
 	render(<PostList />);
@@ -95,7 +98,7 @@ test("asks anonymous users to sign in without loading posts", () => {
 	).toBeInTheDocument();
 });
 
-test("edits a post and refreshes its displayed title", async () => {
+it("edits a post and refreshes its displayed title", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const post = { id: 1, title: "A post", userId: "user-1" };
@@ -128,7 +131,7 @@ test("edits a post and refreshes its displayed title", async () => {
 	expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
 });
 
-test("cancels an edit without changing the post", async () => {
+it("cancels an edit without changing the post", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { queryClient, wrapper } = createQueryTestContext();
@@ -153,7 +156,7 @@ test("cancels an edit without changing the post", async () => {
 	expect(updatePost).not.toHaveBeenCalled();
 });
 
-test("prevents saving a blank title", async () => {
+it("prevents saving a blank title", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { queryClient, wrapper } = createQueryTestContext();
@@ -175,7 +178,7 @@ test("prevents saving a blank title", async () => {
 	expect(updatePost).not.toHaveBeenCalled();
 });
 
-test("keeps the draft and shows an error when saving fails", async () => {
+it("keeps the draft and shows an error when saving fails", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { queryClient, wrapper } = createQueryTestContext();

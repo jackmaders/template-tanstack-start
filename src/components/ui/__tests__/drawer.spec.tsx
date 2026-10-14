@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { it } from "vitest";
 import {
 	Drawer,
 	DrawerClose,
@@ -11,7 +12,7 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 
-test("opens an accessible drawer with default options", async () => {
+it("opens an accessible drawer with default options", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	// Act
@@ -43,7 +44,7 @@ test("opens an accessible drawer with default options", async () => {
 	).not.toBeInTheDocument();
 });
 
-test("closes the drawer with its close button", async () => {
+it("closes the drawer with its close button", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	// Act
@@ -67,7 +68,7 @@ test("closes the drawer with its close button", async () => {
 	expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });
 
-test("supports up drawers without a modal overlay", () => {
+it("supports up drawers without a modal overlay", () => {
 	// Act
 	render(
 		<Drawer
@@ -94,7 +95,7 @@ test("supports up drawers without a modal overlay", () => {
 	).toBeInTheDocument();
 });
 
-test("supports left drawers without a modal overlay", () => {
+it("supports left drawers without a modal overlay", () => {
 	// Act
 	render(
 		<Drawer
@@ -121,7 +122,7 @@ test("supports left drawers without a modal overlay", () => {
 	).toBeInTheDocument();
 });
 
-test("supports right drawers without a modal overlay", () => {
+it("supports right drawers without a modal overlay", () => {
 	// Act
 	render(
 		<Drawer
@@ -148,7 +149,7 @@ test("supports right drawers without a modal overlay", () => {
 	).toBeInTheDocument();
 });
 
-test("marks a modal overlay when snap points are configured", () => {
+it("marks a modal overlay when snap points are configured", () => {
 	// Act
 	render(
 		<Drawer defaultOpen={true} snapPoints={[1]}>
@@ -164,9 +165,11 @@ test("marks a modal overlay when snap points are configured", () => {
 	).toHaveAttribute("data-snap-points");
 });
 
-test("rejects drawer content without a drawer provider", () => {
+it("rejects drawer content without a drawer provider", () => {
 	// Act
-	const renderWithoutProvider = () => render(<DrawerContent />);
+	function renderWithoutProvider() {
+		return render(<DrawerContent />);
+	}
 	// Assert
 	expect(renderWithoutProvider).toThrow(
 		"useDrawer must be used within a Drawer.",

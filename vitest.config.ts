@@ -1,3 +1,4 @@
+import process from "node:process";
 import { cloudflareTest } from "@cloudflare/vitest-plugin";
 import { defineConfig } from "vitest/config";
 

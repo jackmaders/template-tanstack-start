@@ -2,8 +2,9 @@ import type { ComponentProps } from "react";
 import { FieldError } from "@/components/ui/field";
 import { useFormContext } from "./form-context";
 
-const selectSubmitError = (state: { errorMap: { onSubmit?: unknown } }) =>
-	state.errorMap.onSubmit;
+function selectSubmitError(state: { errorMap: { onSubmit?: unknown } }) {
+	return state.errorMap.onSubmit;
+}
 
 export function FormError(
 	props: Omit<ComponentProps<typeof FieldError>, "children" | "errors">,

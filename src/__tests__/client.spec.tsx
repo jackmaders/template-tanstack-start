@@ -1,11 +1,11 @@
 import { isValidElement, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
-import { vi } from "vitest";
+import { it, vi } from "vitest";
 
 vi.mock("@tanstack/react-start/client");
 vi.mock("react-dom/client");
 
-test("hydrates the application inside React strict mode", async () => {
+it("hydrates the application inside React strict mode", async () => {
 	// Act
 	await import("@/client");
 

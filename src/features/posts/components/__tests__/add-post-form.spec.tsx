@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { it } from "vitest";
 import { POST_TITLE_MAX_LENGTH } from "@/db/schema/posts";
 import { useCreatePost } from "@/features/posts/api/use-create-post";
 import { AddPostForm } from "@/features/posts/components/add-post-form";
@@ -8,7 +9,7 @@ import { useSession } from "@/lib/auth/auth-client";
 vi.mock("@/features/posts/api/use-create-post");
 vi.mock("@/lib/auth/auth-client");
 
-test("renders an empty post form with title constraints", () => {
+it("renders an empty post form with title constraints", () => {
 	// Act
 	render(<AddPostForm />);
 
@@ -22,7 +23,7 @@ test("renders an empty post form with title constraints", () => {
 	expect(screen.getByRole("button", { name: "Add post" })).toBeDisabled();
 });
 
-test("creates a post and resets the form after submission", async () => {
+it("creates a post and resets the form after submission", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { mutateAsync } = useCreatePost();
@@ -44,15 +45,17 @@ test("creates a post and resets the form after submission", async () => {
 	await waitFor(() => expect(button).toBeDisabled());
 });
 
-test("does not render for anonymous users", () => {
+it("does not render for anonymous users", () => {
 	// Arrange
 	vi.mocked(useSession).mockReturnValueOnce({
 		data: null,
 		error: null,
 		isPending: false,
 		isRefetching: false,
-		refetch: vi.fn(),
-	} as ReturnType<typeof useSession>);
+		refetch: vi
+			.fn<ReturnType<typeof useSession>["refetch"]>()
+			.mockResolvedValueOnce(undefined),
+	});
 
 	// Act
 	const { container } = render(<AddPostForm />);

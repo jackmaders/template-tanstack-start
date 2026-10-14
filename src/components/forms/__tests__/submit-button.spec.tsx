@@ -1,13 +1,13 @@
 import { createFormHookContexts } from "@tanstack/react-form";
 import { render, screen } from "@testing-library/react";
-import { vi } from "vitest";
+import { it, vi } from "vitest";
 import { SubmitButton } from "@/components/forms/submit-button";
 
 vi.mock("@tanstack/react-form");
 
 const { useFormContext } = createFormHookContexts();
 
-test("renders an enabled submit button by default and forwards props", () => {
+it("renders an enabled submit button by default and forwards props", () => {
 	// Arrange
 	const form = useFormContext();
 
@@ -27,7 +27,7 @@ test("renders an enabled submit button by default and forwards props", () => {
 	expect(form.Subscribe).toHaveBeenCalledOnce();
 });
 
-test("disables the button when the form cannot submit", () => {
+it("disables the button when the form cannot submit", () => {
 	// Arrange
 	const form = useFormContext();
 
@@ -44,7 +44,7 @@ test("disables the button when the form cannot submit", () => {
 	expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
 });
 
-test("keeps an explicitly disabled button disabled when the form can submit", () => {
+it("keeps an explicitly disabled button disabled when the form can submit", () => {
 	// Act
 	render(<SubmitButton disabled={true}>Save</SubmitButton>);
 
@@ -52,7 +52,7 @@ test("keeps an explicitly disabled button disabled when the form can submit", ()
 	expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
 });
 
-test("forwards an explicit button type", () => {
+it("forwards an explicit button type", () => {
 	// Act
 	render(
 		<SubmitButton type="button" variant="secondary">
@@ -67,7 +67,7 @@ test("forwards an explicit button type", () => {
 	expect(button).not.toBeDisabled();
 });
 
-test("disables the button and shows a busy label while submitting", () => {
+it("disables the button and shows a busy label while submitting", () => {
 	// Arrange
 	const form = useFormContext();
 	const mockFormSubmitting = vi.fn(({ children, selector }) =>

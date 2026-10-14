@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { it } from "vitest";
 import {
 	Field,
 	FieldContent,
@@ -12,7 +13,7 @@ import {
 	FieldTitle,
 } from "@/components/ui/field";
 
-test("renders a field set and forwards its props", () => {
+it("renders a field set and forwards its props", () => {
 	// Act
 	render(
 		<FieldSet className="custom-set" data-testid="field-set" title="Options">
@@ -29,7 +30,7 @@ test("renders a field set and forwards its props", () => {
 	expect(fieldSet).toHaveTextContent("Set content");
 });
 
-test("renders legends with the default and label variants", () => {
+it("renders legends with the default and label variants", () => {
 	// Act
 	render(
 		<>
@@ -55,7 +56,7 @@ test("renders legends with the default and label variants", () => {
 	);
 });
 
-test("renders a field group and forwards its props", () => {
+it("renders a field group and forwards its props", () => {
 	// Act
 	render(
 		<FieldGroup className="custom-group" data-testid="field-group">
@@ -71,7 +72,7 @@ test("renders a field group and forwards its props", () => {
 	expect(group).toHaveTextContent("Group content");
 });
 
-test("renders fields with default and explicit orientations", () => {
+it("renders fields with default and explicit orientations", () => {
 	// Act
 	render(
 		<>
@@ -99,7 +100,7 @@ test("renders fields with default and explicit orientations", () => {
 	);
 });
 
-test("renders field content with its slot, class, and children", () => {
+it("renders field content with its slot, class, and children", () => {
 	// Act
 	render(
 		<FieldContent className="custom-content" data-testid="field-content">
@@ -115,7 +116,7 @@ test("renders field content with its slot, class, and children", () => {
 	expect(content).toHaveTextContent("Content text");
 });
 
-test("renders a field label through the shared label component", () => {
+it("renders a field label through the shared label component", () => {
 	// Act
 	render(
 		<FieldLabel
@@ -136,7 +137,7 @@ test("renders a field label through the shared label component", () => {
 	expect(label).toHaveTextContent("Email address");
 });
 
-test("renders a field title with its slot and props", () => {
+it("renders a field title with its slot and props", () => {
 	// Act
 	render(
 		<FieldTitle className="custom-title" data-testid="field-title">
@@ -152,7 +153,7 @@ test("renders a field title with its slot and props", () => {
 	expect(title).toHaveTextContent("Account details");
 });
 
-test("renders a field description with its slot and props", () => {
+it("renders a field description with its slot and props", () => {
 	// Act
 	render(
 		<FieldDescription
@@ -171,7 +172,7 @@ test("renders a field description with its slot and props", () => {
 	expect(description).toHaveTextContent("We use this to contact you.");
 });
 
-test("renders field separators with and without content", () => {
+it("renders field separators with and without content", () => {
 	// Act
 	render(
 		<>
@@ -206,7 +207,7 @@ test("renders field separators with and without content", () => {
 	);
 });
 
-test("renders field errors from children and deduplicates a single message", () => {
+it("renders field errors from children and deduplicates a single message", () => {
 	// Act
 	render(
 		<>
@@ -227,7 +228,7 @@ test("renders field errors from children and deduplicates a single message", () 
 	expect(screen.getByTestId("single-error")).toHaveTextContent("Invalid email");
 });
 
-test("renders unique field error messages and ignores messages without text", () => {
+it("renders unique field error messages and ignores messages without text", () => {
 	// Act
 	render(
 		<FieldError
@@ -253,7 +254,7 @@ test("renders unique field error messages and ignores messages without text", ()
 	expect(error).toHaveTextContent("Name is too short");
 });
 
-test("does not render field errors when there are no messages", () => {
+it("does not render field errors when there are no messages", () => {
 	// Act
 	render(
 		<>

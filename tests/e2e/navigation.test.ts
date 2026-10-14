@@ -1,10 +1,10 @@
 import { expect } from "@playwright/test";
-import { test } from "./fixtures";
+import { test as it } from "./fixtures";
 
-const HOME_URL = /\/$/;
+const HOME_URL = /\/$/u;
 
-test.describe("public navigation", () => {
-	test("visits the public pages and redirects guests away from posts", async ({
+it.describe("public navigation", () => {
+	it("visits the public pages and redirects guests away from posts", async ({
 		app,
 		page,
 	}) => {

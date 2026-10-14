@@ -1,9 +1,9 @@
 import { expect } from "@playwright/test";
 import { AccountActions } from "./components/account-actions";
-import { test } from "./fixtures";
+import { test as it } from "./fixtures";
 
-test.describe("account flows", () => {
-	test("signs up, signs out, and signs back in", async ({
+it.describe("account flows", () => {
+	it("signs up, signs out, and signs back in", async ({
 		app,
 		page,
 		account,
@@ -25,7 +25,7 @@ test.describe("account flows", () => {
 		await expect(accountActions.signUpTrigger).toBeVisible();
 	});
 
-	test("validates email and password during sign up", async ({ app, page }) => {
+	it("validates email and password during sign up", async ({ app, page }) => {
 		await app.goto("/");
 		const accountActions = new AccountActions(page);
 		await accountActions.openSignUp();

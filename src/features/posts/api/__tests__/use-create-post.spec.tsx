@@ -1,4 +1,5 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
+import { it } from "vitest";
 import { createPostFn } from "@/features/posts/api/posts.functions";
 import { postKeys } from "@/features/posts/api/posts-query-options";
 import type { Post } from "@/features/posts/api/posts-schema";
@@ -9,7 +10,7 @@ import { createQueryTestContext } from "@/testing/wrappers/query-client";
 vi.mock("@tanstack/react-start");
 vi.mock("@/features/posts/api/posts.functions");
 
-test("forwards mutation data and exposes the successful result", async () => {
+it("forwards mutation data and exposes the successful result", async () => {
 	// Arrange
 	const data = { title: "New post" };
 	const expected: Post = { id: 1, title: "New post", userId: "user-1" };
@@ -30,7 +31,7 @@ test("forwards mutation data and exposes the successful result", async () => {
 	expect(result.current.data).toBe(expected);
 });
 
-test("invalidates cached post queries after a successful mutation", async () => {
+it("invalidates cached post queries after a successful mutation", async () => {
 	// Arrange
 	const { queryClient, wrapper } = createQueryTestContext();
 	queryClient.setQueryData(postKeys.all, []);
@@ -52,7 +53,7 @@ test("invalidates cached post queries after a successful mutation", async () => 
 	expect(queryClient.getQueryState(["unrelated"])?.isInvalidated).toBe(false);
 });
 
-test("exposes mutation errors without invalidating cached posts", async () => {
+it("exposes mutation errors without invalidating cached posts", async () => {
 	// Arrange
 	const error = new Error("Mutation failed");
 	vi.mocked(createPostFn).mockRejectedValueOnce(error);
@@ -74,7 +75,7 @@ test("exposes mutation errors without invalidating cached posts", async () => {
 	expect(queryClient.getQueryState(postKeys.all)?.isInvalidated).toBe(false);
 });
 
-test("stays pending while the server operation is unresolved", async () => {
+it("stays pending while the server operation is unresolved", async () => {
 	// Arrange
 	const post: Post = { id: 1, title: "New post", userId: "user-1" };
 	const { promise } = createTestPromise<Post>(post);
@@ -89,7 +90,7 @@ test("stays pending while the server operation is unresolved", async () => {
 	await waitFor(() => expect(result.current.isPending).toBe(true));
 });
 
-test("exposes success after a pending server operation completes", async () => {
+it("exposes success after a pending server operation completes", async () => {
 	// Arrange
 	const post: Post = { id: 1, title: "New post", userId: "user-1" };
 	const { promise, resolve } = createTestPromise<Post>(post);

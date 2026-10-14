@@ -12,10 +12,10 @@ import {
 	useContext,
 } from "react";
 
-const TestContent = createContext<ReactNode>(null);
+const TestContentContext = createContext<ReactNode>(null);
 
 function TestRoot() {
-	return useContext(TestContent);
+	return useContext(TestContentContext);
 }
 
 export async function createRouterTestContext(initialLocation = "/") {
@@ -31,9 +31,9 @@ export async function createRouterTestContext(initialLocation = "/") {
 
 	function wrapper({ children }: PropsWithChildren) {
 		return (
-			<TestContent.Provider value={children}>
+			<TestContentContext.Provider value={children}>
 				<RouterProvider router={router} />
-			</TestContent.Provider>
+			</TestContentContext.Provider>
 		);
 	}
 
