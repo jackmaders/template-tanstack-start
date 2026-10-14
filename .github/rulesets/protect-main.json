@@ -7,7 +7,7 @@
 		}
 	},
 	"enforcement": "active",
-	"name": "Protect main",
+	"name": "Protect Main",
 	"rules": [
 		{ "type": "deletion" },
 		{ "type": "non_fast_forward" },
