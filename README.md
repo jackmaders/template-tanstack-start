@@ -7,7 +7,7 @@ A starter template for building web applications with TanStack Start, React, Typ
 ### Prerequisites
 
 - [Bun](https://bun.sh/) v1.4 or later
-- [Node.js](https://nodejs.org/) v22 or later
+- [Node.js](https://nodejs.org/) v22.12 or later
 
 ### Initial setup
 

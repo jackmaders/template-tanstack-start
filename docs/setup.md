@@ -1,36 +1,44 @@
 # New Project Setup
 
-Run these steps in Bash from a new repository created from this template. Setup uses one pull request and one initial deployment; GitHub handles subsequent deployments.
+Run these steps in Bash from a new repository created from this template.
 
 ## Prerequisites
 
-- Bun at the version in `.bun-version`, and Node.js 22.12 or later.
-- Git, GitHub CLI (`gh`), `jq`, Perl, and OpenSSL.
-- Access to the GitHub repository and Cloudflare account.
-- A configured [Cloudflare account subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/), such as `my-account.workers.dev`.
+- [Bun](https://bun.sh/) v1.4 or later.
+- [Node.js](https://nodejs.org/) v22.12 or later.
+- [GitHub CLI](https://cli.github.com/) (authenticated with `gh auth login`)
+- [Wrangler](https://developers.cloudflare.com/workers/wrangler/) (authenticated with `bunx wrangler login`)
 
 ## Prepare the Repository
 
-Install dependencies, sign in, and confirm the repository:
+> [!IMPORTANT]
+> Update the project name in `package.json`
 
 ```bash
+# Install dependencies
 bun install --frozen-lockfile
-gh auth login
+
+# Ensure GitHub CLI is authenticated
 gh repo view --json nameWithOwner
 
-gh repo edit \
-  --default-branch main \
-  --enable-squash-merge \
+# Enforce modern default branch name
+gh repo edit --default-branch main
+
+# Delete branch when a pull request is merged
+gh repo edit --delete-branch-on-merge
+
+# Force commit squashing when a pull request is merged
+gh repo edit  --enable-squash-merge \
   --enable-merge-commit=false \
   --enable-rebase-merge=false \
-  --delete-branch-on-merge
 
+# Create a new git branch
 git switch main
 git pull --ff-only
-git switch -c chore/project-setup
-```
+git switch -c chore/github-setup
 
-Set `package.json`'s `name` to your project name: up to 63 lowercase letters, numbers, or hyphens, with no leading or trailing hyphen. It becomes the Worker and database name. For local development, follow [README.md](../README.md).
+
+```
 
 ## Deploy to Cloudflare
 
