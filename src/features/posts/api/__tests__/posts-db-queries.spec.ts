@@ -112,7 +112,7 @@ test("throws when the post is not owned by the user", async () => {
 	const result = deletePost(TEST_USER, 7);
 
 	// Assert
-	await expect(result).rejects.toThrow("Post not found or unauthorized.");
+	await expect(result).rejects.toThrow("This post is no longer available.");
 });
 
 test("updates and returns only a post owned by the user", async () => {
@@ -148,5 +148,22 @@ test("rejects updating a missing post or another user's post", async () => {
 	const result = updatePost(TEST_USER, { id: 7, title: "Updated" });
 
 	// Assert
-	await expect(result).rejects.toThrow("Post not found or unauthorized.");
+	await expect(result).rejects.toThrow("This post is no longer available.");
+});
+
+test("propagates database failures without converting them into empty results", async () => {
+	// Arrange
+	const error = new Error("database connection failure");
+	const query = db
+		.select()
+		.from(posts)
+		.where(eq(posts.userId, TEST_USER.id))
+		.orderBy(desc(posts.id));
+	vi.mocked(query.limit).mockRejectedValueOnce(error);
+
+	// Act
+	const result = listPosts(TEST_USER);
+
+	// Assert
+	await expect(result).rejects.toBe(error);
 });

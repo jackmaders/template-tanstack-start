@@ -60,3 +60,20 @@ test("does not render for anonymous users", () => {
 	// Assert
 	expect(container).toBeEmptyDOMElement();
 });
+
+test("preserves the title when creation fails", async () => {
+	// Arrange
+	const user = userEvent.setup();
+	const { mutateAsync } = useCreatePost();
+	vi.mocked(mutateAsync).mockRejectedValueOnce(new Error("creation failed"));
+	render(<AddPostForm />);
+	const input = screen.getByRole("textbox", { name: "Post title" });
+
+	// Act
+	await user.type(input, "Keep this draft");
+	await user.click(screen.getByRole("button", { name: "Add post" }));
+
+	// Assert
+	await waitFor(() => expect(mutateAsync).toHaveBeenCalledOnce());
+	expect(input).toHaveValue("Keep this draft");
+});

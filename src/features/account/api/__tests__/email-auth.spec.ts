@@ -1,59 +1,71 @@
-import { FormSubmissionError } from "@/components/forms/form-submission-error";
 import {
 	signInWithEmail,
+	signOutUser,
 	signUpWithEmail,
 } from "@/features/account/api/email-auth";
-import { signIn, signUp } from "@/lib/auth/auth-client";
+import { signIn, signOut, signUp } from "@/lib/auth/auth-client";
+import {
+	EmailAlreadyRegisteredError,
+	InvalidCredentialsError,
+} from "@/lib/errors";
 
 vi.mock("@/lib/auth/auth-client");
 
-test("uses a fallback for an empty sign in error message", async () => {
+test("translates invalid credentials into a concrete safe application error", async () => {
 	// Arrange
 	vi.mocked(signIn.email).mockResolvedValueOnce({
 		data: null,
-		error: { message: "", status: 500, statusText: "Server Error" },
+		error: {
+			code: "INVALID_EMAIL_OR_PASSWORD",
+			message: "vendor details",
+			status: 401,
+			statusText: "Unauthorized",
+		},
 	});
+
 	// Act
 	const result = signInWithEmail({
 		email: "person@example.com",
 		password: "password",
 	});
+
 	// Assert
-	await expect(result).rejects.toBeInstanceOf(FormSubmissionError);
-	await expect(result).rejects.toThrow("Unable to sign in. Please try again.");
+	await expect(result).rejects.toBeInstanceOf(InvalidCredentialsError);
+	await expect(result).rejects.toThrow("The email or password is incorrect.");
 });
 
-test("uses a fallback for an empty sign up error message", async () => {
+test("translates an existing account into a concrete application error", async () => {
 	// Arrange
 	vi.mocked(signUp.email).mockResolvedValueOnce({
 		data: null,
-		error: { message: "", status: 500, statusText: "Server Error" },
+		error: {
+			code: "USER_ALREADY_EXISTS",
+			message: "vendor details",
+			status: 422,
+			statusText: "Unprocessable Entity",
+		},
 	});
+
 	// Act
 	const result = signUpWithEmail({
 		email: "person@example.com",
 		name: "Person",
 		password: "password",
 	});
+
 	// Assert
-	await expect(result).rejects.toBeInstanceOf(FormSubmissionError);
-	await expect(result).rejects.toThrow("Unable to sign up. Please try again.");
+	await expect(result).rejects.toBeInstanceOf(EmailAlreadyRegisteredError);
 });
 
-test("reports unrecognized client authentication errors", async () => {
+test("preserves unfamiliar responses for central reporting and fallback", async () => {
 	// Arrange
-	const authError = {
+	const error = {
 		code: "NEW_AUTH_ERROR",
-		message: "Provider-specific response",
-		status: 422,
-		statusText: "Unprocessable Entity",
+		message: "provider details",
+		status: 500,
+		statusText: "Server Error",
 	};
-	const reportError = vi.spyOn(console, "error");
-	reportError.mockImplementationOnce(() => undefined);
-	vi.mocked(signIn.email).mockResolvedValueOnce({
-		data: null,
-		error: authError,
-	});
+	vi.mocked(signIn.email).mockResolvedValueOnce({ data: null, error });
 
 	// Act
 	const result = signInWithEmail({
@@ -62,27 +74,18 @@ test("reports unrecognized client authentication errors", async () => {
 	});
 
 	// Assert
-	await expect(result).rejects.toThrow("Unable to sign in. Please try again.");
-	expect(reportError).toHaveBeenCalledExactlyOnceWith(
-		"[Better Auth signIn failed]",
-		authError,
-	);
+	await expect(result).rejects.toBe(error);
 });
 
-test("does not report recognized expected authentication errors", async () => {
+test("does not mistake a server failure for invalid credentials", async () => {
 	// Arrange
-	const authError = {
-		code: "INVALID_EMAIL_OR_PASSWORD",
-		message: "Invalid email or password",
-		status: 401,
-		statusText: "Unauthorized",
+	const error = {
+		code: "INVALID_PASSWORD",
+		message: "provider details",
+		status: 500,
+		statusText: "Server Error",
 	};
-	const reportError = vi.spyOn(console, "error");
-	reportError.mockImplementationOnce(() => undefined);
-	vi.mocked(signIn.email).mockResolvedValueOnce({
-		data: null,
-		error: authError,
-	});
+	vi.mocked(signIn.email).mockResolvedValueOnce({ data: null, error });
 
 	// Act
 	const result = signInWithEmail({
@@ -91,6 +94,37 @@ test("does not report recognized expected authentication errors", async () => {
 	});
 
 	// Assert
-	await expect(result).rejects.toThrow("The email or password is incorrect.");
-	expect(reportError).not.toHaveBeenCalled();
+	await expect(result).rejects.toBe(error);
+});
+
+test("preserves rejected authentication requests", async () => {
+	// Arrange
+	const error = new Error("network details");
+	vi.mocked(signUp.email).mockRejectedValueOnce(error);
+
+	// Act
+	const result = signUpWithEmail({
+		email: "person@example.com",
+		name: "Person",
+		password: "password",
+	});
+
+	// Assert
+	await expect(result).rejects.toBe(error);
+});
+
+test("preserves failed sign-out responses for central dispatch", async () => {
+	// Arrange
+	const error = {
+		message: "provider details",
+		status: 500,
+		statusText: "Server Error",
+	};
+	vi.mocked(signOut).mockResolvedValueOnce({ data: null, error });
+
+	// Act
+	const result = signOutUser();
+
+	// Assert
+	await expect(result).rejects.toBe(error);
 });

@@ -1,43 +1,34 @@
-import {
-	MutationCache,
-	QueryClient,
-	useQueryErrorResetBoundary,
-} from "@tanstack/react-query";
+import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 import {
 	createRouter as createTanStackRouter,
 	type ErrorComponentProps,
 	Link,
 } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "./components/ui/toast-manager";
-import { getUserFacingErrorMessage, reportUnexpectedError } from "./lib/errors";
+import { dispatchError } from "./lib/dispatch-error";
+import { ApplicationError, UnexpectedServerError } from "./lib/errors";
+import { createQueryClient } from "./lib/query-client";
+import { reportError } from "./lib/report-error";
 import { routeTree } from "./routeTree.gen";
 
 export function getRouter() {
-	const queryClient = new QueryClient({
-		mutationCache: new MutationCache({
-			onError: (error, _variables, _context, mutation) => {
-				reportUnexpectedError(error, "Mutation failed");
-				if (mutation.meta?.errorPresentation === "form") {
-					return;
-				}
-
-				toast.add({
-					description: getUserFacingErrorMessage(error),
-					priority: "high",
-					type: "error",
-				});
-			},
-		}),
-	});
+	const queryClient = createQueryClient();
 
 	const router = createTanStackRouter({
 		context: { queryClient },
 		defaultErrorComponent: RouteErrorPage,
-		defaultOnCatch: (error) =>
-			reportUnexpectedError(error, "Route rendering failed"),
+		defaultOnCatch: (error) => {
+			if (
+				!(
+					error instanceof ApplicationError ||
+					error instanceof UnexpectedServerError
+				)
+			) {
+				reportError(error, "Route rendering failed");
+			}
+		},
 		defaultPreload: "intent",
 		defaultPreloadStaleTime: 0,
 		routeTree,
@@ -51,6 +42,7 @@ export function getRouter() {
 
 function RouteErrorPage({ error, reset }: ErrorComponentProps) {
 	const queryErrorResetBoundary = useQueryErrorResetBoundary();
+	useEffect(() => dispatchError(error, () => true), [error]);
 	const resetErrors = useCallback(() => {
 		queryErrorResetBoundary.reset();
 		reset();
@@ -59,7 +51,11 @@ function RouteErrorPage({ error, reset }: ErrorComponentProps) {
 	return (
 		<main>
 			<h1>Something went wrong</h1>
-			<p>{getUserFacingErrorMessage(error, "We couldn't load this page.")}</p>
+			<p>
+				{error instanceof ApplicationError
+					? error.message
+					: "We couldn't load this page."}
+			</p>
 			<div className="flex gap-2">
 				<Button onClick={resetErrors} type="button">
 					Try again

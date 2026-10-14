@@ -8,7 +8,9 @@ import {
 } from "@testing-library/react";
 import { vi } from "vitest";
 import { Form } from "@/components/forms/form";
-import { FormSubmissionError } from "@/components/forms/form-submission-error";
+import { toast } from "@/components/ui/toast-manager";
+
+vi.mock("@/components/ui/toast-manager");
 
 vi.mock("@tanstack/react-form");
 
@@ -78,36 +80,19 @@ test("passes submission errors to the onError callback", async () => {
 	expect(form.handleSubmit).toHaveBeenCalledOnce();
 });
 
-test("handles rejected submissions without an error callback", async () => {
+test("contains rejected submissions without presenting them again", async () => {
 	// Arrange
 	const form = useFormContext();
 	vi.mocked(form.handleSubmit).mockRejectedValueOnce(
 		new Error("Internal details"),
 	);
-	// Act
-	render(<Form aria-label="Account form" />);
-	fireEvent.submit(screen.getByRole("form", { name: "Account form" }));
-	// Assert
-	await waitFor(() =>
-		expect(form.setErrorMap).toHaveBeenCalledWith({
-			onSubmit: { fields: {}, form: "Something went wrong. Please try again." },
-		}),
-	);
-});
 
-test("displays the safe message from a submission error", async () => {
-	// Arrange
-	const form = useFormContext();
-	vi.mocked(form.handleSubmit).mockRejectedValueOnce(
-		new FormSubmissionError("Unable to save your changes."),
-	);
 	// Act
 	render(<Form aria-label="Account form" />);
 	fireEvent.submit(screen.getByRole("form", { name: "Account form" }));
+
 	// Assert
-	await waitFor(() =>
-		expect(form.setErrorMap).toHaveBeenCalledWith({
-			onSubmit: { fields: {}, form: "Unable to save your changes." },
-		}),
-	);
+	await waitFor(() => expect(form.handleSubmit).toHaveBeenCalledOnce());
+	expect(form.setErrorMap).not.toHaveBeenCalled();
+	expect(toast.add).not.toHaveBeenCalled();
 });

@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { withApplicationErrorNormalization } from "@/lib/errors";
+import { errorMeta } from "@/lib/query-client";
 import { listPostsFn } from "./posts.functions";
 
 export const postKeys = {
@@ -7,6 +7,8 @@ export const postKeys = {
 };
 
 export const postsQueryOptions = queryOptions({
-	queryFn: () => withApplicationErrorNormalization(() => listPostsFn()),
+	// Initial failures use the route fallback; refresh failures render inline.
+	meta: errorMeta(() => true),
+	queryFn: () => listPostsFn(),
 	queryKey: postKeys.all,
 });

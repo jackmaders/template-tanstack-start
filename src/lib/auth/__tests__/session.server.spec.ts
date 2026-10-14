@@ -24,5 +24,7 @@ test("rejects an anonymous protected operation", async () => {
 	const result = ensureSession();
 
 	// Assert
-	await expect(result).rejects.toThrow("Unauthorized");
+	await expect(result).rejects.toThrow(
+		"Your session has expired. Sign in and try again.",
+	);
 });

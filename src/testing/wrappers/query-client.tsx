@@ -1,13 +1,14 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { PropsWithChildren } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { render } from "@testing-library/react";
+import type { PropsWithChildren, ReactNode } from "react";
 import { onTestFinished } from "vitest";
+import { createQueryClient } from "@/lib/query-client";
 
 export function createQueryTestContext() {
-	const queryClient = new QueryClient({
-		defaultOptions: {
-			mutations: { retry: false },
-			queries: { gcTime: Number.POSITIVE_INFINITY, retry: false },
-		},
+	const queryClient = createQueryClient();
+	queryClient.setDefaultOptions({
+		mutations: { retry: false },
+		queries: { gcTime: Number.POSITIVE_INFINITY, retry: false },
 	});
 	onTestFinished(() => queryClient.clear());
 
@@ -18,4 +19,9 @@ export function createQueryTestContext() {
 	}
 
 	return { queryClient, wrapper };
+}
+
+export function renderWithQuery(ui: ReactNode) {
+	const { wrapper } = createQueryTestContext();
+	return render(ui, { wrapper });
 }

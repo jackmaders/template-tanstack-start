@@ -1,8 +1,13 @@
-import { render, screen } from "@testing-library/react";
+import { toast } from "@/components/ui/toast-manager";
+
+vi.mock("@/components/ui/toast-manager");
+
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SignUpForm } from "@/features/account/components/sign-up-form";
 import { signUp } from "@/lib/auth/auth-client";
 import { createTestPromise } from "@/testing/utils/test-promise";
+import { renderWithQuery as render } from "@/testing/wrappers/query-client";
 
 vi.mock("@/lib/auth/auth-client");
 
@@ -143,9 +148,13 @@ test("displays a safe message when the authentication request rejects", async ()
 	await user.type(screen.getByLabelText("Password"), "password");
 	await user.click(screen.getByRole("button", { name: "Sign up" }));
 	// Assert
-	expect(
-		await screen.findByText("Something went wrong. Please try again."),
-	).toBeVisible();
+	await waitFor(() =>
+		expect(toast.add).toHaveBeenCalledExactlyOnceWith({
+			description: "Something went wrong. Please try again.",
+			priority: "high",
+			type: "error",
+		}),
+	);
 	expect(screen.queryByText("Network details")).not.toBeInTheDocument();
 });
 

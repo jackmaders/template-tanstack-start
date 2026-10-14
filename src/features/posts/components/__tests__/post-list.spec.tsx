@@ -1,3 +1,8 @@
+import { toast } from "@/components/ui/toast-manager";
+import { PostNotFoundError } from "@/lib/errors";
+
+vi.mock("@/components/ui/toast-manager");
+
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { listPosts, updatePost } from "@/features/posts/api/posts-db-queries";
@@ -185,7 +190,7 @@ test("keeps the draft and shows an error when saving fails", async () => {
 	queryClient.setQueryData(postsQueryOptions.queryKey, [
 		{ id: 1, title: "A post", userId: "user-1" },
 	]);
-	vi.mocked(updatePost).mockRejectedValueOnce(new Error("Update failed"));
+	vi.mocked(updatePost).mockRejectedValueOnce(new PostNotFoundError());
 	render(<PostList />, { wrapper });
 
 	// Act
@@ -198,9 +203,107 @@ test("keeps the draft and shows an error when saving fails", async () => {
 
 	// Assert
 	expect(
-		await screen.findByText("Something went wrong. Please try again."),
+		await screen.findByText("This post is no longer available."),
 	).toBeInTheDocument();
 	expect(screen.getByRole("textbox", { name: "Post title" })).toHaveValue(
 		"A post changed",
 	);
+	expect(toast.add).not.toHaveBeenCalled();
+});
+
+test("shows cached posts and inline recovery after a failed background refresh", async () => {
+	// Arrange
+	const post = { id: 1, title: "Cached post", userId: "user-1" };
+	const { queryClient, wrapper } = createQueryTestContext();
+	queryClient.setQueryData(postsQueryOptions.queryKey, [post], {
+		updatedAt: 1,
+	});
+	vi.mocked(listPosts).mockRejectedValueOnce(new Error("private SQL failure"));
+
+	// Act
+	render(<PostList />, { wrapper });
+
+	// Assert
+	expect(
+		await screen.findByText(
+			"Couldn't refresh posts. Showing the last loaded results.",
+		),
+	).toBeVisible();
+	expect(screen.getByText("Cached post")).toBeVisible();
+	expect(queryClient.getQueryData(postsQueryOptions.queryKey)).toEqual([post]);
+	expect(toast.add).not.toHaveBeenCalled();
+});
+
+test("shows pending session status before fetching posts", () => {
+	// Arrange
+	const session = useSession();
+	vi.mocked(useSession).mockReturnValueOnce({ ...session, isPending: true });
+
+	// Act
+	render(<PostList />);
+
+	// Assert
+	expect(screen.getByRole("status")).toHaveTextContent(
+		"Checking your sign-in status…",
+	);
+	expect(listPosts).not.toHaveBeenCalled();
+});
+
+test("keeps session failures inline and allows a retry", async () => {
+	// Arrange
+	const user = userEvent.setup();
+	const session = useSession();
+	const refetch = vi.fn().mockResolvedValueOnce(undefined);
+	vi.mocked(useSession).mockReturnValueOnce({
+		...session,
+		error: {
+			error: {},
+			message: "provider details",
+			name: "BetterFetchError",
+			status: 500,
+			statusText: "Server Error",
+		},
+		refetch,
+	});
+
+	// Act
+	render(<PostList />);
+	await user.click(screen.getByRole("button", { name: "Try again" }));
+
+	// Assert
+	expect(screen.getByRole("alert")).toHaveTextContent(
+		"Unable to check your sign-in status.",
+	);
+	expect(refetch).toHaveBeenCalledOnce();
+	expect(toast.add).not.toHaveBeenCalled();
+});
+
+test("recovers from a failed refresh using the inline retry control", async () => {
+	// Arrange
+	const user = userEvent.setup();
+	const post = { id: 1, title: "Cached post", userId: "user-1" };
+	const refreshed = { ...post, title: "Refreshed post" };
+	const { queryClient, wrapper } = createQueryTestContext();
+	queryClient.setQueryData(postsQueryOptions.queryKey, [post], {
+		updatedAt: 1,
+	});
+	vi.mocked(listPosts)
+		.mockRejectedValueOnce(new Error("refresh failed"))
+		.mockResolvedValueOnce([refreshed]);
+	render(<PostList />, { wrapper });
+	await screen.findByText(
+		"Couldn't refresh posts. Showing the last loaded results.",
+	);
+
+	// Act
+	await user.click(screen.getByRole("button", { name: "Retry" }));
+
+	// Assert
+	expect(await screen.findByText("Refreshed post")).toBeVisible();
+	expect(
+		screen.queryByText(
+			"Couldn't refresh posts. Showing the last loaded results.",
+		),
+	).not.toBeInTheDocument();
+	expect(toast.add).not.toHaveBeenCalled();
 });

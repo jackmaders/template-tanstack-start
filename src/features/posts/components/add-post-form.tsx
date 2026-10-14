@@ -1,5 +1,6 @@
 import { revalidateLogic } from "@tanstack/react-form";
 import { useAppForm } from "@/components/forms/app-form";
+import { handleFormError } from "@/components/forms/handle-form-error";
 import {
 	Card,
 	CardContent,
@@ -13,7 +14,6 @@ import { useCreatePost } from "@/features/posts/api/use-create-post";
 import { useSession } from "@/lib/auth/auth-client";
 
 export function AddPostForm() {
-	const { mutateAsync: createPost } = useCreatePost();
 	const { data: session } = useSession();
 
 	const form = useAppForm({
@@ -28,6 +28,9 @@ export function AddPostForm() {
 			onDynamic: createPostSchema,
 			onMount: createPostSchema,
 		},
+	});
+	const { mutateAsync: createPost } = useCreatePost({
+		handleError: (error) => handleFormError(form, error),
 	});
 
 	if (!session) {

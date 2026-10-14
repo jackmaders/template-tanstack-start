@@ -3,6 +3,7 @@ import { cn } from "cn";
 import type { ComponentProps } from "react";
 import { useAppForm } from "@/components/forms/app-form";
 import type { Form } from "@/components/forms/form";
+import { handleFormError } from "@/components/forms/handle-form-error";
 import { Button } from "@/components/ui/button";
 import { POST_TITLE_MAX_LENGTH } from "@/db/schema/posts";
 import { createPostSchema, type Post } from "@/features/posts/api/posts-schema";
@@ -20,7 +21,6 @@ export function EditPostForm({
 	className,
 	...props
 }: EditPostFormProps) {
-	const { mutateAsync: updatePost, isPending } = useUpdatePost();
 	const form = useAppForm({
 		defaultValues: { title: post.title },
 		onSubmit: async ({ value }) => {
@@ -29,6 +29,9 @@ export function EditPostForm({
 		},
 		validationLogic: revalidateLogic({ mode: "change" }),
 		validators: { onDynamic: createPostSchema, onMount: createPostSchema },
+	});
+	const { mutateAsync: updatePost, isPending } = useUpdatePost({
+		handleError: (error) => handleFormError(form, error),
 	});
 	return (
 		<form.AppForm>

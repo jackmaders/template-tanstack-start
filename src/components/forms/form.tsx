@@ -1,5 +1,4 @@
 import { type ComponentProps, type SubmitEvent, useCallback } from "react";
-import { getUserFacingErrorMessage, reportUnexpectedError } from "@/lib/errors";
 import { useFormContext } from "./form-context";
 
 interface FormProps
@@ -17,13 +16,7 @@ export function Form({ onError, ...props }: FormProps) {
 			try {
 				await form.handleSubmit();
 			} catch (error) {
-				reportUnexpectedError(error, "Form submission failed");
-				form.setErrorMap({
-					onSubmit: {
-						fields: {},
-						form: getUserFacingErrorMessage(error),
-					},
-				});
+				// The mutation cache already dispatched this rejection.
 				onError?.(error);
 			}
 		},

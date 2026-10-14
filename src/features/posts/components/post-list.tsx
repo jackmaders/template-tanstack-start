@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
 	Accordion,
 	AccordionContent,
@@ -9,21 +9,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { postsQueryOptions } from "@/features/posts/api/posts-query-options";
 import type { Post } from "@/features/posts/api/posts-schema";
-import { useSession } from "@/lib/auth/auth-client";
-import { reportAuthFailureIfUnexpected } from "@/lib/auth/auth-errors";
-import { reportUnexpectedError } from "@/lib/errors";
+import { useSessionStatus } from "@/lib/auth/use-session-status";
 import { DeletePostButton } from "./delete-post-button";
 import { EditPostForm } from "./edit-post-form";
 
 export function PostList() {
-	const { data: session, error, isPending, refetch } = useSession();
-	const retrySession = useCallback(async () => {
-		try {
-			await refetch();
-		} catch (failure) {
-			reportAuthFailureIfUnexpected(failure, "session");
-		}
-	}, [refetch]);
+	const { data: session, error, isPending, retrySession } = useSessionStatus();
 
 	if (isPending) {
 		return <p role="status">Checking your sign-in status…</p>;
@@ -54,19 +45,7 @@ function AuthenticatedPostList() {
 		isFetching,
 		refetch,
 	} = useSuspenseQuery(postsQueryOptions);
-	const retryPosts = useCallback(async () => {
-		try {
-			await refetch();
-		} catch (failure) {
-			reportUnexpectedError(failure, "Posts refresh retry failed");
-		}
-	}, [refetch]);
-
-	useEffect(() => {
-		if (error && !isFetching) {
-			reportUnexpectedError(error, "Posts refresh failed");
-		}
-	}, [error, isFetching]);
+	const retryPosts = useCallback(() => refetch(), [refetch]);
 
 	return (
 		<section aria-label="Your posts">

@@ -1,13 +1,6 @@
-import {
-	type ComponentProps,
-	type MouseEvent,
-	useCallback,
-	useState,
-} from "react";
+import { type ComponentProps, type MouseEvent, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/toast-manager";
-import { signOutUser } from "@/features/account/api/email-auth";
-import { getUserFacingErrorMessage, reportUnexpectedError } from "@/lib/errors";
+import { useSignOut } from "@/features/account/api/use-sign-out";
 
 interface LogoutButtonProps extends ComponentProps<"button"> {}
 
@@ -17,32 +10,18 @@ export function LogoutButton({
 	onClick,
 	...props
 }: LogoutButtonProps) {
-	const [pending, setPending] = useState(false);
-
+	const { mutate: signOut, isPending } = useSignOut();
 	const logout = useCallback(
-		async (e: MouseEvent<HTMLButtonElement>) => {
-			setPending(true);
-			try {
-				await signOutUser();
-			} catch (error) {
-				reportUnexpectedError(error, "Sign out failed");
-				toast.add({
-					description: getUserFacingErrorMessage(error),
-					priority: "high",
-					type: "error",
-				});
-			} finally {
-				setPending(false);
-				onClick?.(e);
-			}
+		(event: MouseEvent<HTMLButtonElement>) => {
+			signOut(undefined, { onSettled: () => onClick?.(event) });
 		},
-		[onClick],
+		[onClick, signOut],
 	);
 
 	return (
 		<Button
-			aria-busy={pending}
-			disabled={disabled || pending}
+			aria-busy={isPending}
+			disabled={disabled || isPending}
 			onClick={logout}
 			type="button"
 			variant="ghost"

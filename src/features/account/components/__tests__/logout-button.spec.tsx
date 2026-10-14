@@ -1,9 +1,10 @@
-import { render, screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { toast } from "@/components/ui/toast-manager";
 import { LogoutButton } from "@/features/account/components/logout-button";
 import { signOut } from "@/lib/auth/auth-client";
 import { createTestPromise } from "@/testing/utils/test-promise";
+import { renderWithQuery as render } from "@/testing/wrappers/query-client";
 
 vi.mock("@/lib/auth/auth-client");
 vi.mock("@/components/ui/toast-manager");
@@ -60,7 +61,7 @@ test("enables the button and clears its busy state after completion", async () =
 	await resolve(response);
 
 	// Assert
-	expect(screen.getByRole("button")).toBeEnabled();
+	await waitFor(() => expect(screen.getByRole("button")).toBeEnabled());
 	expect(screen.getByRole("button")).toHaveAttribute("aria-busy", "false");
 });
 
@@ -114,7 +115,7 @@ test("shows server errors in a toast", async () => {
 	await user.click(screen.getByRole("button"));
 	// Assert
 	expect(toast.add).toHaveBeenCalledExactlyOnceWith({
-		description: "Unable to log out. Please try again.",
+		description: "Something went wrong. Please try again.",
 		priority: "high",
 		type: "error",
 	});
@@ -136,7 +137,7 @@ test("enables the button after a failed logout", async () => {
 	render(<LogoutButton />);
 	await user.click(screen.getByRole("button"));
 	// Assert
-	expect(screen.getByRole("button")).toBeEnabled();
+	await waitFor(() => expect(screen.getByRole("button")).toBeEnabled());
 });
 
 test("calls the click callback after a failed logout", async () => {
