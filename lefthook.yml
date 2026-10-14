@@ -1,3 +1,5 @@
+assert_lefthook_installed: true
+
 output:
   - summary
   - execution_out
@@ -8,7 +10,7 @@ pre-commit:
   commands:
     biome-check:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,css,scss}"
-      run: bun biome check --write {staged_files} || true
+      run: bun biome check --write --unsafe {staged_files} || true
       stage_fixed: true
 
 commit-msg:
