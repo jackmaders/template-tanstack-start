@@ -1,9 +1,9 @@
-name: 🤖 PR Agent Review
+name: 🤖 The PR Agent
 
 on:
   pull_request_target:
     branches: [main]
-    types: [opened, reopened, synchronize, ready_for_review]
+    types: [opened, reopened, ready_for_review]
 
 permissions:
   contents: read
@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Run PR Agent Review
+      - name: 🔎 Agent Code Review
         uses: The-PR-Agent/pr-agent@v0.47.0
         env:
           github_action_config.auto_describe: "false"
@@ -32,6 +32,5 @@ jobs:
           config.max_model_tokens: 64000
           config.fallback_models: '["gemini/gemini-3.6-flash", "gemini/gemini-3-flash-preview", "gemini/gemini-3.5-flash-lite", "gemini/gemini-3.1-flash-lite", "gemini/gemini-2.5-flash", "gemini/gemini-2.5-flash-lite", "gemini/gemini-3.1-pro-preview", "gemini/gemini-2.5-pro"]'
           pr_reviewer.require_merge_recommendation: "true"
-          pr_reviewer.num_max_findings: 5
           pr_reviewer.inline_key_issues: "true"
           pr_reviewer.require_can_be_split_review: "true"
