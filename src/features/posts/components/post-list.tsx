@@ -1,7 +1,11 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { postsQueryOptions } from "@/features/posts/api/posts-query-options";
+import type { Post } from "@/features/posts/api/posts-schema";
 import { useSession } from "@/lib/auth/auth-client";
 import { DeletePostButton } from "./delete-post-button";
+import { EditPostForm } from "./edit-post-form";
 
 export function PostList() {
 	const { data: session } = useSession();
@@ -28,13 +32,32 @@ function AuthenticatedPostList() {
 			) : (
 				<ul>
 					{posts.map((post) => (
-						<li className="flex gap-2" key={post.id}>
-							<p>{post.title}</p>
-							<DeletePostButton post={post} />
-						</li>
+						<PostListItem key={post.id} post={post} />
 					))}
 				</ul>
 			)}
 		</section>
+	);
+}
+
+function PostListItem({ post }: { post: Post }) {
+	const [isEditing, setIsEditing] = useState(false);
+	const startEditing = useCallback(() => setIsEditing(true), []);
+	const stopEditing = useCallback(() => setIsEditing(false), []);
+	return (
+		<li className="flex gap-2">
+			{isEditing ? (
+				<EditPostForm onClose={stopEditing} post={post} />
+			) : (
+				<>
+					<p>{post.title}</p>
+					<Button
+						onClick={startEditing}
+						type="button"
+					>{`Edit ${post.title}`}</Button>
+					<DeletePostButton post={post} />
+				</>
+			)}
+		</li>
 	);
 }

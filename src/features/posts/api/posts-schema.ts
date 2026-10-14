@@ -11,3 +11,8 @@ export const deletePostSchema = selectPostSchema.pick({ id: true });
 export type Post = typeof posts.$inferSelect;
 export type PostCreate = z.infer<typeof createPostSchema>;
 export type PostDelete = z.infer<typeof deletePostSchema>;
+
+export const updatePostSchema = createPostSchema.extend({
+	id: selectPostSchema.shape.id,
+});
+export type PostUpdate = z.infer<typeof updatePostSchema>;
