@@ -1,7 +1,7 @@
 import { onTestFinished } from "vitest";
 import { createTestPromise } from "@/testing/utils/test-promise";
 
-test("propagates a rejected request to its caller", async () => {
+it("propagates a rejected request to its caller", async () => {
 	// Arrange
 	const request = createTestPromise(null);
 	const error = new Error("Request failed");
@@ -14,7 +14,7 @@ test("propagates a rejected request to its caller", async () => {
 	await expect(result).resolves.toBe(error);
 });
 
-test("resolves a pending request with its cleanup value after the test", () => {
+it("resolves a pending request with its cleanup value after the test", () => {
 	// Arrange
 	let result!: Promise<string>;
 	onTestFinished(async () => {

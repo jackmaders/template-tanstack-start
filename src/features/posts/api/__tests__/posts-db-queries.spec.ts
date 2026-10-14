@@ -14,7 +14,7 @@ vi.mock("@/db/db.server.ts");
 
 const db = getDb();
 
-test("lists posts by descending id with the configured limit", async () => {
+it("lists posts by descending id with the configured limit", async () => {
 	// Arrange
 	const expectedPosts = [
 		createPostFixture({ id: 2, title: "Newer post", userId: "user-1" }),
@@ -41,7 +41,7 @@ test("lists posts by descending id with the configured limit", async () => {
 	expect(query.limit).toHaveBeenCalledWith(50);
 });
 
-test("creates and returns the inserted post", async () => {
+it("creates and returns the inserted post", async () => {
 	// Arrange
 	const values = { title: "A new post" };
 	const post = createPostFixture(values);
@@ -61,7 +61,7 @@ test("creates and returns the inserted post", async () => {
 	expect(query.returning).toHaveBeenCalledOnce();
 });
 
-test("throws when creating a post returns no row", async () => {
+it("throws when creating a post returns no row", async () => {
 	// Arrange
 	const query = db
 		.insert(posts)
@@ -76,7 +76,7 @@ test("throws when creating a post returns no row", async () => {
 	await expect(result).rejects.toThrow("The post could not be created.");
 });
 
-test("deletes and returns rows matching the post id", async () => {
+it("deletes and returns rows matching the post id", async () => {
 	// Arrange
 	const id = 7;
 	const deletedPost = createPostFixture({ id, title: "Old post" });
@@ -100,7 +100,7 @@ test("deletes and returns rows matching the post id", async () => {
 	expect(query.returning).toHaveBeenCalledOnce();
 });
 
-test("throws when the post is not owned by the user", async () => {
+it("throws when the post is not owned by the user", async () => {
 	// Arrange
 	const query = db
 		.delete(posts)
@@ -115,7 +115,7 @@ test("throws when the post is not owned by the user", async () => {
 	await expect(result).rejects.toThrow("Post not found or unauthorized.");
 });
 
-test("updates and returns only a post owned by the user", async () => {
+it("updates and returns only a post owned by the user", async () => {
 	// Arrange
 	const values = { id: 7, title: "Updated post" };
 	const post = createPostFixture(values);
@@ -138,7 +138,7 @@ test("updates and returns only a post owned by the user", async () => {
 	);
 });
 
-test("rejects updating a missing post or another user's post", async () => {
+it("rejects updating a missing post or another user's post", async () => {
 	// Arrange
 	vi.mocked(
 		db.update(posts).set({ title: "Updated" }).where(eq(posts.id, 7)).returning,

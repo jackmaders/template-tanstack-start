@@ -5,7 +5,7 @@ import { signOut, useSession } from "@/lib/auth/auth-client";
 
 vi.mock("@/lib/auth/auth-client");
 
-test("shows sign-in controls after signing out", async () => {
+it("shows sign-in controls after signing out", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const session: ReturnType<typeof useSession> = {

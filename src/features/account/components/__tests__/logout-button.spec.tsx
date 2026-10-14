@@ -8,7 +8,7 @@ import { createTestPromise } from "@/testing/utils/test-promise";
 vi.mock("@/lib/auth/auth-client");
 vi.mock("@/components/ui/toast-manager");
 
-test("renders the default label and button type", () => {
+it("renders the default label and button type", () => {
 	// Act
 	render(<LogoutButton />);
 	// Assert
@@ -16,28 +16,28 @@ test("renders the default label and button type", () => {
 	expect(screen.getByRole("button")).toHaveAttribute("type", "button");
 });
 
-test("renders a custom label", () => {
+it("renders a custom label", () => {
 	// Act
 	render(<LogoutButton>Leave</LogoutButton>);
 	// Assert
 	expect(screen.getByRole("button", { name: "Leave" })).toBeInTheDocument();
 });
 
-test("forwards button props", () => {
+it("forwards button props", () => {
 	// Act
 	render(<LogoutButton className="custom" />);
 	// Assert
 	expect(screen.getByRole("button")).toHaveClass("custom");
 });
 
-test("respects the disabled prop", () => {
+it("respects the disabled prop", () => {
 	// Act
 	render(<LogoutButton disabled={true} />);
 	// Assert
 	expect(screen.getByRole("button")).toBeDisabled();
 });
 
-test("does not sign out when disabled", async () => {
+it("does not sign out when disabled", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	// Act
@@ -47,7 +47,7 @@ test("does not sign out when disabled", async () => {
 	expect(signOut).not.toHaveBeenCalled();
 });
 
-test("enables the button and clears its busy state after completion", async () => {
+it("enables the button and clears its busy state after completion", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const response = { data: { success: true }, error: null };
@@ -64,7 +64,7 @@ test("enables the button and clears its busy state after completion", async () =
 	expect(screen.getByRole("button")).toHaveAttribute("aria-busy", "false");
 });
 
-test("calls the click callback after completion", async () => {
+it("calls the click callback after completion", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const onClick = vi.fn();
@@ -81,7 +81,7 @@ test("calls the click callback after completion", async () => {
 	expect(onClick).toHaveBeenCalledOnce();
 });
 
-test("does not show a toast on success", async () => {
+it("does not show a toast on success", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const response = { data: { success: true }, error: null };
@@ -98,7 +98,7 @@ test("does not show a toast on success", async () => {
 	expect(toast.add).not.toHaveBeenCalled();
 });
 
-test("shows server errors in a toast", async () => {
+it("shows server errors in a toast", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	vi.mocked(signOut).mockResolvedValueOnce({
@@ -120,7 +120,7 @@ test("shows server errors in a toast", async () => {
 	});
 });
 
-test("enables the button after a failed logout", async () => {
+it("enables the button after a failed logout", async () => {
 	// Arrange
 	const user = userEvent.setup();
 
@@ -139,7 +139,7 @@ test("enables the button after a failed logout", async () => {
 	expect(screen.getByRole("button")).toBeEnabled();
 });
 
-test("calls the click callback after a failed logout", async () => {
+it("calls the click callback after a failed logout", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const onClick = vi.fn();
@@ -159,7 +159,7 @@ test("calls the click callback after a failed logout", async () => {
 	expect(onClick).toHaveBeenCalledOnce();
 });
 
-test("disables the button, marks it busy, and defers the callback while pending", async () => {
+it("disables the button, marks it busy, and defers the callback while pending", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const onClick = vi.fn();
@@ -175,7 +175,7 @@ test("disables the button, marks it busy, and defers the callback while pending"
 	expect(onClick).not.toHaveBeenCalled();
 });
 
-test("ignores repeated clicks while pending", async () => {
+it("ignores repeated clicks while pending", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const onClick = vi.fn();

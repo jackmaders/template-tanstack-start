@@ -4,7 +4,7 @@ import { Navbar } from "@/components/navbar";
 
 import { createRouterTestContext } from "@/testing/wrappers/router";
 
-test("opens an empty mobile menu by default", async () => {
+it("opens an empty mobile menu by default", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { wrapper } = await createRouterTestContext();
@@ -22,7 +22,7 @@ test("opens an empty mobile menu by default", async () => {
 	).not.toBeInTheDocument();
 });
 
-test("closes the mobile menu with the close button", async () => {
+it("closes the mobile menu with the close button", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { wrapper } = await createRouterTestContext();
@@ -38,7 +38,7 @@ test("closes the mobile menu with the close button", async () => {
 	expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });
 
-test("renders the home logo link", async () => {
+it("renders the home logo link", async () => {
 	// Arrange
 	const { wrapper } = await createRouterTestContext();
 	// Act
@@ -50,7 +50,7 @@ test("renders the home logo link", async () => {
 	);
 });
 
-test("forwards header props", async () => {
+it("forwards header props", async () => {
 	// Arrange
 	const { wrapper } = await createRouterTestContext();
 	// Act
@@ -62,7 +62,7 @@ test("forwards header props", async () => {
 	);
 });
 
-test("renders desktop links and actions", async () => {
+it("renders desktop links and actions", async () => {
 	// Arrange
 	const { wrapper } = await createRouterTestContext();
 	// Act
@@ -81,7 +81,7 @@ test("renders desktop links and actions", async () => {
 	expect(screen.getByRole("button", { name: "Account" })).toBeVisible();
 });
 
-test("renders mobile links and actions", async () => {
+it("renders mobile links and actions", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { wrapper } = await createRouterTestContext();
@@ -103,7 +103,7 @@ test("renders mobile links and actions", async () => {
 	expect(menu.getByRole("button", { name: "Account" })).toBeVisible();
 });
 
-test("closes the mobile menu after selecting a destination", async () => {
+it("closes the mobile menu after selecting a destination", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { router, wrapper } = await createRouterTestContext();

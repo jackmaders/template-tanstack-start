@@ -1,6 +1,5 @@
 import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/d1";
-import { expect, it, vi } from "vitest";
 import { getDb } from "@/db/db.server";
 import { authRelations } from "@/db/schema/auth";
 

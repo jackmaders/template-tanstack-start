@@ -1,6 +1,13 @@
 import type { User } from "better-auth";
 
-export const TEST_USER = { id: "user-1" } as User;
+export const TEST_USER = {
+	createdAt: new Date("2026-10-14T00:00:00Z"),
+	email: "test@example.com",
+	emailVerified: false,
+	id: "user-1",
+	name: "Test User",
+	updatedAt: new Date("2026-10-14T00:00:00Z"),
+} satisfies User;
 
 export const TEST_SESSION = {
 	session: {

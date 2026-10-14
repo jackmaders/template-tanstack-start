@@ -2,10 +2,12 @@ import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "./form-context";
 
-const selectSubmitState = (state: {
+function selectSubmitState(state: {
 	canSubmit: boolean;
 	isSubmitting: boolean;
-}) => [state.canSubmit, state.isSubmitting] as const;
+}) {
+	return [state.canSubmit, state.isSubmitting] as const;
+}
 
 export function SubmitButton({
 	children,

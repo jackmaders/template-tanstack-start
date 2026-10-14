@@ -1,5 +1,3 @@
-import { afterEach, beforeEach, vi } from "vitest";
-
 function blockNetworkRequests() {
 	vi.stubGlobal(
 		"fetch",

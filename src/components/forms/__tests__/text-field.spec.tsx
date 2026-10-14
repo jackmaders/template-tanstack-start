@@ -1,7 +1,6 @@
 import { createFormHookContexts } from "@tanstack/react-form";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { vi } from "vitest";
 import { TextField } from "@/components/forms/text-field";
 import { createTextFieldFixture } from "@/testing/fixtures/text-field";
 
@@ -9,7 +8,7 @@ vi.mock("@tanstack/react-form");
 
 const { useFieldContext } = createFormHookContexts();
 
-test("renders a controlled text field with its label and forwarded props", () => {
+it("renders a controlled text field with its label and forwarded props", () => {
 	// Arrange
 	const field = createTextFieldFixture({ state: { value: "ada@example.com" } });
 	vi.mocked(useFieldContext<string>, {
@@ -37,7 +36,7 @@ test("renders a controlled text field with its label and forwarded props", () =>
 	expect(input).not.toHaveAttribute("aria-describedby");
 });
 
-test("forwards input changes and blur to the field handlers", async () => {
+it("forwards input changes and blur to the field handlers", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const field = createTextFieldFixture();
@@ -61,7 +60,7 @@ test("forwards input changes and blur to the field handlers", async () => {
 	expect(handleBlur).toHaveBeenCalledOnce();
 });
 
-test("shows validation errors accessibly after an invalid field is touched", () => {
+it("shows validation errors accessibly after an invalid field is touched", () => {
 	// Arrange
 	vi.mocked(useFieldContext<string>, {
 		deep: true,
@@ -91,7 +90,7 @@ test("shows validation errors accessibly after an invalid field is touched", () 
 	expect(error).toBeVisible();
 });
 
-test("keeps validation errors hidden until the field is touched", () => {
+it("keeps validation errors hidden until the field is touched", () => {
 	// Arrange
 	vi.mocked(useFieldContext<string>, {
 		deep: true,

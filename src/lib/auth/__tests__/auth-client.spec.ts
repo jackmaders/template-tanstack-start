@@ -3,7 +3,7 @@ import { signIn, signOut, signUp, useSession } from "@/lib/auth/auth-client";
 
 vi.mock("better-auth/react");
 
-test("exports authentication methods and the session hook from the same client", () => {
+it("exports authentication methods and the session hook from the same client", () => {
 	// Act
 	const client = createAuthClient();
 

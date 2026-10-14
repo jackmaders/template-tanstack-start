@@ -9,7 +9,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 
-test("renders a default card and forwards its props", () => {
+it("renders a default card and forwards its props", () => {
 	// Act
 	render(
 		<Card
@@ -31,7 +31,7 @@ test("renders a default card and forwards its props", () => {
 	expect(card).toHaveTextContent("Account details");
 });
 
-test("renders a small card", () => {
+it("renders a small card", () => {
 	// Act
 	render(<Card data-testid="small-card" size="sm" />);
 
@@ -39,7 +39,7 @@ test("renders a small card", () => {
 	expect(screen.getByTestId("small-card")).toHaveAttribute("data-size", "sm");
 });
 
-test("renders a card header with its slot and forwarded props", () => {
+it("renders a card header with its slot and forwarded props", () => {
 	// Act
 	render(
 		<CardHeader className="custom-header" data-testid="header" title="Heading">
@@ -56,7 +56,7 @@ test("renders a card header with its slot and forwarded props", () => {
 	expect(header).toHaveTextContent("Heading content");
 });
 
-test("renders a card title with its slot and forwarded props", () => {
+it("renders a card title with its slot and forwarded props", () => {
 	// Act
 	render(
 		<CardTitle className="custom-title" data-testid="title" title="Card title">
@@ -73,7 +73,7 @@ test("renders a card title with its slot and forwarded props", () => {
 	expect(title).toHaveTextContent("Title content");
 });
 
-test("renders a card description with its slot and forwarded props", () => {
+it("renders a card description with its slot and forwarded props", () => {
 	// Act
 	render(
 		<CardDescription
@@ -94,7 +94,7 @@ test("renders a card description with its slot and forwarded props", () => {
 	expect(description).toHaveTextContent("Description content");
 });
 
-test("renders a card action with its slot and forwarded props", () => {
+it("renders a card action with its slot and forwarded props", () => {
 	// Act
 	render(
 		<CardAction
@@ -115,7 +115,7 @@ test("renders a card action with its slot and forwarded props", () => {
 	expect(action).toHaveTextContent("Action content");
 });
 
-test("renders card content with its slot and forwarded props", () => {
+it("renders card content with its slot and forwarded props", () => {
 	// Act
 	render(
 		<CardContent
@@ -136,7 +136,7 @@ test("renders card content with its slot and forwarded props", () => {
 	expect(content).toHaveTextContent("Content text");
 });
 
-test("renders a card footer with its slot and forwarded props", () => {
+it("renders a card footer with its slot and forwarded props", () => {
 	// Act
 	render(
 		<CardFooter

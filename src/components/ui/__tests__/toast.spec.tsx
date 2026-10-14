@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/toast";
 import { createToastManager } from "@/components/ui/toast-manager";
 
-test.each([
+it.each([
 	{ hasIcon: true, type: "success" },
 	{ hasIcon: true, type: "info" },
 	{ hasIcon: true, type: "warning" },
@@ -39,7 +39,7 @@ test.each([
 	},
 );
 
-test("styles the error toast icon as destructive", () => {
+it("styles the error toast icon as destructive", () => {
 	// Arrange
 	const toastManager = createToastManager();
 	render(<Toaster timeout={0} toastManager={toastManager} />);
@@ -57,7 +57,7 @@ test("styles the error toast icon as destructive", () => {
 	);
 });
 
-test("animates the loading toast icon", () => {
+it("animates the loading toast icon", () => {
 	// Arrange
 	const toastManager = createToastManager();
 	render(<Toaster timeout={0} toastManager={toastManager} />);
@@ -77,7 +77,7 @@ test("animates the loading toast icon", () => {
 	);
 });
 
-test("renders a close control for manager-created toasts", () => {
+it("renders a close control for manager-created toasts", () => {
 	// Arrange
 	const toastManager = createToastManager();
 	render(<Toaster timeout={0} toastManager={toastManager} />);
@@ -95,7 +95,7 @@ test("renders a close control for manager-created toasts", () => {
 	expect(toast?.querySelector('[data-slot="toast-close"]')).toBeInTheDocument();
 });
 
-test("forwards props through toast parts and supports custom action and close content", () => {
+it("forwards props through toast parts and supports custom action and close content", () => {
 	// Arrange
 	const toastManager = createToastManager();
 
@@ -119,7 +119,7 @@ test("forwards props through toast parts and supports custom action and close co
 					/>
 					<ToastClose
 						data-testid="custom-close"
-						render={<button type="button" />}
+						render={<button type="button">Dismiss</button>}
 					>
 						Dismiss
 					</ToastClose>
@@ -149,7 +149,7 @@ test("forwards props through toast parts and supports custom action and close co
 	expect(close).toHaveTextContent("Dismiss");
 });
 
-test("uses the default toast manager when none is provided", () => {
+it("uses the default toast manager when none is provided", () => {
 	// Act
 	render(<Toaster>Application content</Toaster>);
 

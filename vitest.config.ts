@@ -1,3 +1,4 @@
+import process from "node:process";
 import { cloudflareTest } from "@cloudflare/vitest-plugin";
 import { defineConfig } from "vitest/config";
 
@@ -41,6 +42,7 @@ export default defineConfig({
 					}),
 				],
 				test: {
+					globals: true,
 					include: ["src/**/__tests__/*.workers.spec.ts"],
 					name: "workers",
 				},

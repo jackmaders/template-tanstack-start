@@ -11,7 +11,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 
-test("opens an accessible dialog with a close button", async () => {
+it("opens an accessible dialog with a close button", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	// Act
@@ -38,7 +38,7 @@ test("opens an accessible dialog with a close button", async () => {
 	expect(screen.getByRole("button", { name: "Close" })).toBeVisible();
 });
 
-test("closes the dialog with a custom close button", async () => {
+it("closes the dialog with a custom close button", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	// Act
@@ -62,7 +62,7 @@ test("closes the dialog with a custom close button", async () => {
 	expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });
 
-test("can move the close button to the footer", () => {
+it("can move the close button to the footer", () => {
 	// Arrange
 	// Act
 	render(
@@ -81,7 +81,7 @@ test("can move the close button to the footer", () => {
 	);
 });
 
-test("closes the dialog with the footer close button", async () => {
+it("closes the dialog with the footer close button", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	// Act

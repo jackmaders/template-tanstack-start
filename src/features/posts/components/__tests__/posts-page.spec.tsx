@@ -4,7 +4,7 @@ import { PostsPage } from "@/features/posts/components/posts-page";
 vi.mock("@/features/posts/components/add-post-form");
 vi.mock("@/features/posts/components/post-list");
 
-test("renders the page heading, add post form, and post list", () => {
+it("renders the page heading, add post form, and post list", () => {
 	// Act
 	render(<PostsPage />);
 

@@ -6,7 +6,7 @@ vi.mock("@/db/db.server.ts");
 vi.mock("@/lib/auth/auth.server.ts");
 vi.mock("@tanstack/react-router-ssr-query");
 
-test("creates the application router with its navigation defaults", () => {
+it("creates the application router with its navigation defaults", () => {
 	// Act
 	const router = getRouter();
 
@@ -17,7 +17,7 @@ test("creates the application router with its navigation defaults", () => {
 	expect(router.routeTree).toBeDefined();
 });
 
-test("shows a high priority toast when a mutation fails", async () => {
+it("shows a high priority toast when a mutation fails", async () => {
 	// Arrange
 	const error = new Error("mutation failed");
 

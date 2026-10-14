@@ -6,7 +6,7 @@ import { createTestPromise } from "@/testing/utils/test-promise";
 
 vi.mock("@/lib/auth/auth-client");
 
-test("forwards form props", () => {
+it("forwards form props", () => {
 	// Act
 	render(<SignInForm aria-label="Account" className="custom-form" />);
 	// Assert
@@ -15,7 +15,7 @@ test("forwards form props", () => {
 	);
 });
 
-test("renders fields with the expected properties and submit button", () => {
+it("renders fields with the expected properties and submit button", () => {
 	// Act
 	render(<SignInForm />);
 	// Assert
@@ -37,7 +37,7 @@ test("renders fields with the expected properties and submit button", () => {
 	);
 });
 
-test("blocks empty submissions", async () => {
+it("blocks empty submissions", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	// Act
@@ -47,7 +47,7 @@ test("blocks empty submissions", async () => {
 	expect(signIn.email).not.toHaveBeenCalled();
 });
 
-test("submits entered values", async () => {
+it("submits entered values", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	vi.mocked(signIn.email).mockResolvedValueOnce({ data: null, error: null });
@@ -66,7 +66,7 @@ test("submits entered values", async () => {
 	});
 });
 
-test("disables submission while the request is pending", async () => {
+it("disables submission while the request is pending", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const response = { data: null, error: null };
@@ -82,7 +82,7 @@ test("disables submission while the request is pending", async () => {
 	expect(screen.getByRole("button", { name: "Please wait…" })).toBeDisabled();
 });
 
-test("enables submission after the request completes", async () => {
+it("enables submission after the request completes", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const response = { data: null, error: null };
@@ -98,7 +98,7 @@ test("enables submission after the request completes", async () => {
 	expect(screen.getByRole("button", { name: "Sign In" })).toBeEnabled();
 });
 
-test("displays authentication errors", async () => {
+it("displays authentication errors", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	vi.mocked(signIn.email).mockResolvedValueOnce({
@@ -119,7 +119,7 @@ test("displays authentication errors", async () => {
 	expect(await screen.findByText("Invalid email or password")).toBeVisible();
 });
 
-test("displays a safe message when the authentication request rejects", async () => {
+it("displays a safe message when the authentication request rejects", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	vi.mocked(signIn.email).mockRejectedValueOnce(new Error("Network details"));
@@ -136,7 +136,7 @@ test("displays a safe message when the authentication request rejects", async ()
 	expect(screen.queryByText("Network details")).not.toBeInTheDocument();
 });
 
-test("allows retrying after an authentication error", async () => {
+it("allows retrying after an authentication error", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	vi.mocked(signIn.email)

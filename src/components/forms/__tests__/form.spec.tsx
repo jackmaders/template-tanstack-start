@@ -6,7 +6,6 @@ import {
 	screen,
 	waitFor,
 } from "@testing-library/react";
-import { vi } from "vitest";
 import { Form } from "@/components/forms/form";
 import { FormSubmissionError } from "@/components/forms/form-submission-error";
 
@@ -14,7 +13,7 @@ vi.mock("@tanstack/react-form");
 
 const { useFormContext } = createFormHookContexts();
 
-test("renders a form and forwards its props and children", () => {
+it("renders a form and forwards its props and children", () => {
 	// Act
 	render(
 		<Form
@@ -35,7 +34,7 @@ test("renders a form and forwards its props and children", () => {
 	expect(form).toHaveTextContent("Account details");
 });
 
-test("prevents the native submit and stops the event from bubbling", () => {
+it("prevents the native submit and stops the event from bubbling", () => {
 	// Arrange
 	const form = useFormContext();
 	const parentOnSubmit = vi.fn();
@@ -57,7 +56,7 @@ test("prevents the native submit and stops the event from bubbling", () => {
 	expect(form.handleSubmit).toHaveBeenCalledOnce();
 });
 
-test("passes submission errors to the onError callback", async () => {
+it("passes submission errors to the onError callback", async () => {
 	// Arrange
 	const form = useFormContext();
 	const error = new Error("submission failed");
@@ -78,7 +77,7 @@ test("passes submission errors to the onError callback", async () => {
 	expect(form.handleSubmit).toHaveBeenCalledOnce();
 });
 
-test("handles rejected submissions without an error callback", async () => {
+it("handles rejected submissions without an error callback", async () => {
 	// Arrange
 	const form = useFormContext();
 	vi.mocked(form.handleSubmit).mockRejectedValueOnce(
@@ -95,7 +94,7 @@ test("handles rejected submissions without an error callback", async () => {
 	);
 });
 
-test("displays the safe message from a submission error", async () => {
+it("displays the safe message from a submission error", async () => {
 	// Arrange
 	const form = useFormContext();
 	vi.mocked(form.handleSubmit).mockRejectedValueOnce(

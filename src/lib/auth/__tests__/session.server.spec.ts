@@ -5,7 +5,7 @@ import { TEST_SESSION } from "@/testing/fixtures/session";
 vi.mock("@tanstack/react-start/server");
 vi.mock("@/lib/auth/auth.server");
 
-test("returns the authenticated session to protected operations", async () => {
+it("returns the authenticated session to protected operations", async () => {
 	// Arrange
 	vi.mocked(auth.api.getSession).mockResolvedValueOnce(TEST_SESSION);
 
@@ -16,7 +16,7 @@ test("returns the authenticated session to protected operations", async () => {
 	expect(session).toBe(TEST_SESSION);
 });
 
-test("rejects an anonymous protected operation", async () => {
+it("rejects an anonymous protected operation", async () => {
 	// Arrange
 	vi.mocked(auth.api.getSession).mockResolvedValueOnce(null);
 

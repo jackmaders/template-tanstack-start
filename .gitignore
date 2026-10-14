@@ -21,3 +21,6 @@ stats.html
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Zed
+.zed/

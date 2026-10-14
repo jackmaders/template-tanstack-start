@@ -5,14 +5,14 @@ import { FormError } from "@/components/forms/form-error";
 vi.mock("@tanstack/react-form");
 const { useFormContext } = createFormHookContexts();
 
-test("renders nothing when there is no submission error", () => {
+it("renders nothing when there is no submission error", () => {
 	// Act
 	render(<FormError />);
 	// Assert
 	expect(screen.queryByRole("alert")).not.toBeInTheDocument();
 });
 
-test("renders the submission error as an alert and forwards props", () => {
+it("renders the submission error as an alert and forwards props", () => {
 	// Arrange
 	const form = useFormContext();
 	const mockFormError = vi.fn(({ children, selector }) =>

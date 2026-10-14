@@ -5,7 +5,7 @@ import {
 	useToastManager,
 } from "@/components/ui/toast-manager";
 
-test("exports a toast manager created by Base UI", () => {
+it("exports a toast manager created by Base UI", () => {
 	// Act
 	const manager = toast;
 
@@ -13,7 +13,7 @@ test("exports a toast manager created by Base UI", () => {
 	expect(manager).toBeDefined();
 });
 
-test("re-exports the Base UI manager factory and hook", () => {
+it("re-exports the Base UI manager factory and hook", () => {
 	// Act
 	const factory = createToastManager;
 	const hook = useToastManager;

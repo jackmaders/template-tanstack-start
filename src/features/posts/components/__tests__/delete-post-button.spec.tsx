@@ -6,7 +6,7 @@ import { createPostFixture } from "@/testing/fixtures/post";
 
 vi.mock("@/features/posts/api/use-delete-post");
 
-test("deletes the post when clicked", async () => {
+it("deletes the post when clicked", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { mutate } = useDeletePost();
@@ -23,7 +23,7 @@ test("deletes the post when clicked", async () => {
 	expect(mutate).toHaveBeenCalledWith({ id: 1 });
 });
 
-test("forwards props and calls the supplied click handler", async () => {
+it("forwards props and calls the supplied click handler", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const onClick = vi.fn();
@@ -47,7 +47,7 @@ test("forwards props and calls the supplied click handler", async () => {
 	expect(onClick).toHaveBeenCalledOnce();
 });
 
-test("disables deletion while a mutation is pending", () => {
+it("disables deletion while a mutation is pending", () => {
 	// Arrange
 	vi.mocked(useDeletePost, { partial: true }).mockReturnValueOnce({
 		isPending: true,
@@ -61,7 +61,7 @@ test("disables deletion while a mutation is pending", () => {
 	expect(screen.getByRole("button")).toBeDisabled();
 });
 
-test("respects an explicitly disabled button", async () => {
+it("respects an explicitly disabled button", async () => {
 	// Arrange
 	const user = userEvent.setup();
 	const { mutate } = useDeletePost();

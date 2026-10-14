@@ -1,3 +1,4 @@
+import process from "node:process";
 import { defineConfig, devices } from "@playwright/test";
 
 const isCi = Boolean(process.env.CI);
@@ -36,7 +37,7 @@ export default defineConfig({
 		baseURL: baseUrl,
 		trace: "on-first-retry",
 	},
-	workers: isCi || !usePreview ? 1 : undefined,
+	...(isCi || !usePreview ? { workers: 1 } : {}),
 	...getWebServerConfig(),
 });
 
