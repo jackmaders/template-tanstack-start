@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const isCi = Boolean(process.env.CI);
-const usePreview = process.env.E2E_USE_PREVIEW === "true";
+const usePreview = process.env.E2E_USE_PREVIEW !== "false";
 const externalBaseUrl = process.env.E2E_BASE_URL?.trim();
 
 const devBaseUrl = "http://localhost:5173";
@@ -42,7 +42,13 @@ function getWebServerConfig() {
 		return {};
 	}
 
-	const steps = ["bun run db:migrate --local"];
+	const steps: string[] = [];
+
+	if (usePreview && !isCi && process.env.E2E_SKIP_BUILD !== "true") {
+		steps.push("bun run build");
+	}
+
+	steps.push("bun run db:migrate --local");
 
 	if (usePreview) {
 		steps.push("bun run cf:preview");
@@ -53,6 +59,12 @@ function getWebServerConfig() {
 	return {
 		webServer: {
 			command: steps.join(" && "),
+			env: {
+				BETTER_AUTH_SECRET:
+					process.env.BETTER_AUTH_SECRET ||
+					"template-local-test-only-secret-value",
+			},
+			timeout: 120_000,
 			url: baseUrl,
 		},
 	};

@@ -48,7 +48,8 @@
 
 - **Feature placement:** Put feature-specific components in `src/features/<feature>/components` and application-wide UI, layout, and form components in `src/components`.
 - **Shared placement:** When another feature needs feature-specific components, move into to shared directory.
-- **Prop derivation:** Derive wrapper prop types from the wrapped component or native element. Use `React.ComponentProps` or the component's exported prop type.
+- **Component props types:** UI component props must extend `ComponentProps<typeof WrappedComponent>` or `ComponentProps<"element">` for the relevant component.
+- **Spread component props:** Use `Omit` for props the wrapper owns, and spread the remaining `{...props}` onto that component or element.
 
 ## Testing
 

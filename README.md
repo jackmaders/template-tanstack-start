@@ -26,14 +26,14 @@ bun run dev
 ## Other useful commands
 
 - `bun run build`: Build the project.
-- `bun run validate:full`: Run a production build, lint and type checks, unused code checks, coverage tests, and Chromium end-to-end tests.
+- `bun run validate:full`: Run the CI checks locally.
 - `bun run validate:fast`: Run lint, type checks, unused code checks, and unit tests.
 - `bun run db:generate`: Generate database migrations from the schema.
 - `bun run db:migrate --local`: Apply database migrations to the local database shared by development and preview servers.
 - `bun run cf:generate`: Generate TypeScript definitions for the Cloudflare environment.
 - `bun run cf:preview`: Preview the production build locally with Wrangler. Requires a successful build first.
 - `bun run test`: Run the test suite.
-- `bun run test:e2e`: Run the end-to-end tests.
+- `bun run test:e2e`: Build and preview locally, then run the end-to-end tests in Chromium, Firefox, and WebKit.
 - `bun run test:perf`: Run the Lighthouse tests.
 - `bun run lint:fix`: Apply code formatting and lint rules.
 
