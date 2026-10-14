@@ -56,9 +56,14 @@
 			}
 		},
 		{
-			"includes": ["**/__tests__/**", "**/__mocks__/**"],
+			"includes": [
+				"**/__tests__/**",
+				"**/__mocks__/**",
+				"src/testing/**",
+				"tests/vitest/**"
+			],
 			"javascript": {
-				"globals": ["expect", "test", "vi"]
+				"globals": ["afterEach", "beforeEach", "expect", "it", "test", "vi"]
 			}
 		},
 		{

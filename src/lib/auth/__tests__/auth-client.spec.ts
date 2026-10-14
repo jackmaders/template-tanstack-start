@@ -1,5 +1,4 @@
 import { createAuthClient } from "better-auth/react";
-import { it } from "vitest";
 import { signIn, signOut, signUp, useSession } from "@/lib/auth/auth-client";
 
 vi.mock("better-auth/react");

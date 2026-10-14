@@ -1,5 +1,4 @@
 import { getRequestHeaders } from "@tanstack/react-start/server";
-import { it } from "vitest";
 import { auth } from "@/lib/auth/auth.server";
 import { getSessionFn } from "@/lib/auth/session.functions";
 import { TEST_SESSION } from "@/testing/fixtures/session";

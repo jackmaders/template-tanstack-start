@@ -1,6 +1,5 @@
 import { createFormHookContexts } from "@tanstack/react-form";
 import { render, screen } from "@testing-library/react";
-import { it } from "vitest";
 import { FormError } from "@/components/forms/form-error";
 
 vi.mock("@tanstack/react-form");

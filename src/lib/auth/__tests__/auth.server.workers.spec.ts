@@ -1,6 +1,5 @@
 import { env } from "cloudflare:workers";
 import { betterAuth } from "better-auth/minimal";
-import { expect, it, vi } from "vitest";
 import "@/lib/auth/auth.server";
 
 vi.mock("better-auth/minimal");

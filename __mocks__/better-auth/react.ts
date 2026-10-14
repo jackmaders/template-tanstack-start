@@ -1,5 +1,3 @@
-import { vi } from "vitest";
-
 const client = {
 	signIn: { email: vi.fn() },
 	signOut: vi.fn(),

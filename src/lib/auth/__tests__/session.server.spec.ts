@@ -1,4 +1,3 @@
-import { it } from "vitest";
 import { auth } from "@/lib/auth/auth.server";
 import { ensureSession } from "@/lib/auth/session.server";
 import { TEST_SESSION } from "@/testing/fixtures/session";

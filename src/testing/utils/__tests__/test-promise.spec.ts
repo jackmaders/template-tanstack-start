@@ -1,4 +1,4 @@
-import { it, onTestFinished } from "vitest";
+import { onTestFinished } from "vitest";
 import { createTestPromise } from "@/testing/utils/test-promise";
 
 it("propagates a rejected request to its caller", async () => {

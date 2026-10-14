@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { it } from "vitest";
 import { SignUpForm } from "@/features/account/components/sign-up-form";
 import { signUp } from "@/lib/auth/auth-client";
 import { createTestPromise } from "@/testing/utils/test-promise";

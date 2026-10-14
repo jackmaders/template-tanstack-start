@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { it } from "vitest";
 import { useDeletePost } from "@/features/posts/api/use-delete-post";
 import { DeletePostButton } from "@/features/posts/components/delete-post-button";
 import { createPostFixture } from "@/testing/fixtures/post";

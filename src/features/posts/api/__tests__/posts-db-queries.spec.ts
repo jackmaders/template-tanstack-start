@@ -1,5 +1,4 @@
 import { and, desc, eq } from "drizzle-orm";
-import { it } from "vitest";
 import { getDb } from "@/db/db.server";
 import { posts } from "@/db/schema/posts";
 import {

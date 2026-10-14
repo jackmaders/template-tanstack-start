@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { it } from "vitest";
 import { PostsPage } from "@/features/posts/components/posts-page";
 
 vi.mock("@/features/posts/components/add-post-form");

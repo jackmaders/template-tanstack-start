@@ -1,5 +1,3 @@
-import { vi } from "vitest";
-
 export const db = {
 	delete: vi.fn().mockReturnThis(),
 	from: vi.fn().mockReturnThis(),

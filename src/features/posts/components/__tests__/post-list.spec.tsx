@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { it } from "vitest";
 import { listPosts, updatePost } from "@/features/posts/api/posts-db-queries";
 import { postsQueryOptions } from "@/features/posts/api/posts-query-options";
 import { PostList } from "@/features/posts/components/post-list";

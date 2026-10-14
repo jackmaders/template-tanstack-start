@@ -1,6 +1,5 @@
 import { isValidElement, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
-import { it, vi } from "vitest";
 
 vi.mock("@tanstack/react-start/client");
 vi.mock("react-dom/client");

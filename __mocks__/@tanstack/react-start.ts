@@ -1,5 +1,3 @@
-import { vi } from "vitest";
-
 export const createServerFn = vi.fn(() => {
 	let middlewares: Array<(options: unknown) => unknown> = [];
 	let validator: { parse: <T>(data: T) => T };

@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { it } from "vitest";
 import { toast } from "@/components/ui/toast-manager";
 import { LogoutButton } from "@/features/account/components/logout-button";
 import { signOut } from "@/lib/auth/auth-client";

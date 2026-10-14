@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { it } from "vitest";
 import { POST_TITLE_MAX_LENGTH } from "@/db/schema/posts";
 import { useCreatePost } from "@/features/posts/api/use-create-post";
 import { AddPostForm } from "@/features/posts/components/add-post-form";

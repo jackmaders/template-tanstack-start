@@ -1,6 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { it } from "vitest";
 import { Navbar } from "@/components/navbar";
 
 import { createRouterTestContext } from "@/testing/wrappers/router";

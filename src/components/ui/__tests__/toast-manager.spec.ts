@@ -1,5 +1,4 @@
 import { Toast } from "@base-ui/react/toast";
-import { it } from "vitest";
 import {
 	createToastManager,
 	toast,

@@ -1,5 +1,4 @@
 import { act, render, screen } from "@testing-library/react";
-import { it } from "vitest";
 import {
 	Toast,
 	ToastAction,

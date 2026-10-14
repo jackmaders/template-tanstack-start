@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { it } from "vitest";
 import { AccountActions } from "@/features/account/components/account-actions";
 import { signOut, useSession } from "@/lib/auth/auth-client";
 
