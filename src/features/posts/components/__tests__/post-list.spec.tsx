@@ -5,7 +5,7 @@ import { useSession } from "@/lib/auth/auth-client";
 import { createQueryTestContext } from "@/testing/wrappers/query-client";
 
 vi.mock("@tanstack/react-start");
-vi.mock("@/lib/auth/auth.functions");
+vi.mock("@/lib/auth/session.server");
 vi.mock("@/features/posts/api/posts-db-queries");
 vi.mock("@/features/posts/api/use-delete-post");
 

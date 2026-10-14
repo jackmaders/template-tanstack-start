@@ -9,7 +9,7 @@ Run these steps in Bash from a new repository created from this template.
 - [jq](https://jqlang.org/).
 - [OpenSSL](https://www.openssl.org/).
 - [GitHub CLI](https://cli.github.com/) authenticated with `gh auth login`.
-- [Wrangler](https://developers.cloudflare.com/workers/wrangler/) .authenticated with `bunx wrangler login`.
+- [Wrangler](https://developers.cloudflare.com/workers/wrangler/) authenticated with `bunx wrangler login`.
 
 ## Prepare the Repository
 
@@ -22,6 +22,9 @@ bun install --frozen-lockfile
 
 # Confirm which GitHub repository the following commands will update
 gh repo view --json nameWithOwner
+
+# Create the branch used for the setup pull request
+git switch -c chore/project-setup
 
 # Set main as the repository's default branch
 gh repo edit --default-branch main
@@ -70,6 +73,9 @@ APP_NAME="$(jq -er '.name' package.json)"
 
 # Create the remote D1 database and save its DB binding in wrangler.json
 bunx wrangler d1 create "$APP_NAME" --binding DB --update-config
+
+# Format the project settings after updating the name, URL, and database binding
+bun run lint:fix
 
 # Generate the secret Better Auth uses to sign and encrypt authentication data
 BETTER_AUTH_SECRET="$(openssl rand -base64 32)"
