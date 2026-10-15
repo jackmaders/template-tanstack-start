@@ -46,6 +46,7 @@
 
 ## Components
 
+- **Server data access:** Access perform server queries through TanStack Query's query (`useQuery` or `useSuspenseQuery`) and mutation (`useMutation`) hooks.
 - **Feature placement:** Put feature-specific components in `src/features/<feature>/components` and application-wide UI, layout, and form components in `src/components`.
 - **Shared placement:** When another feature needs feature-specific components, move into to shared directory.
 - **Component props types:** UI component props must extend `ComponentProps<typeof WrappedComponent>` or `ComponentProps<"element">` for the relevant component.

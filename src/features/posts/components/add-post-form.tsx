@@ -13,13 +13,13 @@ import { useCreatePost } from "@/features/posts/api/use-create-post";
 import { useSession } from "@/lib/auth/auth-client";
 
 export function AddPostForm() {
-	const { mutateAsync: createPost } = useCreatePost();
+	const { mutate: createPost } = useCreatePost();
 	const { data: session } = useSession();
 
 	const form = useAppForm({
 		defaultValues: { title: "" },
 		onSubmit: async ({ value }) => {
-			await createPost(value);
+			createPost(value);
 			form.reset();
 			await form.validate("mount");
 		},

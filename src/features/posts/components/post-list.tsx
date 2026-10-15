@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import {
 	Accordion,
 	AccordionContent,
@@ -47,7 +47,7 @@ function AuthenticatedPostList() {
 
 function PostListItem({ post }: { post: Post }) {
 	const [expanded, setExpanded] = useState<number[]>([]);
-	const stopEditing = useCallback(() => setExpanded([]), []);
+
 	return (
 		<li>
 			<Accordion onValueChange={setExpanded} value={expanded}>
@@ -61,7 +61,7 @@ function PostListItem({ post }: { post: Post }) {
 					</div>
 					<AccordionContent>
 						{expanded.includes(post.id) && (
-							<EditPostForm onClose={stopEditing} post={post} />
+							<EditPostForm onClose={() => setExpanded([])} post={post} />
 						)}
 					</AccordionContent>
 				</AccordionItem>

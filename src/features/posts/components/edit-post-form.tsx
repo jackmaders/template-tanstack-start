@@ -20,11 +20,11 @@ export function EditPostForm({
 	className,
 	...props
 }: EditPostFormProps) {
-	const { mutateAsync: updatePost, isPending } = useUpdatePost();
+	const { mutate: updatePost, isPending } = useUpdatePost();
 	const form = useAppForm({
 		defaultValues: { title: post.title },
-		onSubmit: async ({ value }) => {
-			await updatePost({ id: post.id, ...value });
+		onSubmit: ({ value }) => {
+			updatePost({ id: post.id, ...value });
 			onClose();
 		},
 		validationLogic: revalidateLogic({ mode: "change" }),

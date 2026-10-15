@@ -35,7 +35,7 @@ export async function deletePost(user: User, id: number, db = getDb()) {
 		.returning();
 
 	if (!deleted) {
-		throw new Error("Post not found or unauthorized.");
+		throw new Error("Post not found.");
 	}
 
 	return deleted;
@@ -48,7 +48,7 @@ export async function updatePost(user: User, values: PostUpdate, db = getDb()) {
 		.where(and(eq(posts.id, values.id), eq(posts.userId, user.id)))
 		.returning();
 	if (!post) {
-		throw new Error("Post not found or unauthorized.");
+		throw new Error("Post not found.");
 	}
 	return post;
 }
